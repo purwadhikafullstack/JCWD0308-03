@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserTransactionRouter } from "./user.routers";
+import { UserTransactionRouter } from "./transaction.routers";
 
 export class ApiRouter{
     private userTransactionRouter: UserTransactionRouter
@@ -10,7 +10,7 @@ export class ApiRouter{
         this.initializeRoutes()
     }
     private initializeRoutes(): void {
-        this.router.use('/users', this.userTransactionRouter.getRouter)
+        this.router.use('/transactions', this.userTransactionRouter.getRouter)
     }
     getRouter() : Router {
         return this.router
