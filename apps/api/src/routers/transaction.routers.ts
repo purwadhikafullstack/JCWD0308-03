@@ -16,7 +16,6 @@ export class UserTransactionRouter {
         this.router.patch('/reservation/:reservationId/upload-proof', this.userTransaction.uploadPaymentProof)
         this.router.patch('/reservations/:reservationId/cancel', this.userTransaction.cancelReservation)
     }
-
     getRouter() {
         return this.router
     }
