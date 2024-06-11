@@ -1,17 +1,26 @@
-import React from 'react'
+import React from 'react';
 
 interface PropertieCardProps {
-   name : string
-   description : string
-   category : string
-   pictures : string
-   
+  name: string;
+  description: string;
+  category: string;
+  pictures: string;
 }
 
-const PropertyCard = () => {
+const PropertyCard: React.FC<PropertieCardProps> = ({
+  name,
+  description,
+  category,
+  pictures,
+}) => {
   return (
-    <div>PropertieCard</div>
-  )
-}
+    <div>
+      <div>{name}</div>
+      <div>{description}</div>
+      <div>{category}</div>
+      {/* <div>{pictures}</div> */}
+    </div>
+  );
+};
 
-export default PropertyCard
+export default PropertyCard;
