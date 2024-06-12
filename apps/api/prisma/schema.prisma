@@ -19,7 +19,7 @@ enum ReservationStatus {
 model Property {
   id          Int           @id @default(autoincrement())
   name        String
-  description String
+  description String        @db.LongText
   category    String
   pictures    String
   rooms       Room[]
@@ -61,7 +61,7 @@ model User {
   email       String        @unique
   password    String?
   name        String
-  profile     String?
+  profile     String?       @db.LongText
   isActive    Boolean       @default(false)
   role        String        @default("user")
   reviews     Review[]
@@ -74,7 +74,8 @@ model Tenant {
   id         Int        @id @default(autoincrement())
   name       String
   email      String     @unique
-  password   String
+  password   String?
+  profile    String?    @db.LongText
   isActive   Boolean    @default(false)
   role       String     @default("tenant")
   properties Property[]
