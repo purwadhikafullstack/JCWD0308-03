@@ -10,7 +10,7 @@ export class ApiRouter{
         this.initializeRoutes()
     }
     private initializeRoutes(): void {
-        this.router.use('/transactions', this.userTransactionRouter.getRouter)
+        this.router.use('/transactions', this.userTransactionRouter.getRouter())
     }
     getRouter() : Router {
         return this.router

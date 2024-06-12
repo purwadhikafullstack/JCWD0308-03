@@ -56,7 +56,7 @@ export default class App {
       res.send(`Stay Easy !`);
     });
 
-    this.app.use('/api', apiRouter.getRouter);
+    this.app.use('/api', apiRouter.getRouter());
   }
 
   public start(): void {
