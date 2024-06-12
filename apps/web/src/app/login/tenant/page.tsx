@@ -2,7 +2,7 @@ import React from 'react'
 
 const LoginTenant = () => {
   return (
-    <div>LoginTenant</div>
+    <div className='pt-52'>LoginTenant</div>
   )
 }
 

@@ -1,20 +1,29 @@
 'use client';
+
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Avatar } from '../Avatar';
 import { useCallback, useState } from 'react';
 import { MenuItem } from './MenuItem';
-import { useLoginModal } from '@/hooks/useLoginModal';
-import { useRegisterModal } from '@/hooks/useRegisterModal';
+import { useDispatch } from 'react-redux';
+import { openModal as openLoginModal } from '../../hooks/login/loginModalSlice';
+import { openModal as openRegisterModal } from '../../hooks/signup/signupModalSlice';
 
 export const UserMenu = () => {
-  const registerModal = useRegisterModal();
-  const loginModal = useLoginModal();
-
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
+
+  const handleLoginModalOpen = useCallback(() => {
+    dispatch(openLoginModal());
+  }, [dispatch]);
+
+  const handleRegisterModalOpen = useCallback(() => {
+    dispatch(openRegisterModal());
+  }, [dispatch]);
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
@@ -32,8 +41,8 @@ export const UserMenu = () => {
       {isOpen && (
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[18vw] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
-            <MenuItem label="Login" onClick={loginModal.onOpen} />
-            <MenuItem label="Sign up" onClick={registerModal.onOpen} />
+            <MenuItem label="Login" onClick={handleLoginModalOpen} />
+            <MenuItem label="Sign up" onClick={handleRegisterModalOpen} />
           </div>
         </div>
       )}

@@ -1,14 +1,12 @@
-import Image from 'next/image';
-import styles from './page.module.css';
-import Wrapper from '@/components/wrapper';
 import Search from '@/components/home/Search';
-import { getProperties } from '@/lib/property';
+// import { getProperties } from '@/lib/property';
 import PropertyCard from '@/components/home/PropertyCard';
 import { property } from 'cypress/types/lodash';
 import EmptyState from '@/components/EmptyState';
+import Wrapper from '@/components/wrapper';
 
 export default async function Home() {
-  const properties = await getProperties();
+  // const properties = await getProperties();
 
   const isEmpty = false;
   if (isEmpty) {
@@ -20,7 +18,7 @@ export default async function Home() {
       <Wrapper>
         <Search />
         <div className="pt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-          {properties.properties.map((property: any) => {
+          {/* {properties.properties.map((property: any) => {
             return (
               <PropertyCard
                 key={property.id}
@@ -30,7 +28,7 @@ export default async function Home() {
                 pictures={property.pictures}
               />
             );
-          })}
+          })} */}
         </div>
       </Wrapper>
     </div>

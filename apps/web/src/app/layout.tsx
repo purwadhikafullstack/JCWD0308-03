@@ -3,8 +3,10 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/navbar/Navbar';
-import { RegisterModal } from '@/components/modals/RegisterModal';
+import  StoreProvider  from './storeProvider';
+import LoginModalSlice from '@/hooks/login/loginModalSlice';
 import { LoginModal } from '@/components/modals/LoginModal';
+import { RegisterModal } from '@/components/modals/RegisterModal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,11 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RegisterModal />
-        <LoginModal />
-        <Navbar />
-        {children}
-        {/* <Footer /> */}
+        <StoreProvider>
+          <RegisterModal />
+          <LoginModal />
+          <Navbar />
+          {children}
+          {/* <Footer /> */}
+        </StoreProvider>
       </body>
     </html>
   );
