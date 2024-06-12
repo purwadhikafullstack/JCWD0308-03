@@ -5,6 +5,7 @@ interface PropertieCardProps {
   description: string;
   category: string;
   pictures: string;
+  
 }
 
 const PropertyCard: React.FC<PropertieCardProps> = ({
@@ -18,6 +19,7 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
       <div>{name}</div>
       <div>{description}</div>
       <div>{category}</div>
+      
       {/* <div>{pictures}</div> */}
     </div>
   );
