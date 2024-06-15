@@ -1,6 +1,6 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IconType } from 'react-icons';
 import qs from 'query-string';
 
@@ -17,33 +17,48 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
 }) => {
   const router = useRouter();
   const params = useSearchParams();
+  const [scrollPosition, setScrollPosition] = useState<number | null>(null);
 
-  const handleClick = useCallback(() => {
-    let currentQuery = {};
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.preventDefault();
 
-    if (params) {
-      currentQuery = qs.parse(params.toString());
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updatedQuery: any = {
+        ...currentQuery,
+        category: label,
+      };
+
+      if (params?.get('category') === label) {
+        delete updatedQuery.category;
+      }
+
+      const url = qs.stringifyUrl(
+        {
+          url: '/',
+          query: updatedQuery,
+        },
+        { skipNull: true },
+      );
+
+      const scrollPosition = window.scrollY;
+
+      setScrollPosition(scrollPosition);
+      router.push(url);
+    },
+    [label, params, router],
+  );
+
+  useEffect(() => {
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
     }
-
-    const updatedQuery: any = {
-      ...currentQuery,
-      category: label,
-    };
-
-    if (params?.get('category') === label) {
-      delete updatedQuery.category;
-    }
-
-    const url = qs.stringifyUrl(
-      {
-        url: '/',
-        query: updatedQuery,
-      },
-      { skipNull: true },
-    );
-
-    router.push(url);
-  }, [label, params, router]);
+  }, [scrollPosition]);
 
   return (
     <div
@@ -55,6 +70,7 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
                 justify-center
                 gap-2
                 p-3
+                
                 border-b-2
                 hover:text-[#00a7c4]
                 transition
