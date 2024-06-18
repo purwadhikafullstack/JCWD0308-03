@@ -31,13 +31,13 @@ export const LoginModal = () => {
       <Button
         disabled={isLoading}
         onClick={handleSubmitTenant}
-        outline
+        // outline
         label="For Tenant"
       />
       <Button
         disabled={isLoading}
         onClick={handleSubmitUser}
-        outline
+        // outline
         label="For Traveller"
       />
     </div>
