@@ -22,6 +22,7 @@ model Property {
   description String        @db.LongText
   category    String
   pictures    String
+  location    String
   rooms       Room[]
   reviews     Review[]
   createdAt   DateTime      @default(now())
@@ -33,10 +34,9 @@ model Property {
 
 model Room {
   id           Int           @id @default(autoincrement())
-  type         String // Menambahkan jenis kamar: 'deluxe', 'standard', 'suite'
-  name         String
+  type         String// Menambahkan jenis kamar: 'deluxe', 'standard', 'suite'
   price        Float
-  pictures     String
+  pictures     String        @db.LongText
   description  String
   propertyId   Int
   property     Property      @relation(fields: [propertyId], references: [id])
@@ -60,7 +60,7 @@ model User {
   id          Int           @id @default(autoincrement())
   email       String        @unique
   password    String?
-  name        String
+  name        String?
   profile     String?       @db.LongText
   isActive    Boolean       @default(false)
   role        String        @default("user")
@@ -72,7 +72,7 @@ model User {
 
 model Tenant {
   id         Int        @id @default(autoincrement())
-  name       String
+  name       String?
   email      String     @unique
   password   String?
   profile    String?    @db.LongText

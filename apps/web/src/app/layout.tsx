@@ -29,7 +29,7 @@ export default function RootLayout({
         <StoreProvider>
           <RegisterModal />
           <LoginModal />
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
           {/* <Footer /> */}
         </StoreProvider>
