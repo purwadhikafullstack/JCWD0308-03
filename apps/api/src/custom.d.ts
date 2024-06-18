@@ -5,6 +5,7 @@ type User = {
   password?: string;
   role: string;
   deletedAt: Date | null;
+  isActive: boolean;
 };
 
 type Property = {

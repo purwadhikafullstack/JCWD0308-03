@@ -19,7 +19,7 @@ const HeroSection = () => {
     >
       <div className="container mx-auto">
         <h1 className="text-4xl text-[#4a4a4a] font-bold mb-4">
-          Welcome to Our Property Listings!
+          Welcome to Our Property!
         </h1>
         <Search
           searchQuery={searchQuery}

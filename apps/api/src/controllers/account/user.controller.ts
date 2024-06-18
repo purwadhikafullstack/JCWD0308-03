@@ -1,7 +1,7 @@
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
 import { sign } from 'jsonwebtoken';
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import Handlebars from 'handlebars';
@@ -22,37 +22,16 @@ export class UserController {
     try {
       const { email, name } = req.body;
 
-      let existsUserEmail = await prisma.user.findUnique({
-        where: { email: email },
-      });
-      let existsTenantEmail = await prisma.tenant.findUnique({
-        where: { email: email },
-      });
+      let existsUserEmail = await prisma.user.findUnique({where: { email: email }});
+      let existsTenantEmail = await prisma.tenant.findUnique({where: { email: email }});
 
-      if (
-        existsUserEmail?.isActive === false ||
-        existsTenantEmail?.isActive === false
-      ) {
-        return res
-          .status(409)
-          .send({
-            status: 'error',
-            message: 'email already registered but not verifed',
-          });
-      }
-      if (
-        existsUserEmail?.isActive === true ||
-        existsTenantEmail?.isActive === true
-      ) {
-        return res
-          .status(409)
-          .send({ status: 'error', message: 'email already registered' });
-      }
+      if (existsUserEmail?.isActive === false || existsTenantEmail?.isActive === false) {
+        return res.status(409).send({status: 'error',message: 'email already registered but not verifed'})}
+      if (existsUserEmail?.isActive === true || existsTenantEmail?.isActive === true) {
+        return res.status(409).send({ status: 'error', message: 'email already registered' })}
 
       const createUser = await prisma.user.create({ data: { name, email } });
-
       const payload = { id: createUser.id, role: createUser.role };
-
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h' });
       const link = `http://localhost:3000/verify/${token}`;
 
@@ -76,7 +55,7 @@ export class UserController {
         html: html,
       });
       console.log('token sign up user : ', token);
-      return res.status(201).send({ status: 'ok', createUser, token });
+      return res.status(201).json({ status: 'ok', createUser, token });
     } catch (error) {
       console.log('failed to register user : ', error);
       responseError(res, error);
@@ -87,27 +66,18 @@ export class UserController {
     try {
       const { email, password } = req.body;
       const user = await prisma.user.findUnique({ where: { email: email } });
-      if (!user)
-        return res
-          .status(404)
-          .send({ status: 'error', message: 'user not found' });
+      if (!user)return res.status(404).send({ status: 'error', message: 'email not registered' });
+      if (!user.isActive) return res.status(403).send({ status: 'error', message: 'email not verified' });
 
       const isValidPass = await compare(password, user.password!);
-      if (user?.isActive === false)
-        return res
-          .status(403)
-          .send({ status: 'error', message: 'user not verified' });
-      if (!isValidPass)
-        return res
-          .status(401)
-          .send({ status: 'error', message: 'wrong password' });
+      if (!isValidPass) return res.status(401).send({ status: 'error', message: 'wrong password' });
 
       const payload = { id: user.id, role: user.role };
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
-      console.log('user login :', user);
+      console.log('user login : ', user);
       return res.status(200).send({ status: 'ok', user, token });
     } catch (error) {
-      console.log('failed to login user : ', error);
+      console.log('FAILED TO LOGIN USER : ', error);
       responseError(res, error);
     }
   }

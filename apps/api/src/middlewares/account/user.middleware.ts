@@ -6,7 +6,6 @@ export class UserMiddleware {
   async verifyToken(req: Request, res: Response, next: NextFunction) {
     try {
       let token = req.headers.authorization?.replace('Bearer ','');
-      console.log('verify token sucess : ', token);
       if (token === undefined) throw 'Token empty';
 
       let verifyUser = verify(token, process.env.KEY_JWT!);

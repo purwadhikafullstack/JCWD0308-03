@@ -19,46 +19,32 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
   const params = useSearchParams();
   const [scrollPosition, setScrollPosition] = useState<number | null>(null);
 
-  const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      event.preventDefault();
+  const handleClick = useCallback(() => {
+    let currentQuery = {};
 
-      let currentQuery = {};
-
-      if (params) {
-        currentQuery = qs.parse(params.toString());
-      }
-
-      const updatedQuery: any = {
-        ...currentQuery,
-        category: label,
-      };
-
-      if (params?.get('category') === label) {
-        delete updatedQuery.category;
-      }
-
-      const url = qs.stringifyUrl(
-        {
-          url: '/',
-          query: updatedQuery,
-        },
-        { skipNull: true },
-      );
-
-      const scrollPosition = window.scrollY;
-
-      setScrollPosition(scrollPosition);
-      router.push(url);
-    },
-    [label, params, router],
-  );
-
-  useEffect(() => {
-    if (scrollPosition) {
-      window.scrollTo(0, scrollPosition);
+    if (params) {
+      currentQuery = qs.parse(params.toString());
     }
-  }, [scrollPosition]);
+
+    const updatedQuery: any = {
+      ...currentQuery,
+      category: label,
+    };
+
+    if (params?.get('category') === label) {
+      delete updatedQuery.category;
+    }
+
+    const url = qs.stringifyUrl(
+      {
+        url: '/',
+        query: updatedQuery,
+      },
+      { skipNull: true },
+    );
+
+    router.push(url);
+  }, [label, params, router]);
 
   return (
     <div
