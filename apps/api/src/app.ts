@@ -51,7 +51,7 @@ export default class App {
   }
 
   private routes(): void {
-    const apiRouter = new ApiRouter
+    const apiRouter = new ApiRouter();
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Stay Easy !`);
     });

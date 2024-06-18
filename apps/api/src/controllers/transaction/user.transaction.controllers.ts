@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-
+import { calculateNumberOfDays, calculateTotalPrice } from '@/helpers/responseError';
 const prisma = new PrismaClient();
 export class UserTransaction {
   // Create a new reservation
   async createReservation(req: Request, res: Response) {
     try {
-      const { propertyId, userId, roomId, startDate, endDate, price } =
+      const { propertyId, userId, roomId, startDate, endDate } =
         req.body;
+      const room = await prisma.room.findUnique({where: {id: roomId}});
+      if (!room) { return res.status(404).json({message: 'Room not found'}) }
+      const numberOfDays = calculateNumberOfDays(startDate, endDate);
+      const totalPrice = calculateTotalPrice(numberOfDays, room.price);
       const reservation = await prisma.reservation.create({
         data: {
           propertyId,
@@ -15,7 +19,7 @@ export class UserTransaction {
           roomId,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
-          price,
+          price: totalPrice,
           status: 'Pending', // Assuming default status
         },
       });
