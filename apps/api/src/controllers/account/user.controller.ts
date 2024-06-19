@@ -70,7 +70,7 @@ export class UserController {
       if (!user.isActive) return res.status(403).send({ status: 'error', message: 'email not verified' });
 
       const isValidPass = await compare(password, user.password!);
-      if (!isValidPass) return res.status(401).send({ status: 'error', message: 'wrong password' });
+      if (!isValidPass) return res.status(401).json({ status: 'error', message: 'wrong password' });
 
       const payload = { id: user.id, role: user.role };
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
@@ -90,13 +90,14 @@ export class UserController {
           name: true,
           email: true,
           role: true,
+          profile: true,
           Reservation: true,
         },
       });
       if (!profileUser)
         return res
           .status(404)
-          .send({ status: 'error', message: 'user not found' });
+          .json({ status: 'error', message: 'user not found' });
 
       console.log('profileUser : ', profileUser);
       res.status(200).json(profileUser);

@@ -27,7 +27,7 @@ export class UserRouter{
         this.router.post("/", this.validatorMiddleware.validateRegister,this.userController.registerUser)
         this.router.patch('/verify' ,this.userMiddleware.verifyToken, this.validatorMiddleware.validateSetupAccount,this.accountController.setupAccount ,  this.accountController.verifyAccount)
         this.router.post("/login", this.userController.loginUser )
-        this.router.patch('/profile' ,this.userMiddleware.verifyToken, this.validatorMiddleware.uploadProfileImage,uploader("IMG", "/images").single("file"),  this.userController.uploadProfileImage)
+        this.router.patch('/profile' ,this.userMiddleware.verifyToken, this.validatorMiddleware.uploadImage,uploader("IMG", "/images").single("file"),  this.userController.uploadProfileImage)
         this.router.get("/:id" , this.userMiddleware.verifyToken, this.userController.getProfileById)
     }
 

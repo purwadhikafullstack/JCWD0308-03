@@ -31,7 +31,7 @@ export class ValidatorMiddleware {
 
     allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif']
 
-    uploadProfileImage = [
+    uploadImage = [
         body('file').custom((value, {req}) => {
             if(!req.file){
                 throw new Error('File not found')
