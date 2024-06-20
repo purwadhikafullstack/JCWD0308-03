@@ -3,29 +3,36 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import SingUpForm from '@/components/auth/SignUpForm';
+import { registerAccount } from '@/lib/account';
 
 const initialValues = {
-  name: '',
   email: '',
+  name: '',
 };
 
 const validationSchema = yup.object().shape({
   name: yup
     .string()
     .min(3, 'Name must be at least 3 characters')
-    .max(50, 'Name must be less than 50 characters'),
-  email: yup.string().email('Invalid email'),
+    .max(50, 'Name must be less than 50 characters')
+    .required('Name is required'),
+  email: yup.string().email('Invalid email').required('Email is required'),
 });
 
-const UserSingup = () => {
+const UserSignup = () => {
   const router = useRouter();
 
-  // Function to handle form submission
-  const handleSubmit = (values: any, actions: any) => {
-    // Here you would typically handle the form submission logic, e.g., API call
-    console.log('Form submitted:', values);
-    // Redirect to welcome or other page upon successful registration
-    // router.push('/welcome');
+  const handleSubmit = async (values: any, actions: any) => {
+    console.log('Submitting values:', values);
+    try {
+      const response = await registerAccount(values, 'users');
+      console.log('Successfully registered:', response);
+      // Redirect on success
+      router.push('/welcome');
+    } catch (error: any) {
+      console.error('Failed to register account:', error);
+      alert('Cannot register account: ' + error.message);
+    }
     actions.resetForm();
   };
 
@@ -58,4 +65,4 @@ const UserSingup = () => {
   );
 };
 
-export default UserSingup;
+export default UserSignup;

@@ -1,16 +1,25 @@
-"use client";
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
+import { loginAccount } from '@/lib/account';
+import { createToken } from '@/app/action';
 
 const UserLoginPage: React.FC = () => {
   const router = useRouter();
-
-  const handleSubmit = (values: any, actions: any) => {
-    // Handle user login logic
-    console.log('User login form submitted', values);
-    // router.push('/user-dashboard');
-    actions.setSubmitting(false);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (values: any, actions: any) => {
+    try {
+      setLoading(true);
+      const res = await loginAccount(values, 'users');
+      console.log('token cookie : ', res);
+      router.push('/');
+    } catch (error: any) {
+      alert('Login failed : ' + error.message);
+    } finally{
+      setLoading(false);
+    }
+    actions.resetForm();
   };
 
   const handleGoogleLogin = () => {

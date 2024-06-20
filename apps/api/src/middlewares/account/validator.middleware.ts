@@ -4,9 +4,7 @@ import path from "path";
 
 export class ValidatorMiddleware {
      validateRegister = [
-        body('name').notEmpty().withMessage("name is required"),
-        body('email').notEmpty().withMessage('email is required')
-        .isEmail().withMessage('Invalid Email'),
+        body('email').isEmail().withMessage('Invalid Email'),
 
         (req:Request, res:Response, next:NextFunction) => {
             const errors = validationResult(req)

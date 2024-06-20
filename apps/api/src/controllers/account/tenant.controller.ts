@@ -81,7 +81,7 @@ export class TenantController {
 
     async getProfileById(req: Request, res: Response) {
         try {
-            const tenant = await prisma.tenant.findUnique({where: {id: req.user?.id}, select: { id: true, name: true,role: true, email: true , profile:true, properties: true}})
+            const tenant = await prisma.tenant.findUnique({where:{id: req.user?.id} , include: {properties: true}})
             if (!tenant) return res.status(404).json({status: "error", message: "tenant not found"})
             console.log("tenant profile : ", tenant);
                 
