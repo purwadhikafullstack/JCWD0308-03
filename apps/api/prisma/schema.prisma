@@ -17,24 +17,43 @@ enum ReservationStatus {
 }
 
 model Property {
-  id          Int           @id @default(autoincrement())
-  name        String
-  description String        @db.LongText
-  category    String
-  pictures    String
-  location    String
-  rooms       Room[]
-  reviews     Review[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Reservation Reservation[]
-  Tenant      Tenant?       @relation(fields: [tenantId], references: [id])
-  tenantId    Int?
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String            @db.LongText
+  category        String
+  pictures        String
+  location        String
+  rooms           Room[]
+  reviews         Review[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Reservation     Reservation[]
+  Tenant          Tenant?           @relation(fields: [tenantId], references: [id])
+  tenantId        Int?
+  PropertyPicture PropertyPicture[]
+}
+
+model PropertyPicture {
+  id         Int      @id @default(autoincrement())
+  url        String
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model RoomPicture {
+  id        Int      @id @default(autoincrement())
+  url       String
+  roomId    Int
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Room {
   id           Int           @id @default(autoincrement())
-  type         String// Menambahkan jenis kamar: 'deluxe', 'standard', 'suite'
+  type         String // Menambahkan jenis kamar: 'deluxe', 'standard', 'suite'
   price        Float
   pictures     String        @db.LongText
   description  String
@@ -43,6 +62,7 @@ model Room {
   reservations Reservation[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  RoomPicture  RoomPicture[]
 }
 
 model Review {
@@ -93,7 +113,7 @@ model Reservation {
   endDate      DateTime
   status       String
   paymentProof String?
-  price        Float 
+  price        Float
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   Property     Property? @relation(fields: [propertyId], references: [id])

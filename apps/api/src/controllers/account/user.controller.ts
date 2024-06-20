@@ -12,7 +12,7 @@ export class UserController {
   async getUsers(req: Request, res: Response) {
     try {
       const allUsers = await prisma.user.findMany();
-      res.json(allUsers)
+      res.json(allUsers);
     } catch (error) {
       console.log('failed to get users :', error);
       responseError(res, error);
@@ -22,13 +22,32 @@ export class UserController {
     try {
       const { email, name } = req.body;
 
-      let existsUserEmail = await prisma.user.findUnique({where: { email: email }});
-      let existsTenantEmail = await prisma.tenant.findUnique({where: { email: email }});
+      let existsUserEmail = await prisma.user.findUnique({
+        where: { email: email },
+      });
+      let existsTenantEmail = await prisma.tenant.findUnique({
+        where: { email: email },
+      });
 
-      if (existsUserEmail?.isActive === false || existsTenantEmail?.isActive === false) {
-        return res.status(409).send({status: 'error',message: 'email already registered but not verifed'})}
-      if (existsUserEmail?.isActive === true || existsTenantEmail?.isActive === true) {
-        return res.status(409).send({ status: 'error', message: 'email already registered' })}
+      if (
+        existsUserEmail?.isActive === false ||
+        existsTenantEmail?.isActive === false
+      ) {
+        return res
+          .status(409)
+          .send({
+            status: 'error',
+            message: 'email already registered but not verifed',
+          });
+      }
+      if (
+        existsUserEmail?.isActive === true ||
+        existsTenantEmail?.isActive === true
+      ) {
+        return res
+          .status(409)
+          .send({ status: 'error', message: 'email already registered' });
+      }
 
       const createUser = await prisma.user.create({ data: { name, email } });
       const payload = { id: createUser.id, role: createUser.role };
@@ -66,11 +85,20 @@ export class UserController {
     try {
       const { email, password } = req.body;
       const user = await prisma.user.findUnique({ where: { email: email } });
-      if (!user)return res.status(404).send({ status: 'error', message: 'email not registered' });
-      if (!user.isActive) return res.status(403).send({ status: 'error', message: 'email not verified' });
+      if (!user)
+        return res
+          .status(404)
+          .send({ status: 'error', message: 'email not registered' });
+      if (!user.isActive)
+        return res
+          .status(403)
+          .send({ status: 'error', message: 'email not verified' });
 
       const isValidPass = await compare(password, user.password!);
-      if (!isValidPass) return res.status(401).send({ status: 'error', message: 'wrong password' });
+      if (!isValidPass)
+        return res
+          .status(401)
+          .json({ status: 'error', message: 'wrong password' });
 
       const payload = { id: user.id, role: user.role };
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
@@ -86,17 +114,10 @@ export class UserController {
     try {
       const profileUser = await prisma.user.findUnique({
         where: { id: req.user?.id },
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          Reservation: true,
-        },
+        include: { reviews: true, Reservation: true },
       });
       if (!profileUser)
-        return res
-          .status(404)
-          .send({ status: 'error', message: 'user not found' });
+      return res.status(404).json({ status: 'error', message: 'user not found' });
 
       console.log('profileUser : ', profileUser);
       res.status(200).json(profileUser);
@@ -109,19 +130,14 @@ export class UserController {
   async uploadProfileImage(req: Request, res: Response) {
     try {
       const { file } = req;
-      if (!file)
-        return res
-          .status(404)
-          .send({ status: 'error', message: 'file not found' });
+      if (!file) return res.status(404).send({ status: 'error', message: 'file not found' });
 
       const imgUrl = `http:localhost:8000/public/images/${file.fieldname}`;
       await prisma.user.update({
         where: { id: req.user?.id },
         data: { profile: imgUrl },
       });
-      res
-        .status(200)
-        .send({ status: 'ok', message: 'success upload profile image' });
+      res.status(200).send({ status: 'ok', message: 'success upload profile image' });
     } catch (error) {
       console.log('failed to upload profile image : ', error);
       responseError(res, error);
