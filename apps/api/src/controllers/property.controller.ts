@@ -23,7 +23,7 @@ export class PropertyController {
       });
       res.status(200).json(properties);
     } catch (error) {
-      console.log('failed to get properties', error);
+      console.log('failed to get properties : ', error);
       responseError(res, error);
     }
   }
