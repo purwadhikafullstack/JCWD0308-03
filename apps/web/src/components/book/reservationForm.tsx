@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import { DatePickerWithRange } from './calendar';
 
 export default function ReservationForm() {
   const [propertyId, setPropertyId] = useState('');
@@ -50,14 +51,7 @@ export default function ReservationForm() {
             <div className="card shadow-md text-black p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
               <div className="flex flex-col justify-between mb-4 gap-5">
-                <div className=''>
-                  <p>Check In</p>
-                  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className='bg bg-[#00a7c4] text-white rounded-md' />
-                </div>
-                <div>
-                  <p>Check Out</p>
-                  <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className='bg bg-[#00a7c4] text-white rounded-md' />
-                </div>
+               <DatePickerWithRange />
               </div>
             </div>
             <div className="card shadow-md text-black p-6">

@@ -18,4 +18,27 @@ export class TenantManagement {
             res.status(500).json({ error });
         }
     }
+    async confirmPayment(req: Request, res: Response) {
+        const { reservationId, status } = req.body;
+        try {
+            const updatedReservation = await prisma.reservation.update({
+                where: { id: reservationId },
+                data: { status },
+            });
+        } catch (error) {
+            
+        }
+    }
+    async cancelReservation(req: Request, res: Response) {
+        const { reservationId } = req.body;
+        try {
+            const canceledReservation = await prisma.reservation.update({
+                where: { id: reservationId },
+                data: { status: 'Cancelled' },
+            });
+            res.status(200).json(canceledReservation);
+        } catch (error) {
+            res.status(500).json({ error });
+        }
+    }
 }

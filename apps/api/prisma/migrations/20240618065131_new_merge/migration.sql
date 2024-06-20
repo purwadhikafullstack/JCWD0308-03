@@ -17,7 +17,6 @@ CREATE TABLE `Property` (
 CREATE TABLE `Room` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `type` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
     `pictures` LONGTEXT NOT NULL,
     `description` VARCHAR(191) NOT NULL,
@@ -45,7 +44,7 @@ CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NULL,
-    `name` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NULL,
     `profile` LONGTEXT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT false,
     `role` VARCHAR(191) NOT NULL DEFAULT 'user',
@@ -59,7 +58,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Tenant` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NULL,
     `profile` LONGTEXT NULL,
