@@ -25,7 +25,8 @@ const VerifyPage = () => {
     try {
       const token = params.token.toString();
       const result = await VerifyEmail(values, token, 'users');
-      console.log('result : ', result);
+      
+      // console.log('result : ', result);
       alert('verify success');
       router.push('/login/user');
     } catch (error:any) {

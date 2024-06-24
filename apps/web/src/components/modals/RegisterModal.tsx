@@ -27,17 +27,19 @@ export const RegisterModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading center title="Welcome to Stay Easy!" subtittle="Create an account!" />
+      <Heading
+        center
+        title="Welcome to Stay Easy!"
+        subtittle="Create an account!"
+      />
       <Button
         disabled={isLoading}
         onClick={handleSubmitTenant}
-        outline
         label="For Tenant"
       />
       <Button
         disabled={isLoading}
         onClick={handleSubmitUser}
-        outline
         label="For Traveller"
       />
     </div>

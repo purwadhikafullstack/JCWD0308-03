@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/navbar/Navbar';
-import  StoreProvider  from './storeProvider';
+import StoreProvider from './storeProvider';
 import LoginModalSlice from '@/hooks/login/loginModalSlice';
 import { LoginModal } from '@/components/modals/LoginModal';
 import { RegisterModal } from '@/components/modals/RegisterModal';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,8 +29,8 @@ export default function RootLayout({
         <StoreProvider>
           <RegisterModal />
           <LoginModal />
-          {/* <Navbar /> */}
           {children}
+          <Toaster />
           {/* <Footer /> */}
         </StoreProvider>
       </body>

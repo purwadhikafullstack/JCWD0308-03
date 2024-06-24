@@ -88,17 +88,17 @@ export class UserController {
       if (!user)
         return res
           .status(404)
-          .send({ status: 'error', message: 'email not registered' });
+          .send({ status: 'error', message: 'Email not registered, please register an account first, you will redirect to register page' });
       if (!user.isActive)
         return res
           .status(403)
-          .send({ status: 'error', message: 'email not verified' });
+          .send({ status: 'error', message: 'Account not verified, please check email to verify your account' });
 
       const isValidPass = await compare(password, user.password!);
       if (!isValidPass)
         return res
           .status(401)
-          .json({ status: 'error', message: 'wrong password' });
+          .json({ status: 'error', message: 'Wrong password, please try again!' });
 
       const payload = { id: user.id, role: user.role };
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
@@ -112,15 +112,15 @@ export class UserController {
 
   async getProfileById(req: Request, res: Response) {
     try {
-      const profileUser = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: req.user?.id },
         include: { reviews: true, Reservation: true },
       });
-      if (!profileUser)
+      if (!user)
       return res.status(404).json({ status: 'error', message: 'user not found' });
 
-      console.log('profileUser : ', profileUser);
-      res.status(200).json(profileUser);
+      console.log('user : ', user);
+      res.status(200).json(user);
     } catch (error) {
       console.log('failed to get user profile : ', error);
       responseError(res, error);

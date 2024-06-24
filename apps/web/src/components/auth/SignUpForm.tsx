@@ -7,6 +7,9 @@ import { Button } from '../Button';
 import { Label } from '../ui/label';
 import { Heading } from '../Heading';
 import { FcGoogle } from 'react-icons/fc';
+import useAuth from '@/hooks/useAuth';
+import { toast } from '../ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 interface SignUpFormProps {
   initialValues: any;
@@ -29,6 +32,30 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
   buttonLabel,
   linkHref,
 }) => {
+  const { signInGoogle, data } = useAuth();
+  const router = useRouter();
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log( "user data google signIn : " ,data.user);
+      
+      toast({
+        title: 'Succes login',
+        description: 'You will redirect to home page',
+        duration: 3000,
+      });
+      setTimeout(() => {
+        router.push('/'), 4000;
+      });
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title:"Something went wrong please try again!"
+      })
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Formik
@@ -40,7 +67,7 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
           <Form className="px-4 sm:px-0 md:px-0">
             <Card className="min-w-[370px] w-full">
               <CardHeader>
-                <Heading title={title} subtittle={subtitle} />
+                <Heading center title={title} subtittle={subtitle} />
               </CardHeader>
               <CardContent>
                 <div className="grid pt-4 gap-4">
@@ -61,12 +88,13 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
                     </div>
                   ))}
                   <Button type="submit" label={buttonLabel} />
+                  {/* <hr>or</hr> */}
                   <Button
                     type="button"
                     outline
                     label="Continue with Google"
                     icon={FcGoogle}
-                    onClick={() => console.log('Login with Google')}
+                    onClick={handleGoogleSignIn}
                   />
                 </div>
                 <div className="mt-4 text-center text-sm">

@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import SingUpForm from '@/components/auth/SignUpForm';
 import { registerAccount } from '@/lib/account';
+import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 
 const initialValues = {
   email: '',
@@ -21,13 +23,12 @@ const validationSchema = yup.object().shape({
 
 const UserSignup = () => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (values: any, actions: any) => {
-    console.log('Submitting values:', values);
     try {
       const response = await registerAccount(values, 'users');
-      console.log('Successfully registered:', response);
-      // Redirect on success
+      
       router.push('/welcome');
     } catch (error: any) {
       console.error('Failed to register account:', error);
@@ -42,7 +43,7 @@ const UserSignup = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         title="Register as Traveller"
-        subtitle="Create a new account"
+        subtitle="Enter your information to create an account"
         fields={[
           {
             name: 'name',
@@ -58,7 +59,7 @@ const UserSignup = () => {
           },
         ]}
         onSubmit={handleSubmit}
-        buttonLabel="Register"
+        buttonLabel="Create an account"
         linkHref="/login/user"
       />
     </div>

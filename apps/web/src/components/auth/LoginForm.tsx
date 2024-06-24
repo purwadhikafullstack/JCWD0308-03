@@ -29,7 +29,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   googleLogin,
   linkHref,
 }) => {
-  // Define validation schema using Yup
   const validationSchema = yup.object().shape({
     email: yup.string().email('Invalid email'),
     password: yup.string().min(6, 'Password must be at least 6 characters').max(15, "Password can't be more than 15 characters"),
@@ -46,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <Form className="px-4 sm:px-0 md:px-0">
             <Card className="min-w-[370px] w-full">
               <CardHeader>
-                <Heading title={title} subtittle={subtitle} />
+                <Heading center title={title} subtittle={subtitle} />
               </CardHeader>
               <CardContent>
                 <div className="grid pt-4 gap-4">
@@ -88,7 +87,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                   </div>
                   <Button type="submit" label={buttonLabel} />
                   <Button
-                    type="button"
+                    type='button'
                     outline
                     label="Continue with Google"
                     icon={FcGoogle}
