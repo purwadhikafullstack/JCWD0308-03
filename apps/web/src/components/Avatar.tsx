@@ -8,7 +8,7 @@ export const Avatar = () => {
       height={30}
       width={30}
       alt="Avatar"
-      src="/images/placeholder.png"
+      src="/images/placeholder.png" 
     />
   );
 };
