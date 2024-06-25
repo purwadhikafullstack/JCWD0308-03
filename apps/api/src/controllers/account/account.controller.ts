@@ -22,6 +22,8 @@ export class AccountController {
           data: { password: hashPW },
         });
          return next();
+
+         
       } else if (req.user?.role === 'tenant') {
         const tenant = await prisma.tenant.update({
           where: { id: req.user?.id },

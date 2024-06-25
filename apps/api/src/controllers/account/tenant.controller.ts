@@ -20,22 +20,19 @@ export class TenantController {
     }
     async registerTenant(req: Request, res: Response) {
         try {
-         const {email, name} = req.body
+         const {email, name, phoneNumber} = req.body
 
          let existsUserEmail = await prisma.user.findUnique({where: {email: email}})
          let existsTenantEmail = await prisma.tenant.findUnique({where: {email: email}})
           
-         if (existsUserEmail?.isActive === false || existsTenantEmail?.isActive === false) {
-             return res.status(409).json({status: "error", message: "email already registered but not verifed"})}
-         if (existsUserEmail?.isActive === true || existsTenantEmail?.isActive === true) {
-             return res.status(409).json({status: "error", message: "email already registered"})}
+         if (existsUserEmail) return res.status(409).json({status: "error", message: "Email registered as Traveller please login as Traveller"})
+         if (existsTenantEmail?.isActive === false) return res.status(409).json({status: "error", message: "Email already registered but not verifed, please check your email for verification"})
+         if (existsTenantEmail?.isActive === true) return res.status(409).json({status: "error", message: "Email already registered, please login"})
 
-         const createTenant = await prisma.tenant.create({data: {name, email}})
-
+         const createTenant = await prisma.tenant.create({data: {phoneNumber, name, email}})
          const payload = { id : createTenant.id, role : createTenant.role }
          const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1h"})
          const link = `http://localhost:3000/verify/${token}`
-
          const templatePath = path.join(__dirname, "../../templates" ,"registerUser.html" )
          const templateSource = fs.readFileSync(templatePath, "utf-8")
          const compiledTemplate = Handlebars.compile(templateSource)
@@ -59,15 +56,20 @@ export class TenantController {
     async loginTenant(req: Request, res: Response) {
         try {
             const {email, password} = req.body
+            if(email && password == null|| password == undefined || password == "" ) return res.status(400).json({status: "error", message: "Please enter your password"})
+            if (password && email === null || email === undefined || email === "") return res.status(400).json({status: "error", message: "Please enter your email"})
         
             const tenant = await prisma.tenant.findUnique({where: {email: email}})
-            if (!tenant) return res.status(404).json({status: "error", message: "tenant not found"})
-            if (tenant?.isActive === false) return res.status(403).json({status: "error", message: "tenant not verified"})
+            const emailUser = await prisma.user.findUnique({where: {email: email}})
 
+            if(emailUser) return res.status(409).json({status: "error", message: "email registered as Traveller, please login as Traveller"})
+            if (!tenant) return res.status(404).json({status: "error", message: "Email not registered"})
+            if (tenant?.isActive === false) return res.status(403).json({status: "error", message: "Email not verified, please check your email for verification"})
+            
             const match = await compare(password, tenant.password!)
-            if (!match) return res.status(401).json({status: "error", message: "wrong password"})
+            if (!match) return res.status(401).json({status: "error", message: "Wrong password, please try again"})
 
-            const payload = { id : tenant.id, role : tenant.role }
+            const payload = { id : tenant.id, role : tenant.role, name: tenant.name }
             const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1d"})
             console.log("tenant login : " , tenant);
             console.log("tenant token : " , token);
