@@ -1,55 +1,54 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { calculateNumberOfDays, calculateTotalPrice } from '@/helpers/responseError';
+import { calculateNumberOfDays, calculateTotalPrice, } from '@/services/reservation.service';
+
 const prisma = new PrismaClient();
 export class UserTransaction {
   // Create a new reservation
   async createReservation(req: Request, res: Response) {
     try {
-      const { propertyId, userId, roomId, startDate, endDate } =
-        req.body;
-      const room = await prisma.room.findUnique({where: {id: roomId}});
-      if (!room) { return res.status(404).json({message: 'Room not found'}) }
-      const numberOfDays = calculateNumberOfDays(startDate, endDate);
+      const { propertyId, userId, roomId, date } = req.body;
+      const room = await prisma.room.findUnique({ where: { id: +roomId } });
+      if (!room) {
+        return res.status(404).json({ message: 'Room not found' })}
+      const numberOfDays = calculateNumberOfDays(date.from, date.to);
       const totalPrice = calculateTotalPrice(numberOfDays, room.price);
       const reservation = await prisma.reservation.create({
         data: {
-          propertyId,
-          userId,
-          roomId,
-          startDate: new Date(startDate),
-          endDate: new Date(endDate),
+          propertyId: +propertyId,
+          userId: +userId,
+          roomId: +roomId,
+          startDate: new Date(date.from),
+          endDate: new Date(date.to),
           price: totalPrice,
           status: 'Pending', // Assuming default status
         },
       });
-      res.status(201).json(reservation);
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  }
-  // Upload payment proof
-  async uploadPaymentProof(req: Request, res: Response) {
-    const { reservationId, paymentProof } = req.body;
-    try {
-      // Retrieve the payment associated with the reservation
-      const payment = await prisma.payment.findFirst({
-        where: { reservationId },
-      });
-      if (!payment) {
-        return res
-          .status(404)
-          .json({ message: 'Payment not found for this reservation.' });
-      }
-      // Update the payment proof
-      const updatedPayment = await prisma.payment.update({
-        where: { id: payment.id },
-        data: {
-          proof: paymentProof,
-          status: 'Confirmed', // Update status after payment proof is uploaded
+      let data = {
+        transaction_details: {
+          order_id: reservation.id.toString(),
+          gross_amount: totalPrice,
         },
+        expiry: {
+          unit: 'minutes',
+          duration: 10,
+        },
+      };
+      const secret = process.env.MIDTRANS_PUBLIC_SECRET as string;
+      const encededSecret = Buffer.from(secret).toString('base64');
+      const basicAuth = `Basic ${encededSecret}`;
+      const response = await fetch(`${process.env.MIDTRANS_PUBLIC_API}`, {
+        method: 'POST',
+        headers: {
+          'Access-Control-Allow-Origin': 'true',
+          "Accept": 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': basicAuth,
+        },
+        body: JSON.stringify(data),
       });
-      res.status(200).json(updatedPayment);
+      const paymentLink = await response.json();
+      res.status(201).json(paymentLink);
     } catch (error) {
       res.status(500).json({ error });
     }
@@ -76,6 +75,23 @@ export class UserTransaction {
         data: { status: 'Cancelled' },
       });
       res.status(200).json(canceledReservation);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+  // Get transaction status
+  async getTransactionStatus(req: Request, res: Response) {
+    try {
+      if (req.body.transaction_status === 'settlement') {
+        const updatedReservation = await prisma.reservation.update({
+          where: { id: req.body.order_id },
+          data: { status: 'Confirmed' },
+        });
+        res.status(200).json(updatedReservation);
+      }
+      else if (req.body.transaction_status === 'pending') {
+          return
+      }
     } catch (error) {
       res.status(500).json({ error });
     }

@@ -5,6 +5,7 @@ const nextConfig = {
       'akcdn.detik.net.id',
       'assets.promediateknologi.id',
       'tourbandung.id',
+      'images.unsplash.com',
     ],
   },
 };

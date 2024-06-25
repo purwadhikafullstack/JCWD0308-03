@@ -1,14 +1,21 @@
 'use client'
 import { useState } from 'react';
 import { DatePickerWithRange } from './calendar';
+import { DateRange } from 'react-day-picker';
+import { addDays } from 'date-fns';
+import { useRouter } from 'next/navigation';
 
 export default function ReservationForm() {
-  const [propertyId, setPropertyId] = useState('');
-  const [userId, setUserId] = useState('');
-  const [roomId, setRoomId] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 20),
+  })
+  const [propertyId, setPropertyId] = useState('1');
+  const [userId, setUserId] = useState('1');
+  const [roomId, setRoomId] = useState('1');
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -18,40 +25,39 @@ export default function ReservationForm() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          propertyId,
+          propertyId ,
           userId,
           roomId,
-          startDate,
-          endDate
+          date
         })
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to create reservation');
-      }
-      const responseData = await response.json();
-      console.log('Server response:', responseData);
-
-      if (!response.ok) {
-        throw new Error('Failed to create reservation');
-      }
-      if (responseData.success) {
-        alert('Reservation created successfully');
-      } else {
-        alert('Failed to create reservation');
-      }
+      const result = await response.json();
+      const paymentLink = result.redirect_url;
+      router.push(paymentLink)
+      // if (!response.ok) {
+      //   throw new Error('Failed to create reservation');
+      // }
+      // const responseData = await response.json();
+      // console.log('Server response:', responseData);
+      // if (!response.ok) {
+      //   throw new Error('Failed to create reservation');
+      // }
+      // if (responseData.success) {
+      //   alert('Reservation created successfully');
+      // } else {
+      //   alert('Failed to create reservation');
+      // }
     } catch (error) {
       console.error('Failed to create reservation:', error);
     }
   }
-
   return (
       <div className='form'>
         <form onSubmit={handleSubmit}>
             <div className="card shadow-md text-black p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
               <div className="flex flex-col justify-between mb-4 gap-5">
-               <DatePickerWithRange />
+              <DatePickerWithRange date={date} setDate={setDate} />
               </div>
             </div>
             <div className="card shadow-md text-black p-6">
