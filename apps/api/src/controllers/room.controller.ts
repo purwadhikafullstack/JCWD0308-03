@@ -5,7 +5,7 @@ import { responseError } from "@/helpers/responseError";
 export class RoomController {
     async getRooms(req: Request, res: Response) {
         try {
-            const { propertyId } = req.query;
+            const { propertyId } = req.params;
             const rooms = await prisma.room.findMany({
                 where: { propertyId: Number(propertyId) },
                 include: {

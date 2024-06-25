@@ -95,7 +95,7 @@ model Tenant {
   name        String?
   email       String     @unique
   password    String?
-  phoneNumber Int
+  phoneNumber String
   profile     String?    @db.LongText
   isActive    Boolean    @default(false)
   role        String     @default("tenant")

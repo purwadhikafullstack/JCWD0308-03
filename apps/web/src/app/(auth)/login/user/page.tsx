@@ -4,16 +4,12 @@ import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
 import { loginAccount } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
-import { Toaster } from '@/components/ui/toaster';
-import { ToastProvider } from '@/components/ui/toast';
-import useAuth from '@/hooks/useAuth';
 
 const UserLoginPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  const { signInGoogle, data } = useAuth();
 
   if (loading) {
     return <div>loading... </div>;
@@ -23,7 +19,6 @@ const UserLoginPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await loginAccount(values, 'users');
-      // console.log("RES  : " , res);
       if (res.status === 'ok') {
         toast({
           title: 'Login successful',
@@ -55,38 +50,15 @@ const UserLoginPage: React.FC = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInGoogle();
-      console.log( "user data google signIn : " ,data.user);
-      
-      toast({
-        title: 'Succes login',
-        description: 'You will redirect to home page',
-        duration: 3000,
-      });
-      setTimeout(() => {
-        router.push('/'), 4000;
-      });
-    } catch (error) {
-      console.log('erorr signIn with google : ', error);
-      toast({
-        title:"Something went wrong please try again!"
-      })
-    }
-  }
 
-  const initialValues = { email: '', password: '' };
 
   return (
     <LoginForm
-      initialValues={initialValues}
       title="Login as Traveller"
       subtitle="Enter your email below to login to your account"
       onSubmit={handleSubmit}
       buttonLabel="Login"
       forgotPasswordHref="#"
-      googleLogin={handleGoogleSignIn}
       linkHref="/signup/user"
     />
   );

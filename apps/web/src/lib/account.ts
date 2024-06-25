@@ -12,15 +12,6 @@ export const registerAccount = async (data: any, role: string) => {
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Failed to register account:', {
-        status: response.status,
-        statusText: response.statusText,
-        data: errorData,
-      });
-      throw new Error('Failed to register account');
-    }
 
     const responseData = await response.json();
     console.log('registered account : ', responseData);

@@ -7,32 +7,66 @@ import { Button } from '../Button';
 import { Label } from '../ui/label';
 import { Heading } from '../Heading';
 import { FcGoogle } from 'react-icons/fc';
+import useAuth from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { toast } from '../ui/use-toast';
+import { useState } from 'react';
+import { IoEyeOffOutline } from 'react-icons/io5';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
 interface LoginFormProps {
-  initialValues: any;
   title: string;
   subtitle: string;
   onSubmit: (values: any, actions: any) => void;
   buttonLabel: string;
   forgotPasswordHref: string;
-  googleLogin: () => void;
   linkHref: string;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  initialValues,
   title,
   subtitle,
   onSubmit,
   buttonLabel,
   forgotPasswordHref,
-  googleLogin,
   linkHref,
 }) => {
+
+  const initialValues = {email: '', password: ''};
   const validationSchema = yup.object().shape({
     email: yup.string().email('Invalid email'),
-    password: yup.string().min(6, 'Password must be at least 6 characters').max(15, "Password can't be more than 15 characters"),
+    password: yup
+      .string()
+      .min(6, 'Password must be at least 6 characters')
+      .max(15, "Password can't be more than 15 characters"),
   });
+
+  const { signInGoogle, data } = useAuth();
+  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log('user data google signIn : ', data.user); 
+
+      toast({
+        title: 'Succes login',
+        description : 'You will redirect to home page',
+        duration: 3000,
+      });
+      setTimeout(() => {router.push('/')}, 3500)
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title: 'Something went wrong please try again!'
+      })
+    }
+  }
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -72,13 +106,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       >
                         Forgot your password?
                       </Link>
+                    </div><div className="relative">
+                      <Field
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        className="p-2 border border-gray-300 rounded w-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={toggleShowPassword}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                      >
+                        {showPassword ? <MdOutlineRemoveRedEye size={20} /> : <IoEyeOffOutline size={20} /> }
+                      </button>
                     </div>
-                    <Field
-                      name="password"
-                      type="password"
-                      placeholder="••••••••"
-                      className="p-2 border border-gray-300 rounded"
-                    />
                     <ErrorMessage
                       name="password"
                       component="div"
@@ -86,12 +128,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     />
                   </div>
                   <Button type="submit" label={buttonLabel} />
+                  <div className="relative flex py-1 items-center">
+                    <div className="flex-grow border-t border-gray-400"></div>
+                    <span className="flex-shrink mx-4 text-gray-400">or</span>
+                    <div className="flex-grow border-t border-gray-400"></div>
+                  </div>
                   <Button
-                    type='button'
+                    type="button"
                     outline
                     label="Continue with Google"
                     icon={FcGoogle}
-                    onClick={googleLogin}
+                    onClick={handleGoogleSignIn}
                   />
                 </div>
                 <div className="mt-4 text-center text-sm">

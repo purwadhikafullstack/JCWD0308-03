@@ -1,34 +1,64 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
+import { loginAccount } from '@/lib/account';
+import { useToast } from '@/components/ui/use-toast';
 
 const TenantLoginPage: React.FC = () => {
   const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values: any, actions: any) => {
-    // Handle tenant login logic
-    console.log('Tenant login form submitted', values);
-    // router.push('/tenant-dashboard');
-    actions.setSubmitting(false);
+
+  if (loading) {
+    return <div>loading... </div>;
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    try {
+      setLoading(true);
+      const res = await loginAccount(values, 'tenants');
+      if (res.status === 'ok') {
+        toast({
+          title: 'Login successful',
+          description: 'You have successfully logged in.',
+          duration: 3000,
+        });
+        router.push('/');
+      } else {
+        toast({
+          title: 'Login failed',
+          description: res.message,
+          duration: 5000,
+        });
+      }
+
+      if (
+        res.message ==
+        'Email not registered, please register an account first, you will redirect to register page'
+      ) {
+        setTimeout(() => {
+          router.push('/signup/user');
+        }, 6000);
+      }
+    } catch (error: any) {
+      console.log('login error : ', error);
+    } finally {
+      setLoading(false);
+      actions.resetForm();
+    }
   };
 
-  const handleGoogleLogin = () => {
-    // Handle Google login logic
-    console.log('Continue with Google');
-  };
 
-  const initialValues = { email: '', password: '' };
 
   return (
     <LoginForm
-      initialValues={initialValues}
       title="Login as Tenant"
-      subtitle="Enter your email below to login to your tenant account"
+      subtitle="Enter your email below to login to your account"
       onSubmit={handleSubmit}
-      buttonLabel="Submit"
+      buttonLabel="Login"
       forgotPasswordHref="#"
-      googleLogin={handleGoogleLogin}
       linkHref="/signup/tenant"
     />
   );

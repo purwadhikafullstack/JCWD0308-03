@@ -12,26 +12,30 @@ import { toast } from '../ui/use-toast';
 import { useRouter } from 'next/navigation';
 
 interface SignUpFormProps {
-  initialValues: any;
-  validationSchema: yup.ObjectSchema<any>;
   title: string;
   subtitle: string;
   fields: { name: string; label: string; type: string; placeholder: string }[];
   onSubmit: (values: any, actions: any) => void;
   buttonLabel: string;
   linkHref: string;
+  initialValues: any;
 }
 
 const SingUpForm: React.FC<SignUpFormProps> = ({
-  initialValues,
-  validationSchema,
   title,
   subtitle,
   fields,
   onSubmit,
   buttonLabel,
   linkHref,
+  initialValues
 }) => {
+  const validationSchema = yup.object().shape({
+    name: yup.string().min(3, 'Name must be at least 3 characters').max(50, 'Name must be less than 50 characters'),
+    email: yup.string().email('Invalid email'),
+    phoneNumber : yup.string().min(10, 'Invalid phone number'),
+  })
+
   const { signInGoogle, data } = useAuth();
   const router = useRouter();
 
@@ -46,7 +50,7 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
         duration: 3000,
       });
       setTimeout(() => {
-        router.push('/'), 4000;
+        router.push('/'), 3500
       });
     } catch (error) {
       console.log('erorr signIn with google : ', error);
@@ -88,7 +92,11 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
                     </div>
                   ))}
                   <Button type="submit" label={buttonLabel} />
-                  {/* <hr>or</hr> */}
+                  <div className="relative flex  items-center">
+                    <div className="flex-grow border-t border-gray-400"></div>
+                    <span className="flex-shrink mx-4 text-gray-400">or</span>
+                    <div className="flex-grow border-t border-gray-400"></div>
+                  </div>
                   <Button
                     type="button"
                     outline

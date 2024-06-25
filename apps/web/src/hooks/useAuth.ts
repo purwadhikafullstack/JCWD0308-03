@@ -17,7 +17,7 @@ export default function useAuth() {
 
         if (token && user) {
           setData({ token, user });
-          createToken(token)
+          createToken(token);
         }
 
         // console.log("data : " , data.user);
