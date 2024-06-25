@@ -14,10 +14,10 @@ export class UserTransactionRouter {
         this.initializeRoutes()
     }
     private initializeRoutes(): void{
-        this.router.get('/users/:userId/reservations' ,this.userTransaction.getUserReservations)
-        this.router.post('/reservation' ,this.userTransaction.createReservation)
-        this.router.patch('/reservation/:reservationId/upload-proof', this.userTransaction.uploadPaymentProof)
+        this.router.get('/users/:userId/reservations', this.userTransaction.getUserReservations)
+        this.router.post('/reservation' , this.userTransaction.createReservation)
         this.router.patch('/reservations/:reservationId/cancel', this.userTransaction.cancelReservation)
+        this.router.post('/status', this.userTransaction.getTransactionStatus)
     }
     getRouter() {
         return this.router
