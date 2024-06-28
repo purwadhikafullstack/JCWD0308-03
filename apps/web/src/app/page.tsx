@@ -16,7 +16,12 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 
 export default async function Home() {
-  // const properties = await getProperties();
+  const properties = await getProperties();
+  console.log("get rooms : " , properties[0].rooms[0].type);
+  // console.log("get reviews : " , properties[1].reviews);
+  // console.log("get tenants : " , properties[1].Reservation);
+  console.log("get property pict : " , properties[0].PropertyPicture[0].url);
+  // const pict = properties[0].PropertyPicture[1].url;
 
   const isEmpty = false;
   if (isEmpty) {
@@ -29,20 +34,20 @@ export default async function Home() {
         <HeroSection />
         <Categories />
         <div className="pt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-          {/* {properties.map((property: any) => {
+          {properties.map((property: any) => {
             return (
               <PropertyCard
                 key={property.id}
                 name={property.name}
                 description={property.description}
                 category={property.category}
-                pictures={property.pictures}
+                pictures={'/'}
               />
             );
-          })} */}
+          })}
         </div>
 
-        <Carousel className="w-full max-w-xs">
+        {/* <Carousel className="w-full max-w-xs">
           <CarouselContent>
             {Array.from({ length: 5 }).map((_, index) => (
               <CarouselItem key={index}>
@@ -60,7 +65,7 @@ export default async function Home() {
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
-        </Carousel>
+        </Carousel> */}
       </Wrapper>
     </div>
   );

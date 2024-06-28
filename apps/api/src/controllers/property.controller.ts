@@ -19,6 +19,7 @@ export class PropertyController {
           reviews: true,
           Tenant: true,
           Reservation: true,
+          PropertyPicture: true,
         },
       });
       res.status(200).json(properties);
@@ -31,7 +32,7 @@ export class PropertyController {
   async createProperty(req: Request, res: Response) {
     try {
       const { name, location, description, category } = req.body;
-      if (!name || !location || !description || !category ) {
+      if (!name || !location || !description || !category) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
@@ -41,7 +42,7 @@ export class PropertyController {
           location,
           description,
           category,
-          tenantId : 1
+          tenantId: Number(req.user?.id),
         },
       });
       res.status(201).json(createdProperty);
@@ -53,7 +54,7 @@ export class PropertyController {
 
   async getPropertyById(req: Request, res: Response) {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
       const property = await prisma.property.findUnique({
         where: {
           id: Number(id),
@@ -104,7 +105,7 @@ export class PropertyController {
 
   async deleteProperty(req: Request, res: Response) {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
       const deletedProperty = await prisma.property.delete({
         where: {
           id: Number(id),
@@ -120,4 +121,31 @@ export class PropertyController {
       responseError(res, error);
     }
   }
+
+  // upload images at table propertyPicture
+  // async uploadPropertyImages(req: Request, res: Response) {
+  //   try {
+  //     const files  = req.files as Express.Multer.File[]
+  //     const {id} = req.params
+  //     const numId = +id
+  //     if (!files || files.length === 0) return res.status(404).send({ status: 'error', message: 'file not found' });
+
+  //     const images = files.map((file) => {
+  //       url : `http:localhost:8000/public/images/${file.filename}`
+  //       propertyId : numId
+  //     })
+
+  //     const uploadImgs = await prisma.propertyPicture.createMany({
+  //       data: images,
+
+  //     })
+  //     console.log('uploadImgs : ', images);
+      
+
+  //     res.status(200).send({ status: 'ok', message: 'success upload property image', uploadImgs });
+  //   } catch (error) {
+  //     console.log('failed to upload property image : ', error);
+  //     responseError(res, error);
+  //   }
+  // }
 }

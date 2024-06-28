@@ -19,7 +19,6 @@ export const UserMenu = () => {
   const user = useAppSelector((state) => state.user);
   const token = Cookies.get('token');
   
-  const [session, setSession] = useState(null);
   const { data } = useAuth();
   console.log('data socialLogin : ', data);
 
@@ -45,7 +44,6 @@ export const UserMenu = () => {
   const onLogout = () => {
     deleteToken('token');
     Cookies.remove('token');
-    setSession(null);
     dispatch(clearUser());
   };
 
@@ -53,7 +51,6 @@ export const UserMenu = () => {
     if (token) {
       try {
         const fetchUser = await getUser(token);
-        setSession(fetchUser);
         dispatch(setUser(fetchUser));
         console.log('fetchUser : ', fetchUser);
         
@@ -68,7 +65,6 @@ export const UserMenu = () => {
     getSession();
   }, [getSession]);
   
-  console.log("session useState :" , session);
   console.log('store redux user : ', user.value);
   return (
     <div className="relative">

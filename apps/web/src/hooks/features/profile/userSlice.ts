@@ -16,7 +16,12 @@ export interface UserSlice {
 const getUserFromLocalStorage = () => {
   if (typeof window !== 'undefined') {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    try {
+      return user ? JSON.parse(user) : null;
+    } catch (e) {
+      console.error('Error parsing user from localStorage:', e);
+      return null;
+    }
   }
   return null;
 };

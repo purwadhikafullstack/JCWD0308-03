@@ -2,10 +2,20 @@ import axios from 'axios';
 import React from 'react';
 
 const getProperties = async () => {
-  const data = await axios.get(`http://localhost:8000/api/properties`);
+  try {
+    const response = await fetch(`http://localhost:8000/api/properties`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
 
-//   console.log(data.data.properties);
-  return data.data.properties;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
 
 export default getProperties;

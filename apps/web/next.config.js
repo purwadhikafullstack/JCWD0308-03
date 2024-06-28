@@ -21,6 +21,10 @@ const nextConfig = {
         hostname: 'tourbandung.id',
       },
       {
+        protocol: 'https',
+        hostname: 'asset-a.grid.id',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
