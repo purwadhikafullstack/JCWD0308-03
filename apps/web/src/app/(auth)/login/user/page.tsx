@@ -1,15 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
 import { loginAccount } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/useAuth';
+import { useAppDispatch, useAppSelector } from '@/hooks/hooks';
+import { setUser } from '@/hooks/features/profile/userSlice';
 
 const UserLoginPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-
+  const { signInGoogle , data} = useAuth();
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.user) 
 
   if (loading) {
     return <div>loading... </div>;
@@ -19,7 +24,9 @@ const UserLoginPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await loginAccount(values, 'users');
+
       if (res.status === 'ok') {
+        
         toast({
           title: 'Login successful',
           description: 'You have successfully logged in.',
@@ -50,17 +57,38 @@ const UserLoginPage: React.FC = () => {
     }
   };
 
-
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log('user data google signIn : ', data);
+      toast({
+        title: 'Succes login',
+        description: 'You will redirect to home page',
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push('/');
+      }, 2500);
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title: 'Something went wrong please try again!',
+      });
+    }
+  };
 
   return (
-    <LoginForm
-      title="Login as Traveller"
-      subtitle="Enter your email below to login to your account"
-      onSubmit={handleSubmit}
-      buttonLabel="Login"
-      forgotPasswordHref="#"
-      linkHref="/signup/user"
-    />
+    <Suspense>
+      <LoginForm
+        title="Login as Traveller"
+        subtitle="Enter your email below to login to your account"
+        onSubmit={handleSubmit}
+        buttonLabel="Login"
+        forgotPasswordHref="#"
+        linkHref="/signup/user"
+        onClickGoogle={handleGoogleSignIn}
+      />
+    </Suspense>
   );
 };
 

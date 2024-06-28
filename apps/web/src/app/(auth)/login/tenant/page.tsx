@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
 import { loginAccount } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 const TenantLoginPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const { signInGoogle , data} = useAuth();
 
 
   if (loading) {
@@ -19,13 +21,16 @@ const TenantLoginPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await loginAccount(values, 'tenants');
+      console.log("res login tenant :"  , res);
+      
       if (res.status === 'ok') {
+        
         toast({
-          title: 'Login successful',
+          title: 'Login as tenant successful',
           description: 'You have successfully logged in.',
           duration: 3000,
         });
-        router.push('/');
+        setTimeout(() => {router.push('/')}, 3300) 
       } else {
         toast({
           title: 'Login failed',
@@ -43,14 +48,33 @@ const TenantLoginPage: React.FC = () => {
         }, 6000);
       }
     } catch (error: any) {
-      console.log('login error : ', error);
+      console.log('login tenant error : ', error);
+      alert();
     } finally {
       setLoading(false);
       actions.resetForm();
     }
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log('user data google signIn : ', data);
+      toast({
+        title: 'Succes login',
+        description: 'You will redirect to home page',
+        duration: 3000,
+      });
+      setTimeout(() => {
+        router.push('/');
+      }, 3500);
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title: 'Something went wrong please try again!',
+      });
+    }
   };
-
-
 
   return (
     <LoginForm
@@ -60,6 +84,7 @@ const TenantLoginPage: React.FC = () => {
       buttonLabel="Login"
       forgotPasswordHref="#"
       linkHref="/signup/tenant"
+      onClickGoogle={handleGoogleSignIn}
     />
   );
 };

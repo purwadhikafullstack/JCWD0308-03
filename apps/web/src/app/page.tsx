@@ -1,10 +1,8 @@
-import Search from '@/components/home/Search';
 import PropertyCard from '@/components/home/PropertyCard';
 import EmptyState from '@/components/EmptyState';
 import Wrapper from '@/components/wrapper';
 import getProperties from '@/lib/properties';
 import HeroSection from '@/components/home/HeroSection';
-import { useEffect, useState } from 'react';
 import Categories from '@/components/home/Categories';
 import {
   Carousel,

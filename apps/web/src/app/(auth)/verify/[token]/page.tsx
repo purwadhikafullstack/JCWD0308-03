@@ -1,77 +1,32 @@
-// 'use client';
-
-// import SingUpForm from '@/components/auth/SignUpForm';
-// import VerifyForm from '@/components/auth/verifyAccountForm';
-// import { VerifyEmail } from '@/lib/account';
-// import { useParams, useRouter } from 'next/navigation';
-// import * as yup from 'yup';
-
-// const VerifyPage = () => {
-//   const params = useParams();
-//   const router = useRouter()
-
-//   const handleVerify = async (values: any, actions: any) => {
-//     try {
-//       const token = params.token.toString();
-//       const result = await VerifyEmail(values, token, 'users');
-
-//       // console.log('result : ', result);
-//       alert('verify success');
-//       router.push('/login/user');
-//     } catch (error:any) {
-//       console.error('failed to verify email : ', error);
-//       alert('Verification failed: ' + error.message);
-//     }
-//     actions.resetForm();
-//   };
-
-//   return (
-//     <div>
-//       <VerifyForm
-//       title='Verify your Account'
-//       subtitle='Enter password and verify your account'
-//       fields={[
-//         {
-//           name: 'password',
-//           label: 'Password',
-//           type: 'password',
-//           placeholder: 'Enter your password',
-//         }
-//       ]}
-//       onSubmit={handleVerify}
-//       buttonLabel='Verify'
-//       linkHref='/login/user'
-//       />
-//     </div>
-//   );
-// };
-
-// export default VerifyPage;
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import VerifyForm from '@/components/auth/verifyAccountForm';
 import { VerifyEmail } from '@/lib/account';
 import { useParams, useRouter } from 'next/navigation';
-import * as yup from 'yup';
+import { useToast } from '@/components/ui/use-toast';
 
 const VerifyPage = () => {
   const params = useParams();
   const router = useRouter();
-  const [verificationError, setVerificationError] = useState('')
-
+  const [verificationError, setVerificationError] = useState('');
+  const { toast, dismiss } = useToast();
   const handleVerify = async (values: any, actions: any) => {
     try {
       const token = params.token.toString();
-      const response = await VerifyEmail(values, token, 'users');
+      const response = await VerifyEmail(values, token);
       if (response.status === 'ok') {
-      alert('Verification successful!');
-      router.push('/login/user');
+        toast({
+          title: 'Account verified successfully',
+          description: 'You will redirect to login page',
+          duration: 2500,
+        });
+        setTimeout(() => {
+          router.push('/login/user');
+        }, 3000);
       } else if (response.message === 'Email already verified') {
         setVerificationError('Email already verified');
       }
-
     } catch (error: any) {
       console.error(' failed:', error);
       if (error) {

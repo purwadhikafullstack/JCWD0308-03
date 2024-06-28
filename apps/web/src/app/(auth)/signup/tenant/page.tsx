@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import SingUpForm from '@/components/auth/SignUpForm';
 import { registerAccount } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 const TenantSignup = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const { signInGoogle, data } = useAuth();
 
   const handleSubmit = async (values: any, actions: any) => {
     try {
@@ -29,7 +31,7 @@ const TenantSignup = () => {
           duration: 3000,
         });
         setTimeout(() => {
-          router.push('/login/user');
+          router.push('/login/tenant');
         }, 3500);
       } else {
         toast({
@@ -40,8 +42,29 @@ const TenantSignup = () => {
       }
     } catch (error: any) {
       console.error('Failed to register account front :', error);
+      return error
     }
     actions.resetForm();
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log('user data google signIn : ', data);
+      toast({
+        title: 'Succes login',
+        description: 'You will redirect to home page',
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push('/');
+      }, 2500);
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title: 'Something went wrong please try again!',
+      });
+    }
   };
 
   return (
@@ -73,6 +96,7 @@ const TenantSignup = () => {
         onSubmit={handleSubmit}
         buttonLabel="Create an account"
         linkHref="/login/user"
+        onClickGoogle={handleGoogleSignIn}
       />
     </div>
   );
