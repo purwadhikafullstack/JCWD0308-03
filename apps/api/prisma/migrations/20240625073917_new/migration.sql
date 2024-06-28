@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE `tenant` ADD COLUMN `phoneNumber` INTEGER NOT NULL;
+ALTER TABLE `Tenant` ADD COLUMN `phoneNumber` VARCHAR(191) NOT NULL;

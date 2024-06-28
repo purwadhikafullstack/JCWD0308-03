@@ -4,10 +4,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export class TenantManagement {
     async getOrderList(req: Request, res: Response) {
-        const tenantId  = parseInt(req.params.tenantId);
+        const { id } = req.query;
         try {
             const orders = await prisma.reservation.findMany({
-                where: {Property: { tenantId }},
+                where: {Property: { id: +id!}},
                 include: {
                     user: true,
                     room: true,
@@ -18,17 +18,7 @@ export class TenantManagement {
             res.status(500).json({ error });
         }
     }
-    async confirmPayment(req: Request, res: Response) {
-        const { reservationId, status } = req.body;
-        try {
-            const updatedReservation = await prisma.reservation.update({
-                where: { id: reservationId },
-                data: { status },
-            });
-        } catch (error) {
-            
-        }
-    }
+
     async cancelReservation(req: Request, res: Response) {
         const { reservationId } = req.body;
         try {
