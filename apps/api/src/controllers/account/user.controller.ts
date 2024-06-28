@@ -84,22 +84,6 @@ export class UserController {
     }
   }
 
-  async getProfileById(req: Request, res: Response) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: req.user?.id },
-        include: { reviews: true, Reservation: true },
-      });
-      if (!user)
-      return res.status(404).json({ status: 'error', message: 'user not found' });
-
-      console.log('user : ', user);
-      res.status(200).json(user);
-    } catch (error) {
-      console.log('failed to get user profile : ', error);
-      responseError(res, error);
-    }
-  }
 
   async uploadProfileImage(req: Request, res: Response) {
     try {

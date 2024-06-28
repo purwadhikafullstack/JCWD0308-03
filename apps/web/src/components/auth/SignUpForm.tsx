@@ -19,6 +19,7 @@ interface SignUpFormProps {
   buttonLabel: string;
   linkHref: string;
   initialValues: any;
+  onClickGoogle: () => void;
 }
 
 const SingUpForm: React.FC<SignUpFormProps> = ({
@@ -28,7 +29,8 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
   onSubmit,
   buttonLabel,
   linkHref,
-  initialValues
+  initialValues,
+  onClickGoogle
 }) => {
   const validationSchema = yup.object().shape({
     name: yup.string().min(3, 'Name must be at least 3 characters').max(50, 'Name must be less than 50 characters'),
@@ -102,7 +104,7 @@ const SingUpForm: React.FC<SignUpFormProps> = ({
                     outline
                     label="Continue with Google"
                     icon={FcGoogle}
-                    onClick={handleGoogleSignIn}
+                    onClick={onClickGoogle}
                   />
                 </div>
                 <div className="mt-4 text-center text-sm">

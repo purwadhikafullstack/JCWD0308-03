@@ -15,7 +15,7 @@ const HeroSection = () => {
   return (
     <section
       className="bg-cover bg-center py-20 text-center text-white"
-      style={{ backgroundImage: "url('/path-to-your-hero-background.jpg')" }}
+      style={{ backgroundImage: "url('/')" }}
     >
       <div className="container mx-auto">
         <h1 className="text-4xl text-[#4a4a4a] font-bold mb-4">

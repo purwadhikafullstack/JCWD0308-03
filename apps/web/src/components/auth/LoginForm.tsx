@@ -7,12 +7,10 @@ import { Button } from '../Button';
 import { Label } from '../ui/label';
 import { Heading } from '../Heading';
 import { FcGoogle } from 'react-icons/fc';
-import useAuth from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { toast } from '../ui/use-toast';
 import { useState } from 'react';
 import { IoEyeOffOutline } from 'react-icons/io5';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { set } from 'cypress/types/lodash';
 
 interface LoginFormProps {
   title: string;
@@ -21,6 +19,7 @@ interface LoginFormProps {
   buttonLabel: string;
   forgotPasswordHref: string;
   linkHref: string;
+  onClickGoogle: () => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
@@ -30,6 +29,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   buttonLabel,
   forgotPasswordHref,
   linkHref,
+  onClickGoogle
 }) => {
 
   const initialValues = {email: '', password: ''};
@@ -41,32 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       .max(15, "Password can't be more than 15 characters"),
   });
 
-  const { signInGoogle, data } = useAuth();
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  }
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInGoogle();
-      console.log('user data google signIn : ', data.user); 
-
-      toast({
-        title: 'Succes login',
-        description : 'You will redirect to home page',
-        duration: 3000,
-      });
-      setTimeout(() => {router.push('/')}, 3500)
-    } catch (error) {
-      console.log('erorr signIn with google : ', error);
-      toast({
-        title: 'Something went wrong please try again!'
-      })
-    }
-  }
-
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -115,7 +90,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       />
                       <button
                         type="button"
-                        onClick={toggleShowPassword}
+                        onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       >
                         {showPassword ? <MdOutlineRemoveRedEye size={20} /> : <IoEyeOffOutline size={20} /> }
@@ -138,7 +113,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     outline
                     label="Continue with Google"
                     icon={FcGoogle}
-                    onClick={handleGoogleSignIn}
+                    onClick={onClickGoogle}
                   />
                 </div>
                 <div className="mt-4 text-center text-sm">

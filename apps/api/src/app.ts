@@ -26,6 +26,7 @@ export default class App {
     this.app.use(cors());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
+    this.app.use('/public', express.static("public"));
   }
 
   private handleError(): void {
@@ -58,7 +59,6 @@ export default class App {
     });
 
     this.app.use('/api', apiRouter.getRouter());
-    this.app.use('/public' , express.static(path.join(__dirname, '../public')))
   }
 
   public start(): void {

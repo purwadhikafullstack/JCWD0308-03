@@ -81,25 +81,12 @@ export class TenantController {
         }
     }
 
-    async getProfileById(req: Request, res: Response) {
-        try {
-            const tenant = await prisma.tenant.findUnique({where:{id: req.user?.id} , include: {properties: true}})
-            if (!tenant) return res.status(404).json({status: "error", message: "tenant not found"})
-            console.log("tenant profile : ", tenant);
-                
-            return res.status(200).send({status: "ok", tenant})
-        } catch (error) {
-            console.log("failed to get tenant profile : ", error);
-            responseError(res, error)
-        }
-    }
-
     async uploadProfileImage(req: Request, res: Response) {
         try {
             const {file} = req
             if(!file) return res.status(404).json({status: "error", message: "file not found"})
 
-            const imgUrl = `http://localhost:8000/public/images/${file.fieldname}`
+            const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
             await prisma.tenant.update({
                 where: {id: req.user?.id},
                 data: {profile: imgUrl}

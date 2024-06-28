@@ -30,8 +30,8 @@ export class PropertyController {
 
   async createProperty(req: Request, res: Response) {
     try {
-      const { name, location, description, category, pictures } = req.body;
-      if (!name || !location || !description || !category || !pictures) {
+      const { name, location, description, category } = req.body;
+      if (!name || !location || !description || !category ) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
@@ -41,7 +41,7 @@ export class PropertyController {
           location,
           description,
           category,
-          pictures,
+          tenantId : 1
         },
       });
       res.status(201).json(createdProperty);
@@ -79,7 +79,7 @@ export class PropertyController {
   async updateProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, description, category, pictures } = req.body;
+      const { name, description, category } = req.body;
       const updatedProperty = await prisma.property.update({
         where: {
           id: +id,
@@ -88,7 +88,6 @@ export class PropertyController {
           name,
           description,
           category,
-          pictures,
         },
       });
 

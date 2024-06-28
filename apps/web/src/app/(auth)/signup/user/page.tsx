@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import SingUpForm from '@/components/auth/SignUpForm';
 import { registerAccount } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 const UserSignup = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const {data, signInGoogle}= useAuth()
 
   const handleSubmit = async (values: any, actions: any) => {
     try {
@@ -39,6 +41,26 @@ const UserSignup = () => {
     actions.resetForm();
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      console.log('user data google signIn : ', data);
+      toast({
+        title: 'Succes login',
+        description: 'You will redirect to home page',
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push('/');
+      }, 2500);
+    } catch (error) {
+      console.log('erorr signIn with google : ', error);
+      toast({
+        title: 'Something went wrong please try again!',
+      });
+    }
+  };
+
   return (
     <div>
       <SingUpForm
@@ -62,6 +84,7 @@ const UserSignup = () => {
         onSubmit={handleSubmit}
         buttonLabel="Create an account"
         linkHref="/login/user"
+        onClickGoogle={handleGoogleSignIn}
       />
     </div>
   );

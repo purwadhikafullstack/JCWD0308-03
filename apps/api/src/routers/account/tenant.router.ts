@@ -27,10 +27,8 @@ export class TenantRouter{
     private initializeRoutes(): void {
         this.router.get("/", this.tenantController.getTenants)
         this.router.post("/", this.validatorMiddleware.validateRegister,this.tenantController.registerTenant)
-        this.router.patch('/verify' ,this.userMiddleware.verifyToken, this.validatorMiddleware.validateSetupAccount,this.accountController.setupAccount ,  this.accountController.verifyAccount)
         this.router.post("/login", this.tenantController.loginTenant )
-        this.router.patch('/profile' ,this.userMiddleware.verifyToken, this.validatorMiddleware.uploadImage,uploader("IMG", "/images").single("file"),  this.tenantController.uploadProfileImage)
-        this.router.get("/:id" , this.userMiddleware.verifyToken, this.tenantController.getProfileById)
+        this.router.patch('/profile' ,this.userMiddleware.verifyToken,uploader("IMG", "/images").single("file"),  this.tenantController.uploadProfileImage)
     }
 
     getRouter()  {
