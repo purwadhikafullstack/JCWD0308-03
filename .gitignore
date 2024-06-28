@@ -40,3 +40,4 @@ dist
 
 .env
 .env.development
+.package-lock.json

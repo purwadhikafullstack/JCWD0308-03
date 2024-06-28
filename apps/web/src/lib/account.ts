@@ -12,7 +12,6 @@ export const registerAccount = async (data: any, role: string) => {
       body: JSON.stringify(data),
     });
 
-
     const responseData = await response.json();
     console.log('registered account : ', responseData);
 
@@ -36,10 +35,10 @@ export const VerifyEmail = async (data: any, token: string) => {
 
     const res = await response.json();
     // console.log('data verify : ', res);
-    return res
+    return res;
   } catch (error) {
     console.log('failed to verify email : ', error);
-    return error
+    return error;
   }
 };
 
@@ -65,7 +64,7 @@ export const loginAccount = async (data: any, role: string) => {
   }
 };
 
-export const getUser = async (token:any) => {
+export const getUser = async (token: any) => {
   try {
     const response = await fetch(`http://localhost:8000/api/users/profile`, {
       method: 'GET',
@@ -82,7 +81,6 @@ export const getUser = async (token:any) => {
     return res;
   } catch (error) {
     console.error('Error fetching user:', error);
-    return null; 
+    return null;
   }
 };
-
