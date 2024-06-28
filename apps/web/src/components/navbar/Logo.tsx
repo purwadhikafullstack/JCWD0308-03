@@ -11,7 +11,8 @@ export const Logo = () => {
           alt="logo"
           width={100}
           height={100}
-          className="block cursor-pointer"
+          className="block cursor-pointer w-auto h-auto"
+          priority
         /> 
       </Link>
     </div>

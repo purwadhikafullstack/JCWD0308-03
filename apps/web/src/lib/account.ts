@@ -23,9 +23,9 @@ export const registerAccount = async (data: any, role: string) => {
   }
 };
 
-export const VerifyEmail = async (data: any, token: string, role: string) => {
+export const VerifyEmail = async (data: any, token: string) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/${role}/verify`, {
+    const response = await fetch(`http://localhost:8000/api/users/verify`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -36,9 +36,10 @@ export const VerifyEmail = async (data: any, token: string, role: string) => {
 
     const res = await response.json();
     // console.log('data verify : ', res);
-    return data;
+    return res
   } catch (error) {
     console.log('failed to verify email : ', error);
+    return error
   }
 };
 
@@ -52,11 +53,15 @@ export const loginAccount = async (data: any, role: string) => {
       },
     });
 
+    if (!response.ok) {
+      throw new Error('Failed to login');
+    }
     const res = await response.json();
     createToken(res.token);
     return res;
   } catch (error) {
     console.log('failed to login : ', error);
+    // return error
   }
 };
 
@@ -73,12 +78,11 @@ export const getUser = async (token:any) => {
     if (!response.ok) {
       throw new Error('Failed to fetch user');
     }
-
     const res = await response.json();
     return res;
   } catch (error) {
     console.error('Error fetching user:', error);
-    return null; // Return null on error
+    return null; 
   }
 };
 

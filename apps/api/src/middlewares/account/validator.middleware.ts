@@ -6,13 +6,13 @@ export class ValidatorMiddleware {
      validateRegister = [
         body('email').isEmail().withMessage('Invalid Email, please enter a valid email'),
         body('name').notEmpty().withMessage('Name is required'),
-        body('phoneNumber')
-        .notEmpty().withMessage('Phone number is required')
-        .matches(/^(?:\+62|0)[0-9\s\-]+$/).withMessage('Phone number must start with +62 or 0 and contain only digits, spaces, or hyphens')
-        .custom(value => {
-            const sanitizedValue = value.replace(/[\s\-]/g, '');
-            return sanitizedValue.length >= 10 && sanitizedValue.length <= 15;
-        }).withMessage('Phone number must be between 10 and 15 digits (excluding spaces and hyphens)'),
+        // body('phoneNumber')
+        // .notEmpty().withMessage('Phone number is required')
+        // .matches(/^(?:\+62|0)[0-9\s\-]+$/).withMessage('Phone number must start with +62 or 0 and contain only digits, spaces, or hyphens')
+        // .custom(value => {
+        //     const sanitizedValue = value.replace(/[\s\-]/g, '');
+        //     return sanitizedValue.length >= 10 && sanitizedValue.length <= 15;
+        // }).withMessage('Phone number must be between 10 and 15 digits (excluding spaces and hyphens)'),
 
 
         (req:Request, res:Response, next:NextFunction) => {

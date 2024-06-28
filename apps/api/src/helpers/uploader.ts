@@ -28,5 +28,5 @@ export const uploader = (filePrefix: string, folderName?: string) => {
       cb(null, newFileName);
     },
   });
-  return multer({ storage: storage });
+  return multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } });
 };

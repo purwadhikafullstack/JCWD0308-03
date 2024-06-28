@@ -12,16 +12,16 @@ import Wrapper from "@/components/wrapper"
 import { useState, useEffect } from "react"
 
 export default function Management() {
-  const [order, setOrder] = useState()
-  const getOrder = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}tenantManagements/order/?id=1`) // blum selaesai
-    const data = await res.json()
-    setOrder(data)
-  }
-  useEffect(() => {
-    getOrder()
-  }, [])
-console.log(order);
+//   const [order, setOrder] = useState()
+//   const getOrder = async () => {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}tenantManagements/order/?id=1`) // blum selaesai
+//     const data = await res.json()
+//     setOrder(data)
+//   }
+//   useEffect(() => {
+//     getOrder()
+//   }, [])
+// console.log(order);
 
   return (
     <Wrapper>

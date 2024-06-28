@@ -27,11 +27,14 @@ export class TenantRouter{
     private initializeRoutes(): void {
         this.router.get("/", this.tenantController.getTenants)
         this.router.post("/", this.validatorMiddleware.validateRegister,this.tenantController.registerTenant)
-        this.router.patch('/verify' ,this.userMiddleware.verifyToken, this.validatorMiddleware.validateSetupAccount,this.accountController.setupAccount ,  this.accountController.verifyAccount)
         this.router.post("/login", this.tenantController.loginTenant )
+<<<<<<< HEAD
         this.router.patch('/profile' ,this.userMiddleware.verifyToken, this.validatorMiddleware.uploadImage,uploader("IMG", "/images").single("file"),  this.tenantController.uploadProfileImage)
         this.router.get("/:id" , this.userMiddleware.verifyToken, this.tenantController.getProfileById)
         // this.router.get("/orderList/:id" , this.userMiddleware.verifyToken, this.tenantController.getOrderList)
+=======
+        this.router.patch('/profile' ,this.userMiddleware.verifyToken,uploader("IMG", "/images").single("file"),  this.tenantController.uploadProfileImage)
+>>>>>>> e1d29bfbc92f2783daf8fb225e744c8e213e2cbb
     }
 
     getRouter()  {

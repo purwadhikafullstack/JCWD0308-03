@@ -6,7 +6,13 @@ import { UserMenu } from './UserMenu';
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const hideNavbar = ['/login/tenant', '/signup/tenant', '/login/user', '/signup/user', '/verify'];
+  const hideNavbar = [
+    '/login/tenant',
+    '/signup/tenant',
+    '/login/user',
+    '/signup/user',
+    '/verify',
+  ];
 
   if (hideNavbar.includes(pathname)) {
     return null;
