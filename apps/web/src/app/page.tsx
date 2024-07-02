@@ -17,10 +17,10 @@ import { toast } from '@/components/ui/use-toast';
 
 export default async function Home() {
   const properties = await getProperties();
-  console.log("get rooms : " , properties[0].rooms[0].type);
+  // console.log("get rooms : " , properties[0].rooms[0].type);
   // console.log("get reviews : " , properties[1].reviews);
   // console.log("get tenants : " , properties[1].Reservation);
-  console.log("get property pict : " , properties[0].PropertyPicture[0].url);
+  // console.log("get property pict : " , properties[0].PropertyPicture[0].url);
   // const pict = properties[0].PropertyPicture[1].url;
 
   const isEmpty = false;
@@ -41,31 +41,11 @@ export default async function Home() {
                 name={property.name}
                 description={property.description}
                 category={property.category}
-                pictures={'/'}
+                pictures={'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
               />
             );
           })}
         </div>
-
-        {/* <Carousel className="w-full max-w-xs">
-          <CarouselContent>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-4xl font-semibold">
-                        {index + 1}
-                      </span>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel> */}
       </Wrapper>
     </div>
   );

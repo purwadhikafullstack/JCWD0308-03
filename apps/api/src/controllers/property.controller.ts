@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import prisma from '@/prisma';
 import { responseError } from '@/helpers/responseError';
 
@@ -29,23 +29,23 @@ export class PropertyController {
     }
   }
 
-  async createProperty(req: Request, res: Response) {
+  async createProperty(req: Request, res: Response,next:NextFunction) {
     try {
-      const { name, location, description, category } = req.body;
-      if (!name || !location || !description || !category) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
+      const { name, description, category,address } = req.body;
+      const { user } = req;
 
       const createdProperty = await prisma.property.create({
         data: {
+          ...req.body,
           name,
-          location,
           description,
           category,
-          tenantId: Number(req.user?.id),
-        },
+          address,
+          tenantId: Number(user?.id),
+        }
       });
-      res.status(201).json(createdProperty);
+      res.status(201).json({status: 'ok',createdProperty});
+      // next()
     } catch (error) {
       console.log('failed to create property', error);
       responseError(res, error);
@@ -57,7 +57,7 @@ export class PropertyController {
       const { id } = req.params;
       const property = await prisma.property.findUnique({
         where: {
-          id: Number(id),
+          id: +id,
         },
         include: {
           reviews: true,
@@ -69,7 +69,7 @@ export class PropertyController {
       if (property) {
         res.status(200).json(property);
       } else {
-        res.status(404).json({ message: 'Property not found' });
+        res.status(404).json({ error: 'Property not found' });
       }
     } catch (error) {
       console.log('failed to get property by id', error);
@@ -125,7 +125,7 @@ export class PropertyController {
   // upload images at table propertyPicture
   // async uploadPropertyImages(req: Request, res: Response) {
   //   try {
-  //     const files  = req.files as Express.Multer.File[]
+  //     const files  = req.files as Express.Multer.File[] 
   //     const {id} = req.params
   //     const numId = +id
   //     if (!files || files.length === 0) return res.status(404).send({ status: 'error', message: 'file not found' });
@@ -136,7 +136,7 @@ export class PropertyController {
   //     })
 
   //     const uploadImgs = await prisma.propertyPicture.createMany({
-  //       data: images,
+  //       data: images   
 
   //     })
   //     console.log('uploadImgs : ', images);
@@ -148,4 +148,5 @@ export class PropertyController {
   //     responseError(res, error);
   //   }
   // }
+
 }

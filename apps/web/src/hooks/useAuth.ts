@@ -7,6 +7,8 @@ import { createToken } from '@/app/action';
 import { useAppDispatch } from './hooks';
 import { setUser } from './features/profile/userSlice';
 import Cookies from 'js-cookie';
+import { useToast } from '@/components/ui/use-toast';
+import { result } from 'cypress/types/lodash';
 
 export default function useAuth() {
   const [data, setData] = useState<any>(null);
@@ -14,26 +16,28 @@ export default function useAuth() {
 
   async function signInGoogle() {
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
+    .then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const user = result.user;
 
-        if (token && user) {
-          setData({ token, user });
-          createToken(token);
-          Cookies.set('token', token);
-          dispatch(setUser(user));
-        }
+      if (token &&user) {
+        // createToken(token)
+        // dispatch(setUser(user))
+        setData({user, token})
+        console.log("data : ", data);
+        
+      }
 
-        console.log('data signInGoogle useAuth : ', user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
+    }).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      console.log(errorCode, errorMessage, email, credential);
+    });
   }
+  
   return { signInGoogle, data };
+
 }

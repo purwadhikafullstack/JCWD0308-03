@@ -12,10 +12,7 @@ export class UserMiddleware {
       req.user = verifyUser as User;
       next();
     } catch (error:any) {
-      if (error instanceof TokenExpiredError) {
-        return res.status(401).json({ status: 'error', message: 'Token expired' });
-      }
-      console.log('error verify token : ', error);
+      console.log('error verify token back : ', error);
       responseError(res, error);
     }
   }

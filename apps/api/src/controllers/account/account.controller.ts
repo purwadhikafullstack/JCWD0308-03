@@ -2,7 +2,6 @@ import prisma from '@/prisma';
 import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
 import { genSalt, hash } from 'bcrypt';
-import { error } from 'console';
 
 // controller for user & tenant
 export class AccountController {
@@ -40,33 +39,21 @@ export class AccountController {
   async verifyAccount(req: Request, res: Response) {
     try {
       const { user } = req;
-      if (!user)
-        return res
-          .status(401)
-          .json({ status: 'error', message: 'Unauthorized' });
+      if (!user) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+      const checkActive = await prisma.user.findUnique({where: { id: user.id }}) || await prisma.tenant.findUnique({where: { id: user.id }})
+      if (checkActive?.isActive) return res.status(400).json({ status: 'error', message: 'Account already verified' })
 
       if (user.role === 'user') {
-        if (user.isActive) {
-          return res
-            .status(400)
-            .json({ status: 'error', message: 'Account already verified' });
-        }
         const updatedUser = await prisma.user.update({
           where: { id: user.id },
           data: { isActive: true },
         });
-        console.log('User verified:', updatedUser);
         return res.status(200).json({ status: 'ok', data: updatedUser });
       } else if (user.role === 'tenant') {
-        if (user.isActive)
-          return res
-            .status(400)
-            .json({ status: 'error', message: 'Account already verified' });
         const updatedTenant = await prisma.tenant.update({
           where: { id: user.id },
           data: { isActive: true },
         });
-        console.log('Tenant verified:', updatedTenant);
         return res.status(200).json({ status: 'ok', data: updatedTenant });
       } else {
         return res.status(403).json({ status: 'error', message: 'Forbidden' });
@@ -107,6 +94,35 @@ export class AccountController {
       }
     } catch (error) {
       console.log('failed to get user profile : ', error);
+      responseError(res, error);
+    }
+  }
+
+  async uploadProfileImage(req: Request, res: Response) {
+    try {
+      const { file, user} = req
+      if (!file) return res.status(404).send({ status: 'error', message: 'file not found' });
+
+      const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
+
+      if (user?.role === 'user') {
+        await prisma.user.update({
+          where: { id: req.user?.id },
+          data: { profile: imgUrl },
+        })
+        res.status(200).send({ status: 'ok', message: 'success upload profile image' });
+      } else if (user?.role === 'tenant') {
+        await prisma.tenant.update({
+          where: { id: req.user?.id },
+          data: { profile: imgUrl },
+        })
+        res.status(200).send({ status: 'ok', message: 'success upload profile image' });
+      } else {
+        return res.status(403).send({ status: 'error', message: 'Forbidden' });
+      }
+
+    } catch (error) {
+      console.log('failed to upload profile image : ', error);
       responseError(res, error);
     }
   }
