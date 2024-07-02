@@ -21,6 +21,11 @@ type Property = {
   deletedAt: Date | null;
 };
 
+type Room = {
+  id: string
+  description : string
+}
+
 declare namespace Express {
   export interface Request {
     user?: User;
