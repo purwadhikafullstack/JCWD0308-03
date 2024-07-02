@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserTransactionRouter } from './transaction.routers';
+import { UserTransactionRouter } from './transaction/transaction.routers';
 import { PropertyRouter } from './property.router';
 import { UserRouter } from './account/user.router';
 import { TenantRouter } from './account/tenant.router';

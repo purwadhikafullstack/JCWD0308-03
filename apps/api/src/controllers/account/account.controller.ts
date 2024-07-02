@@ -35,7 +35,6 @@ export class AccountController {
       responseError(res, error);
     }
   }
-
   async verifyAccount(req: Request, res: Response) {
     try {
       const { user } = req;
@@ -63,7 +62,6 @@ export class AccountController {
       return responseError(res, error);
     }
   }
-
   async getProfileById(req: Request, res: Response) {
     try {
       const { user } = req;
@@ -97,14 +95,26 @@ export class AccountController {
       responseError(res, error);
     }
   }
-
+  async getAccountRole(req: Request, res: Response) {
+    try {
+      const role = req.user?.role
+      res.status(200).send({
+        status: 'ok',
+        message: 'type found',
+        role,
+      });
+    } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        error,
+      });
+    }
+  }
   async uploadProfileImage(req: Request, res: Response) {
     try {
       const { file, user} = req
       if (!file) return res.status(404).send({ status: 'error', message: 'file not found' });
-
       const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
-
       if (user?.role === 'user') {
         await prisma.user.update({
           where: { id: req.user?.id },
@@ -120,7 +130,6 @@ export class AccountController {
       } else {
         return res.status(403).send({ status: 'error', message: 'Forbidden' });
       }
-
     } catch (error) {
       console.log('failed to upload profile image : ', error);
       responseError(res, error);

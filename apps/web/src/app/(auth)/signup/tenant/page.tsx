@@ -10,7 +10,7 @@ import { Heading } from '@/components/Heading';
 const TenantSignup = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { signInGoogleTenant, data } = useAuth();
+  const { signInGoogle, data } = useAuth();
   const [loading, setLoading] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false)
   const handleSubmit = async (values: any, actions: any) => {
@@ -47,7 +47,7 @@ const TenantSignup = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signInGoogleTenant();
+      await signInGoogle();
       console.log('user data google signIn : ', data);
       toast({
         title: 'Succes login',
