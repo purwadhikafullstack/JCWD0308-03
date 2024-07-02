@@ -1,4 +1,4 @@
-import { Request, Response, response } from 'express';
+import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { calculateNumberOfDays, calculateTotalPrice, } from '@/services/reservation.service';
 

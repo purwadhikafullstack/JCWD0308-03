@@ -1,36 +1,37 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoginForm from '@/components/auth/LoginForm';
-import { loginAccount } from '@/lib/account';
+import { loginAccount, registerUserGoogle } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/useAuth';
+import { createToken } from '@/app/action';
+import { useAppDispatch, useAppSelector } from '@/hooks/hooks';
+import { setUser } from '@/hooks/features/profile/userSlice';
+import Cookies from 'js-cookie';
 
 const TenantLoginPage: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { signInGoogle , data} = useAuth();
-
-
-  if (loading) {
-    return <div>loading... </div>;
-  }
-
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.user);
   const handleSubmit = async (values: any, actions: any) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const res = await loginAccount(values, 'tenants');
       console.log("res login tenant :"  , res);
       
       if (res.status === 'ok') {
-        
+        dispatch(setUser(res.tenant))
+        console.log("tenant login :", user );
         toast({
-          title: 'Login as tenant successful',
-          description: 'You have successfully logged in.',
+          title: 'You succesfully login as tenant',
+          description: 'You will redirect to management page',
           duration: 3000,
         });
-        setTimeout(() => {router.push('/')}, 3300) 
+        setTimeout(() => {router.push('/tenant/management')}, 3500) 
       } else {
         toast({
           title: 'Login failed',
@@ -38,14 +39,13 @@ const TenantLoginPage: React.FC = () => {
           duration: 5000,
         });
       }
-
       if (
         res.message ==
         'Email not registered, please register an account first, you will redirect to register page'
       ) {
         setTimeout(() => {
           router.push('/signup/user');
-        }, 6000);
+        }, 5500);
       }
     } catch (error: any) {
       console.log('login tenant error : ', error);
@@ -56,25 +56,45 @@ const TenantLoginPage: React.FC = () => {
     }
   }
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInGoogle();
-      console.log('user data google signIn : ', data);
-      toast({
-        title: 'Succes login',
-        description: 'You will redirect to home page',
-        duration: 3000,
-      });
-      setTimeout(() => {
-        router.push('/');
-      }, 3500);
-    } catch (error) {
-      console.log('erorr signIn with google : ', error);
-      toast({
-        title: 'Something went wrong please try again!',
-      });
+  useEffect(() =>{
+    async function registerUserFromGoogle() {
+      const { user } = data
+      const userData = {name: user.displayName, email: user.email, profile: user.photoURL, phoneNumber: user.phoneNumber}
+
+      try {
+        const res = await registerUserGoogle(userData, 'tenants')
+        console.log("res register ggole tenant :"  , res);
+        dispatch(setUser(res.user))
+        if (res.status === 'ok') {
+          createToken(res.token)
+          Cookies.set('token', res.token)
+          toast({
+            title: 'You succesfully login as tenant',
+            description: 'You will redirect to management page',
+            duration: 3000,
+          })
+          setTimeout(() => {router.push('/tenant/management')}, 3500)
+        } else if (res.message === 'Account already registered as Traveller, please login as Traveller') {
+          toast({
+            title: 'Account already registered as Traveler, please login as Traveller',
+            description: 'You will redirect to login as traveler page',
+            duration: 3000,
+          })
+          setTimeout(() => {router.push('/login/user')}, 3500)
+        } else {
+          console.log('something went wrong: ', res);
+          toast({
+            title: 'Something went wrong please try again!',
+          })
+        }
+      } catch (error) {
+        toast({
+          title :"Something went wrong please try again!",
+        })
+      }
     }
-  };
+    if (data) registerUserFromGoogle()
+  } , [data, toast, router])
 
   return (
     <LoginForm
@@ -84,7 +104,8 @@ const TenantLoginPage: React.FC = () => {
       buttonLabel="Login"
       forgotPasswordHref="#"
       linkHref="/signup/tenant"
-      onClickGoogle={handleGoogleSignIn}
+      onClickGoogle={signInGoogle}
+      loading={loading}
     />
   );
 };

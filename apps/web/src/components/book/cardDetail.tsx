@@ -37,7 +37,7 @@ export default function CardDetail() {
             How to position your furniture for positivity
           </h3>
           <h3 className="mt-0.5 text-lg text-gray-900">
-            {/* Room Price: {room.price} */}
+            Room Price: {}
           </h3>
         </a>
       </div>

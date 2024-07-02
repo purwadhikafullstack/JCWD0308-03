@@ -4,6 +4,7 @@ import { DatePickerWithRange } from './calendar';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 
 export default function ReservationForm() {
   const [date, setDate] = useState<DateRange | undefined>({
@@ -13,8 +14,8 @@ export default function ReservationForm() {
   const [propertyId, setPropertyId] = useState('1');
   const [userId, setUserId] = useState('1');
   const [roomId, setRoomId] = useState('1');
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,19 +35,19 @@ export default function ReservationForm() {
       const result = await response.json();
       const paymentLink = result.redirect_url;
       router.push(paymentLink)
-      // if (!response.ok) {
-      //   throw new Error('Failed to create reservation');
-      // }
-      // const responseData = await response.json();
-      // console.log('Server response:', responseData);
-      // if (!response.ok) {
-      //   throw new Error('Failed to create reservation');
-      // }
-      // if (responseData.success) {
-      //   alert('Reservation created successfully');
-      // } else {
-      //   alert('Failed to create reservation');
-      // }
+      if (!response.ok) {
+        throw new Error('Failed to create reservation');
+      }
+      const responseData = await response.json();
+      console.log('Server response:', responseData);
+      if (!response.ok) {
+        throw new Error('Failed to create reservation');
+      }
+      if (responseData.success) {
+        alert('Reservation created successfully');
+      } else {
+        alert('Failed to create reservation');
+      }
     } catch (error) {
       console.error('Failed to create reservation:', error);
     }
@@ -58,15 +59,6 @@ export default function ReservationForm() {
               <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
               <div className="flex flex-col justify-between mb-4 gap-5">
               <DatePickerWithRange date={date} setDate={setDate} />
-              </div>
-            </div>
-            <div className="card shadow-md text-black p-6">
-              <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-              <div className="mb-4 ">
-                <select className="select bg-gray-400 select-bordered w-full">
-                  <option>Bank Transfer</option>
-                  <option>Gopay</option>
-                </select>
               </div>
             </div>
             <div className="mt-6 text-black">
@@ -85,7 +77,7 @@ export default function ReservationForm() {
                 </ul>
               </div>
             </div>
-            <button type="submit" className="btn bg-[#00a7c4] text-white mt-6 w-full">Reservasi</button>
+            <Button type="submit" variant="outline" className='btn bg-[#00a7c4] text-white mt-6 w-full'>Confirm and Pay</Button>
         </form>
     </div>
   );
