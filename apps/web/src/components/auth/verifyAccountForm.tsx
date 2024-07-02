@@ -15,7 +15,7 @@ interface VerifyFormProps {
   fields: { name: string; label: string; type: string; placeholder: string }[];
   onSubmit: (values: any, actions: any) => void;
   buttonLabel: string;
-  linkHref: string;
+  loading : boolean
 }
 
 const VerifyForm: React.FC<VerifyFormProps> = ({
@@ -24,7 +24,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
   fields,
   onSubmit,
   buttonLabel,
-  linkHref,
+  loading,
 }) => {
 
   const validationSchema = yup.object().shape({
@@ -50,7 +50,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
         onSubmit={onSubmit}
       >
         {() => (
-          <Form className="px-4 sm:px-0 md:px-0">
+          <Form className="px-4 sm:px-0 md:px-4">
             <Card className="min-w-[370px] w-full">
               <CardHeader>
                 <Heading center title={title} subtittle={subtitle} />
@@ -85,16 +85,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
                       />
                     </div>
                   ))}
-                  <Button type="submit" label={buttonLabel} />
-                </div>
-                <div className="mt-4 text-center text-sm">
-                  Expired token?{' '}
-                  <Link
-                    href={linkHref}
-                    className="underline hover:text-blue-500"
-                  >
-                    Resend email verification
-                  </Link>
+                  <Button type="submit" label={loading ? 'Waiting...' : buttonLabel} disabled={loading} />
                 </div>
               </CardContent>
             </Card>

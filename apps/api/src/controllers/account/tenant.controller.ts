@@ -32,7 +32,7 @@ export class TenantController {
          const createTenant = await prisma.tenant.create({data: {phoneNumber, name, email}})
          const payload = { id : createTenant.id, role : createTenant.role }
          const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1h"})
-         const link = `http://localhost:3000/verify/${token}`
+         const link = `http://localhost:3000/verify/tenant/${token}`
          const templatePath = path.join(__dirname, "../../templates" ,"registerUser.html" )
          const templateSource = fs.readFileSync(templatePath, "utf-8")
          const compiledTemplate = Handlebars.compile(templateSource)
@@ -52,7 +52,40 @@ export class TenantController {
             responseError(res, error)
         }
     }
-        
+
+    async resendEmailVerification(req: Request, res: Response) {
+        try {
+            const {email} = req.body
+            const tenant = await prisma.tenant.findUnique({where: {email: email}})
+            if(!tenant) return res.status(404).json({status: "error", message: "Email not registered"})
+            
+            const payload = { id : tenant.id, role : tenant.role }   
+            const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1h"})
+            const link = `http://localhost:3000/verify/tenant/${token}`
+
+            const templatePath = path.join(__dirname,'../../templates','registerUser.html');
+            const templateSource = fs.readFileSync(templatePath, 'utf-8');
+            const compiledTemplate = Handlebars.compile(templateSource);
+            const html = compiledTemplate({
+                name: tenant.name,
+                role: tenant.role,
+                link,
+            });
+
+            await transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to: tenant.email,
+                subject: 'Verify your account',
+                html: html,
+            })
+
+            return res.status(200).json({status: "ok", message: "suscess resend email verification", tenant, token})
+        } catch (error) {
+            console.log("failed to resend email verification :", error);
+            responseError(res, error)
+        }
+    }
+         
     async loginTenant(req: Request, res: Response) {
         try {
             const {email, password} = req.body
@@ -81,20 +114,35 @@ export class TenantController {
         }
     }
 
-    async uploadProfileImage(req: Request, res: Response) {
+    async signInGoogle(req: Request, res: Response) {
         try {
-            const {file} = req
-            if(!file) return res.status(404).json({status: "error", message: "file not found"})
+            const {email, name, profile, phoneNumber } = req.body
 
-            const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
-            await prisma.tenant.update({
-                where: {id: req.user?.id},
-                data: {profile: imgUrl}
+            let tenant = await prisma.tenant.findUnique({where: {email: email}})
+            const existsUserEmail = await prisma.user.findUnique({where: {email: email}})
+            if (existsUserEmail) return res.status(409).json({status: "error", message: "Account already registered as Traveller, please login as Traveller"})
+            
+            if (tenant) {
+                const payload = {id: tenant?.id, role: tenant?.role, name: tenant?.name}
+                const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1d"})
+                return res.status(200).json({status: "ok", tenant, token})
+            }
+
+            tenant = await prisma.tenant.create({
+                data: {
+                    name,
+                    email,
+                    profile ,
+                    phoneNumber,
+                    isActive: true,
+                    isSocialLogin: true
+                }
             })
-
-            res.status(200).json({status: "ok", message: "success upload tenant profile image" , imgUrl})
+            const payload = {id: tenant.id, role: tenant.role, name: tenant.name}
+            const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1d"})
+            res.status(200).json({status: "ok", tenant, token})
         } catch (error) {
-            console.log("failed to upload tenant profile image : ", error);
+            console.log("failed to sign in google tenant back : ", error);
             responseError(res, error)
         }
     }

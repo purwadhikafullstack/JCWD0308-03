@@ -24,14 +24,17 @@ export class UserRouter{
 
     private initializeRoutes(): void {
         this.router.get("/", this.userController.getUsers)
-        this.router.post("/", this.validatorMiddleware.validateRegister,this.userController.registerUser)
-        this.router.post("/login", this.userController.loginUser )
-        this.router.patch('/upload-profile' ,this.userMiddleware.verifyToken, this.validatorMiddleware.uploadImage,uploader("IMG", "/images").single("image"),  this.userController.uploadProfileImage)
-        
+        this.router.post("/", this.validatorMiddleware.validateRegisterUser,this.userController.registerUser)
+        this.router.post("/login", this.validatorMiddleware.validateLogin,this.userController.loginUser )
+        this.router.post('/signIn-with-google' , this.userController.singInGoogle)
+        this.router.post('/resend-verify', this.validatorMiddleware.validateEmail,this.userController.resendEmailVerification)
+        this.router.patch('/send-update-email', this.userMiddleware.verifyToken,this.userController.updateEmail)
+
         // account (user&tenant)
         this.router.patch('/verify' ,this.userMiddleware.verifyToken, this.validatorMiddleware.validateSetupAccount,this.accountController.setupAccount,  this.accountController.verifyAccount)
         this.router.get("/profile" , this.userMiddleware.verifyToken, this.accountController.getProfileById)
         this.router.get("/accountRole", this.userMiddleware.verifyToken, this.accountController.getAccountRole)
+        this.router.patch('/upload-profile' ,this.userMiddleware.verifyToken,uploader("IMG", "/images").single("image"),this.accountController.uploadProfileImage)
     }
     getRouter()  {
         return this.router

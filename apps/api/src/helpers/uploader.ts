@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import multer from 'multer';
-import path, { extname } from 'path';
+import path from 'path';
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
@@ -23,25 +23,10 @@ export const uploader = (filePrefix: string, folderName?: string) => {
       cb: FileNameCallback,
     ) => {
       const originalNameParts = file.originalname.split('.');
-      const fileExtension = originalNameParts[originalNameParts.length - 1];
+      const fileExtension = originalNameParts[originalNameParts.length - 1].toLowerCase();
       const newFileName = filePrefix + Date.now() + '.' + fileExtension;
       cb(null, newFileName);
     },
   });
-
-  const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    const allowedFileTypes = /jpeg|jpg|png|gif/;
-    const extname = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedFileTypes.test(file.mimetype);
-
-    if (extname && mimetype) {
-      cb(null, true)
-
-    }else { 
-      cb(new Error('File type not allowed. Only .jpg, .jpeg, .png, .gif files are allowed'))
-    }
-  }
-  
-
-  return multer({ storage: storage, fileFilter: fileFilter,limits: { fileSize: 10 * 1024 * 1024 } });
+  return multer({ storage: storage});
 };

@@ -9,23 +9,15 @@ import { openModal as openRegisterModal } from '../../hooks/signup/signupModalSl
 import Cookies from 'js-cookie';
 import { deleteToken } from '@/app/action';
 import { clearUser, setUser } from '@/hooks/features/profile/userSlice';
-import { getUser } from '@/lib/account';
-import useAuth from '@/hooks/useAuth';
 import { LogoutAlertDialog } from '../AlertDialog'; // Import the new component
+import { useRouter } from 'next/navigation';
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const user = useAppSelector((state) => state.user);
   const token = Cookies.get('token');
-  
-  const { data } = useAuth();
-  console.log('data socialLogin : ', data);
-
-  // useEffect(() => {
-  //   const token = Cookies.get('token');
-  //   if (token) setIsUserLogged(true);
-  // }, [user, dispatch]);
+  const router = useRouter();
+  const [profile, setProfile] = useState<any>({});
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen(!isMenuOpen);
@@ -44,28 +36,25 @@ export const UserMenu = () => {
   const onLogout = () => {
     deleteToken('token');
     Cookies.remove('token');
+    localStorage.setItem('logout', 'true'); // Set a flag indicating logout
     dispatch(clearUser());
+    router.push('/');
   };
 
-  const getSession = useCallback(async () => {
-    if (token) {
-      try {
-        const fetchUser = await getUser(token);
-        dispatch(setUser(fetchUser));
-        console.log('fetchUser : ', fetchUser);
-        
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        dispatch(clearUser());
-      }
-    }
-  }, [token, dispatch]);
-  
   useEffect(() => {
-    getSession();
-  }, [getSession]);
-  
-  console.log('store redux user : ', user.value);
+    const userInfo = localStorage.getItem('user');
+    if (userInfo) {
+      setProfile(JSON.parse(userInfo));
+    } else {
+      setProfile({});
+    }
+    
+    if (localStorage.getItem('logout') === 'true') {
+      localStorage.removeItem('logout');
+      window.location.reload();
+    }
+  }, []);
+
   return (
     <div className="relative">
       <div className="flex items-center gap-3">
@@ -75,7 +64,7 @@ export const UserMenu = () => {
         >
           <AiOutlineMenu className="text-gray-500" />
           <div className="block">
-            <Avatar src={user.value?.profile} />
+            <Avatar src={profile?.profile} />
           </div>
         </div>
       </div>
@@ -85,12 +74,12 @@ export const UserMenu = () => {
           <div className="flex flex-col">
             {token ? (
               <>
-                {user.value?.role === 'user' ? (
+                {profile.role === 'user' ? (
                   <>
-                    <MenuItem label="My Trips" onClick={() => {}} />
+                    <MenuItem label={profile.name} onClick={() => {}} />
                     <MenuItem label="My reservation" onClick={() => {}} />
                     <MenuItem label="My favorite" onClick={() => {}} />
-                    <MenuItem label="Profile" onClick={() => {}} />
+                    <MenuItem label="Profile" onClick={() => {router.push('/user/profile')}} />
                     <hr className="bg-gray-300" />
                     <LogoutAlertDialog label='Logout' onClick={onLogout} />
                   </>
