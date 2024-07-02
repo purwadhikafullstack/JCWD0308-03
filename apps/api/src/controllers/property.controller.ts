@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import prisma from '@/prisma';
 import { responseError } from '@/helpers/responseError';
-import { error } from 'console';
 
 export class PropertyController {
   async getProperties(req: Request, res: Response) {
@@ -30,23 +29,23 @@ export class PropertyController {
     }
   }
 
-  async createProperty(req: Request, res: Response) {
+  async createProperty(req: Request, res: Response,next:NextFunction) {
     try {
-      const { name, description, category, rooms } = req.body;
-      if (!name || !location || !description || !category) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
+      const { name, description, category,address } = req.body;
+      const { user } = req;
 
       const createdProperty = await prisma.property.create({
         data: {
+          ...req.body,
           name,
-          location,
           description,
           category,
-          tenantId: Number(req.user?.id),
-        },
+          address,
+          tenantId: Number(user?.id),
+        }
       });
-      res.status(201).json(createdProperty);
+      res.status(201).json({status: 'ok',createdProperty});
+      // next()
     } catch (error) {
       console.log('failed to create property', error);
       responseError(res, error);
@@ -149,4 +148,5 @@ export class PropertyController {
   //     responseError(res, error);
   //   }
   // }
+
 }

@@ -27,13 +27,15 @@ const VerifyPageTenant = () => {
           duration: 3000,
         });
         setTimeout(() => {
-          router.push(`/login/user`);
+          router.push(`/login/tenant`);
         }, 3500);
       }else if (response.message.name === 'JsonWebTokenError') {
         toast({
           title: 'Invalid link verify, please check your email and click the verify button',
           duration: 3000
         })
+      } else if (response.message.name === 'TokenExpiredError') {
+        setVerificationError(response.message.name)
       } else {
           toast({
             title: response.message,

@@ -36,9 +36,10 @@ const UserLoginPage: React.FC = () => {
         });
         setTimeout(() => {router.push('/')}, 3500)
       } else {
+        console.log('login error : ', res);
         toast({
           title: 'Login failed',
-          description: res.message,
+          description: res.message || res,
           duration: 5000,
         });
       }
