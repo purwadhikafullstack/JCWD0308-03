@@ -17,10 +17,10 @@ import { toast } from '@/components/ui/use-toast';
 
 export default async function Home() {
   const properties = await getProperties();
-  console.log("get rooms : " , properties[0].rooms[0].type);
+  // console.log("get rooms : " , properties[0].rooms[0].type);
   // console.log("get reviews : " , properties[1].reviews);
   // console.log("get tenants : " , properties[1].Reservation);
-  console.log("get property pict : " , properties[0].PropertyPicture[0].url);
+  // console.log("get property pict : " , properties[0].PropertyPicture[0].url);
   // const pict = properties[0].PropertyPicture[1].url;
 
   const isEmpty = false;

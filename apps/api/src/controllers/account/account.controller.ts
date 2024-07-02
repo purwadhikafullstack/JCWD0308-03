@@ -36,7 +36,6 @@ export class AccountController {
       responseError(res, error);
     }
   }
-
   async verifyAccount(req: Request, res: Response) {
     try {
       const { user } = req;
@@ -76,7 +75,6 @@ export class AccountController {
       return responseError(res, error);
     }
   }
-
   async getProfileById(req: Request, res: Response) {
     try {
       const { user } = req;
@@ -108,6 +106,21 @@ export class AccountController {
     } catch (error) {
       console.log('failed to get user profile : ', error);
       responseError(res, error);
+    }
+  }
+  async getAccountRole(req: Request, res: Response) {
+    try {
+      const role = req.user?.role
+      res.status(200).send({
+        status: 'ok',
+        message: 'type found',
+        role,
+      });
+    } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        error,
+      });
     }
   }
 }
