@@ -14,6 +14,7 @@ export class RoomRouter {
 
   private initializeRoutes(): void {
     this.router.get('/room/:id', this.roomController.getRooms);
+    this.router.post('/room', this.roomController.createRoom)
   }
 
   getRouter(): Router {

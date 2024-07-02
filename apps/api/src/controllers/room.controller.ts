@@ -10,11 +10,32 @@ export class RoomController {
         where: { propertyId: +id },
         include: {
           property: true,
+          
         },
       });
       res.status(200).json(rooms);
     } catch (error) {
       console.log('failed to get rooms', error);
+      responseError(res, error);
+    }
+  }
+
+  async createRoom(req: Request, res: Response) {
+    try {
+      const {type, price,description, propertyId, capacity } = req.body;
+
+      const createdRoom = await prisma.room.create({
+        data: {
+          type,
+          price,
+          description,
+          propertyId,
+          capacity
+        },
+      });
+      res.status(201).json(createdRoom);
+    } catch (error) {
+      console.log('failed to create room', error);
       responseError(res, error);
     }
   }

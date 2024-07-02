@@ -1,12 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'akcdn.detik.net.id',
-      'assets.promediateknologi.id',
-      'tourbandung.id',
-      'images.unsplash.com',
-    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -23,6 +17,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'asset-a.grid.id',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
       {
         protocol: 'http',

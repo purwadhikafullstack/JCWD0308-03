@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SingUpForm from '@/components/auth/SignUpForm';
 import { registerAccount } from '@/lib/account';
@@ -10,8 +10,10 @@ const UserSignup = () => {
   const router = useRouter();
   const { toast } = useToast();
   const {data, signInGoogle}= useAuth()
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values: any, actions: any) => {
+    setLoading(true)
     try {
       const response = await registerAccount(values, 'users');
       if(response.status === 'ok') {
@@ -31,34 +33,37 @@ const UserSignup = () => {
       } else {
         toast({
           title: 'Failed to register account',
-          description: response.message,
+          description: response || response.message,
           duration: 5000,
         })
       }
     } catch (error: any) {
       console.error('Failed to register account front :', error);
     }
+    setLoading(false)
     actions.resetForm();
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true)
     try {
       await signInGoogle();
       console.log('user data google signIn : ', data);
       toast({
         title: 'Succes login',
         description: 'You will redirect to home page',
-        duration: 2000,
+        duration: 3000,
       });
       setTimeout(() => {
         router.push('/');
-      }, 2500);
+      }, 3500);
     } catch (error) {
       console.log('erorr signIn with google : ', error);
       toast({
         title: 'Something went wrong please try again!',
       });
     }
+    setLoading(false)
   };
 
   return (
@@ -85,6 +90,7 @@ const UserSignup = () => {
         buttonLabel="Create an account"
         linkHref="/login/user"
         onClickGoogle={handleGoogleSignIn}
+        loading={loading}
       />
     </div>
   );

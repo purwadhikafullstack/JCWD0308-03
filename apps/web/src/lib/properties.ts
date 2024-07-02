@@ -3,12 +3,15 @@ import React from 'react';
 
 const getProperties = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/properties`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}properties`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     const data = await response.json();
 
     return data;

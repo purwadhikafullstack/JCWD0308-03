@@ -25,7 +25,8 @@ const HeroSection = () => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           handleSearch={handleSearch}
-        />
+        />  
+        
       </div>
     </section>
   );
