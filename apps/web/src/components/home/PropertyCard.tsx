@@ -2,25 +2,19 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
-import { Button } from '../Button';
-import { Card, CardContent } from "@/components/ui/card"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 
 interface PropertieCardProps {
   name: string;
   description: string;
+  country: string;
+  city : string
   category: string;
   pictures: string;
   disabled?: boolean;
   onAction?: (id: string) => void;
   actionLabel?: string;
   actionId?: string;
+  id: number
 }
 
 const PropertyCard: React.FC<PropertieCardProps> = ({
@@ -32,6 +26,9 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
   onAction,
   actionLabel,
   actionId,
+  country,
+  city,
+  id
 }) => {
   const router = useRouter();
 
@@ -49,51 +46,29 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
 
   return (
     <div
-      // onClick={() => router.push(`/properties/${slugnyo}`)}
-      className="col-span-1 cursor-pointer group"
-    >
-      <div className="aspect-square w-full relative overflow-hidden rounded-xl">
-        {/* <Image
-          fill
-          alt="Property"
-          className="object-cover w-full h-full group-hover:scale-110 transition"
-          src={pictures}
-        /> */}
-        <Carousel className="w-full max-w-xs">
-      <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card className='bg-green-400'>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-      </div>
-        <div className="text-lg mt-2 font-semibold">{name}</div>
-        <div className="font-semibold text-sm ">Jakarta, Indonesia</div>
-        <div className='text-neutral-500 text-sm font-light'>
-        reservation date if ada
-        </div>
-        <div className='flex flex-row items-center gap-1'>
-          <div className='font-semibold'>Rp. 1.000.000 <span className='font-light'>night</span></div>
-          {/* reservation */}
-        </div>
-        {onAction && actionLabel && (
-          <Button
-          disabled={disabled}
-          small
-          label={actionLabel}
-          onClick={handleCancel} 
+      onClick={() => router.push(`/properties/${id}`)}
+      className="col-span-1 cursor-pointer group">
+      <div className="max-w-sm">
+        <a href="#" className=''>
+          <Image
+             className="rounded-xl object-cover w-[400px] h-[400px]"
+             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+             alt="Property Img"
+             width={400}
+             height={400}
           />
-        )}
+        </a>
+        <div className="p-5">
+          <a href="#">
+            <h5 className="mb-2 text-2xl font-bold">
+              {name}
+            </h5>
+          </a>
+          <p className="mb-3 font-normal">
+            {city}, {country}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

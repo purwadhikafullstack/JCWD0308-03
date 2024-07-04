@@ -1,10 +1,27 @@
 'use client';
 
 import { Provider } from 'react-redux';
-import  store  from '../hooks/store';
+import store, { AppStore } from '../hooks/store';
+import { ReactNode, useEffect, useRef } from 'react';
+import { setupListeners } from '@reduxjs/toolkit/query'
 
-const ReduxProvider = ({ children }: { children: React.ReactNode }) => {
-  return <Provider store={store}>{children}</Provider>;
-};
+interface Props {
+  readonly children: ReactNode
+}
 
-export default ReduxProvider;
+export const StoreProvider = ({ children }: Props) => {
+  const storeRef = useRef<AppStore | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = store
+  }
+  useEffect(() => {
+    if (storeRef.current != null) {
+      const unsubscribe = setupListeners(storeRef.current.dispatch)
+      return unsubscribe
+    }
+  },[])
+
+  return <Provider store={storeRef.current}>{children}</Provider>
+}
+

@@ -11,8 +11,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { result } from 'cypress/types/lodash';
 
 export default function useAuth() {
-  const [data, setData] = useState<any>(null);
-  const dispatch = useAppDispatch();
+  const [data, setData] = useState<any>();
+  // const dispatch = useAppDispatch();
 
   async function signInGoogle() {
     signInWithPopup(auth, googleProvider)
@@ -21,20 +21,19 @@ export default function useAuth() {
       const token = credential?.accessToken;
       const user = result.user;
 
-      if (token &&user) {
+      if (token && user) {
         // createToken(token)
         // dispatch(setUser(user))
         setData({user, token})
-        console.log("data : ", data);
+        console.log("data : ", data.user);
         
       }
 
     }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      const email = error.customData.email;
+      // const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
-      console.log(errorCode, errorMessage, email, credential);
     });
   }
   
