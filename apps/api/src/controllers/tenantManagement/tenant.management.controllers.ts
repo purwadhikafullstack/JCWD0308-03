@@ -31,4 +31,35 @@ export class TenantManagement {
             res.status(500).json({ error });
         }
     }
+    async submitReview(req: Request, res: Response) {
+        const { userId, propertyId, checkOutDate, content } = req.body;
+        const currentDate = new Date();
+        const checkOut = new Date(checkOutDate);
+        if (currentDate < checkOut) {
+            return res.status(400).json({ error: 'You can only review after check out' });
+        }
+        try {
+            const existingReview = await prisma.review.findFirst({
+                where: {
+                    userId,
+                    propertyId,
+                    // checkOutDate,
+                }
+            })
+            if (existingReview) {
+                return res.status(400).json({ error: 'You have already reviewed this property' });
+            }
+            // const rewiew = await prisma.review.create({
+            //     data: {
+            //         userId,
+            //         propertyId,
+            //         content,
+            //         checkOutDate,
+            //     }
+            // })
+            // res.status(200).json(rewiew);
+        } catch (error) {
+            res.status(500).json({ error });
+        }
+    }
 }

@@ -102,14 +102,15 @@ model RoomPeekSeason {
 }
 
 model Review {
-  id         Int      @id @default(autoincrement())
-  content    String
-  rating     Int
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
-  propertyId Int
-  property   Property @relation(fields: [propertyId], references: [id])
-  createdAt  DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  content      String
+  reply        String?
+  checkOutDate DateTime
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  propertyId   Int
+  property     Property @relation(fields: [propertyId], references: [id])
+  createdAt    DateTime @default(now())
 }
 
 model User {
