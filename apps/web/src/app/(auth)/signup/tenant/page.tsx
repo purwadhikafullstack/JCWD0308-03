@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SingUpForm from '@/components/auth/SignUpForm';
 import { registerAccount } from '@/lib/account';
@@ -44,27 +44,6 @@ const TenantSignup = () => {
     actions.resetForm();
   };
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    try {
-      await signInGoogle();
-      console.log('user data google signIn : ', data);
-      toast({
-        title: 'Succes login',
-        description: 'You will redirect to home page',
-        duration: 3000,
-      });
-      setTimeout(() => {
-        router.push('/');
-      }, 3500);
-    } catch (error) {
-      console.log('erorr signIn with google : ', error);
-      toast({
-        title: 'Something went wrong please try again!',
-      });
-    }
-    setLoading(false);
-  };
 
   return (
     <div>
@@ -102,7 +81,7 @@ const TenantSignup = () => {
         onSubmit={handleSubmit}
         buttonLabel="Create an account"
         linkHref="/login/user"
-        onClickGoogle={handleGoogleSignIn}
+        onClickGoogle={signInGoogle}
         loading={loading}
       />
     </div>

@@ -22,10 +22,9 @@ model Property {
   description        String  @db.LongText
   category           String
   location_cordinate String?
-  country            String?
-  city               String?
+  country            String
+  city               String
   address            String
-  slug               String?
 
   rooms           Room[]
   reviews         Review[]

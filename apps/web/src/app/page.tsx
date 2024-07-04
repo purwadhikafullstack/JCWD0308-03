@@ -1,19 +1,9 @@
 import PropertyCard from '@/components/home/PropertyCard';
 import EmptyState from '@/components/EmptyState';
 import Wrapper from '@/components/wrapper';
-import getProperties from '@/lib/properties';
 import HeroSection from '@/components/home/HeroSection';
 import Categories from '@/components/home/Categories';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
+import { getProperties } from '@/lib/properties';
 
 export default async function Home() {
   const properties = await getProperties();
@@ -37,12 +27,12 @@ export default async function Home() {
           {properties.map((property: any) => {
             return (
               <PropertyCard
+                id={property.id}
                 key={property.id}
                 name={property.name}
                 description={property.description}
                 category={property.category}
-                pictures={'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
-              />
+                pictures={'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} country={''} city={''}              />
             );
           })}
         </div>

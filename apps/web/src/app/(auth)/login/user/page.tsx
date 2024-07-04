@@ -64,15 +64,14 @@ const UserLoginPage: React.FC = () => {
     async function registerUserFromGoogle() {
       const {user} = data
       const userData = { name: user.displayName, email: user.email, profile: user.photoURL }
-      
-      setLoading(true)
+      // setLoading(true)
       try {
         const res = await registerUserGoogle(userData , 'users')
         console.log("register user from google : ", res);
-        dispatch(setUser(res.user))
         if (res.status === 'ok') {
+          dispatch(setUser(res.user))
           createToken(res.token)
-          Cookies.set('token', res.token)
+          Cookies.set('token', res.token, { expires: 1 });
           toast({
             title: 'Succes login',
             description: 'You will redirect to home page',
@@ -103,9 +102,13 @@ const UserLoginPage: React.FC = () => {
       }
       setLoading(false)
     }
-    if (data) registerUserFromGoogle()
+    if (data) {
+      registerUserFromGoogle()
+    }
+      console.log('halo data :' , data);
+      
     
-  }, [data, router, toast])
+  }, [data])
 
   return (
     <Suspense>
