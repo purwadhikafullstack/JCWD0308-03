@@ -6,7 +6,7 @@ type User = {
   role: string;
   deletedAt: Date | null;
   isActive: boolean;
-  phoneNumber?: number
+  phoneNumber?: string;
 };
 
 type Property = {
@@ -22,9 +22,9 @@ type Property = {
 };
 
 type Room = {
-  id: string
-  description : string
-}
+  id: string;
+  description: string;
+};
 
 declare namespace Express {
   export interface Request {

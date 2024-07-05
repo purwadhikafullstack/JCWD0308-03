@@ -118,7 +118,7 @@ export class UserController {
 
   async singInGoogle(req: Request, res: Response) {
     try {
-      const { displayName, email, photoURL } = req.body
+      const { name, email, profile, phoneNumber } = req.body
 
       let user = await prisma.user.findUnique({ where: { email: email } }) 
       const existsTenantEmail = await prisma.tenant.findUnique({ where: { email: email } });
@@ -132,9 +132,10 @@ export class UserController {
 
       user = await prisma.user.create({
         data :{
-          name : displayName,
+          name, 
           email,
-          profile: photoURL,
+          profile,
+          // phoneNumber,
           isActive: true,
           isSocialLogin: true
         }

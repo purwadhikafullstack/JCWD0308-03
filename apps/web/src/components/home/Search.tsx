@@ -29,7 +29,7 @@ const Search: React.FC<SearchProps> = ({
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Add Guests"
+          placeholder="Search"
           className="flex-1 bg-transparent outline-none text-[#4a4a4a] px-4 py-2"
         />
       </div>

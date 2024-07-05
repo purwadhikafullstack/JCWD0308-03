@@ -35,21 +35,18 @@ const TenantLoginPage: React.FC = () => {
       } else {
         toast({
           title: 'Login failed',
-          description: res.message,
+          description: res.message || res.message.name,
           duration: 5000,
         });
       }
-      if (
-        res.message ==
-        'Email not registered, please register an account first, you will redirect to register page'
-      ) {
+
+      if (res.message =='Email not registered, please register an account first, you will redirect to register page') {
         setTimeout(() => {
           router.push('/signup/user');
         }, 5500);
       }
     } catch (error: any) {
       console.log('login tenant error : ', error);
-      alert();
     } finally {
       setLoading(false);
       actions.resetForm();
@@ -63,9 +60,8 @@ const TenantLoginPage: React.FC = () => {
 
       try {
         const res = await registerUserGoogle(userData, 'tenants')
-        console.log("res register ggole tenant :"  , res);
-        dispatch(setUser(res.user))
         if (res.status === 'ok') {
+          dispatch(setUser(res.user))
           createToken(res.token)
           Cookies.set('token', res.token)
           toast({
@@ -74,9 +70,9 @@ const TenantLoginPage: React.FC = () => {
             duration: 3000,
           })
           setTimeout(() => {router.push('/tenant/management')}, 3500)
-        } else if (res.message === 'Account already registered as Traveller, please login as Traveller') {
+        } else if (res.message === 'Account already registered as Traveler, please login as Traveler') {
           toast({
-            title: 'Account already registered as Traveler, please login as Traveller',
+            title: 'Account already registered as Traveler, please login as Traveler',
             description: 'You will redirect to login as traveler page',
             duration: 3000,
           })
@@ -94,7 +90,7 @@ const TenantLoginPage: React.FC = () => {
       }
     }
     if (data) registerUserFromGoogle()
-  } , [data, toast, router])
+  } , [data, toast, router, dispatch])
 
   return (
     <LoginForm
