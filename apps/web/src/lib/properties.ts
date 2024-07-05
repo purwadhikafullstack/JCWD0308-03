@@ -67,7 +67,7 @@ export const getPropertyById = async (id:number) => {
       },
     })
     const res = await response.json();
-    console.log('res get properti by id on front fetch: ', res);
+    // console.log('res get properti by id on front fetch: ', res);
     return res
   } catch (error) {
     console.log('failed to get property by id : ', error);

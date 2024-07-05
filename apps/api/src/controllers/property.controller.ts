@@ -64,6 +64,7 @@ export class PropertyController {
           Tenant: true,
           rooms: true,
           Reservation: true,
+          PropertyPicture: true,
         },
       });
       if (property) {

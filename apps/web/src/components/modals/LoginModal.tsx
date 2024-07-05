@@ -38,7 +38,7 @@ export const LoginModal = () => {
         disabled={isLoading}
         onClick={handleSubmitUser}
         // outline
-        label="For Traveller"
+        label="For Traveler"
       />
     </div>
   );

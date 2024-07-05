@@ -44,10 +44,7 @@ const UserLoginPage: React.FC = () => {
         });
       }
 
-      if (
-        res.message ==
-        'Email not registered, please register an account first, you will redirect to register page'
-      ) {
+      if (res.message == 'Email not registered, please register an account first, you will redirect to register page') {
         setTimeout(() => {
           router.push('/signup/user');
         }, 5500);
@@ -82,7 +79,7 @@ const UserLoginPage: React.FC = () => {
           }, 3500);
         } else if (res.message === 'Account already registered as tenant please login as tenant'){
           toast({
-            title: 'Account already registered as tenant please login as tenant',
+            title: res.message,
             description: 'You will redirect to home page',
             duration: 3000,
           });
@@ -105,15 +102,13 @@ const UserLoginPage: React.FC = () => {
     if (data) {
       registerUserFromGoogle()
     }
-      console.log('halo data :' , data);
-      
     
   }, [data])
 
   return (
     <Suspense>
       <LoginForm
-        title="Login as Traveller"
+        title="Login as Traveler"
         subtitle="Enter your email below to login to your account"
         onSubmit={handleSubmit}
         buttonLabel="Login"
