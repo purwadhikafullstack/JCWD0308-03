@@ -5,8 +5,10 @@ import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 export default function ReservationForm() {
+  const {toast} = useToast();
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 20),
@@ -14,8 +16,6 @@ export default function ReservationForm() {
   const [propertyId, setPropertyId] = useState('1');
   const [userId, setUserId] = useState('1');
   const [roomId, setRoomId] = useState('1');
-  // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,7 +23,8 @@ export default function ReservationForm() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}transactions/reservation`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           propertyId ,
@@ -43,11 +44,11 @@ export default function ReservationForm() {
       if (!response.ok) {
         throw new Error('Failed to create reservation');
       }
-      if (responseData.success) {
-        alert('Reservation created successfully');
-      } else {
-        alert('Failed to create reservation');
-      }
+      // toast({
+      //   title: 'Reservation successful',
+      //   description: 'You have' + responseData.message
+      // })
+      
     } catch (error) {
       console.error('Failed to create reservation:', error);
     }

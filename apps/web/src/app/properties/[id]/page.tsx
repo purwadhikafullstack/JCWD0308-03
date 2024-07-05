@@ -10,13 +10,11 @@ interface Property {
   name: string;
   // Add other property fields as needed
 }
-
 export const PropertyDetail = () => {
   const params = useParams();
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     async function fetchProperty() {
       try {
