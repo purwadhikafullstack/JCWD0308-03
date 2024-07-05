@@ -6,7 +6,7 @@ type User = {
   role: string;
   deletedAt: Date | null;
   isActive: boolean;
-  phoneNumber?: number;
+  phoneNumber?: string;
 };
 
 type Property = {

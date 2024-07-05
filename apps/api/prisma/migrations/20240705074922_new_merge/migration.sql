@@ -4,9 +4,10 @@ CREATE TABLE `Property` (
     `name` VARCHAR(191) NOT NULL,
     `description` LONGTEXT NOT NULL,
     `category` VARCHAR(191) NOT NULL,
-    `location_cordinate` VARCHAR(191) NULL,
+    `locationCordinate` VARCHAR(191) NULL,
     `country` VARCHAR(191) NOT NULL,
     `city` VARCHAR(191) NOT NULL,
+    `province` VARCHAR(191) NOT NULL,
     `address` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -40,7 +41,7 @@ CREATE TABLE `RoomPicture` (
 -- CreateTable
 CREATE TABLE `Room` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` VARCHAR(191) NOT NULL,
+    `type` VARCHAR(191) NOT NULL DEFAULT 'Standard',
     `price` DOUBLE NOT NULL,
     `stock` INTEGER NOT NULL DEFAULT 1,
     `description` VARCHAR(191) NOT NULL,
@@ -100,6 +101,9 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NULL,
     `name` VARCHAR(191) NOT NULL,
+    `dob` DATETIME(3) NULL,
+    `gender` ENUM('MALE', 'FAMALE') NULL,
+    `phoneNumber` VARCHAR(191) NULL,
     `profile` LONGTEXT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT false,
     `role` VARCHAR(191) NOT NULL DEFAULT 'user',
@@ -117,7 +121,10 @@ CREATE TABLE `Tenant` (
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NULL,
+    `dob` DATETIME(3) NULL,
+    `gender` ENUM('MALE', 'FAMALE') NULL,
     `phoneNumber` VARCHAR(191) NULL,
+    `bio` LONGTEXT NULL,
     `profile` LONGTEXT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT false,
     `role` VARCHAR(191) NOT NULL DEFAULT 'tenant',
@@ -131,31 +138,16 @@ CREATE TABLE `Tenant` (
 
 -- CreateTable
 CREATE TABLE `Reservation` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `roomId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
-    `status` VARCHAR(191) NOT NULL,
-    `paymentProof` VARCHAR(191) NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
     `price` DOUBLE NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `propertyId` INTEGER NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Payment` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `reservationId` INTEGER NOT NULL,
-    `amount` DOUBLE NOT NULL,
-    `method` VARCHAR(191) NOT NULL,
-    `status` VARCHAR(191) NOT NULL,
-    `proof` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -192,6 +184,3 @@ ALTER TABLE `Reservation` ADD CONSTRAINT `Reservation_userId_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `Reservation` ADD CONSTRAINT `Reservation_propertyId_fkey` FOREIGN KEY (`propertyId`) REFERENCES `Property`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Payment` ADD CONSTRAINT `Payment_reservationId_fkey` FOREIGN KEY (`reservationId`) REFERENCES `Reservation`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
