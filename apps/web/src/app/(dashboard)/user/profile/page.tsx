@@ -1,3 +1,4 @@
+'use client'
 import { UserProfile } from '@/components/profile/userProfile'
 import React from 'react'
 

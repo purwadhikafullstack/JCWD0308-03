@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MALE
+  FAMALE
+}
+
 enum ReservationStatus {
   PENDING
   CONFIRMED
@@ -17,14 +22,15 @@ enum ReservationStatus {
 }
 
 model Property {
-  id                 Int     @id @default(autoincrement())
-  name               String
-  description        String  @db.LongText
-  category           String
-  location_cordinate String?
-  country            String
-  city               String
-  address            String
+  id                Int     @id @default(autoincrement())
+  name              String
+  description       String  @db.LongText
+  category          String
+  locationCordinate String?
+  country           String
+  city              String
+  province          String
+  address           String
 
   rooms           Room[]
   reviews         Review[]
@@ -113,14 +119,17 @@ model Review {
 }
 
 model User {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
   password      String?
   name          String
-  profile       String? @db.LongText
-  isActive      Boolean @default(false)
-  role          String  @default("user")
-  isSocialLogin Boolean @default(false)
+  dob           DateTime?
+  gender        Gender?
+  phoneNumber   String?
+  profile       String?   @db.LongText
+  isActive      Boolean   @default(false)
+  role          String    @default("user")
+  isSocialLogin Boolean   @default(false)
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -129,15 +138,18 @@ model User {
 }
 
 model Tenant {
-  id            Int     @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String
-  email         String  @unique
+  email         String    @unique
   password      String?
+  dob           DateTime?
+  gender        Gender?
   phoneNumber   String?
-  profile       String? @db.LongText
-  isActive      Boolean @default(false)
-  role          String  @default("tenant")
-  isSocialLogin Boolean @default(false)
+  bio           String?   @db.LongText
+  profile       String?   @db.LongText
+  isActive      Boolean   @default(false)
+  role          String    @default("tenant")
+  isSocialLogin Boolean   @default(false)
 
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt

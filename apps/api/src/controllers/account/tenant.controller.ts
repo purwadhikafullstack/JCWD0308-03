@@ -25,7 +25,7 @@ export class TenantController {
          let existsUserEmail = await prisma.user.findUnique({where: {email: email}})
          let existsTenantEmail = await prisma.tenant.findUnique({where: {email: email}})
           
-         if (existsUserEmail) return res.status(409).json({status: "error", message: "Email registered as Traveller please login as Traveller"})
+         if (existsUserEmail) return res.status(409).json({status: "error", message: "Email registered as Traveler please login as Traveler"})
          if (existsTenantEmail?.isActive === false) return res.status(409).json({status: "error", message: "Email already registered but not verifed, please check your email for verification"})
          if (existsTenantEmail?.isActive === true) return res.status(409).json({status: "error", message: "Email already registered, please login"})
 
@@ -89,13 +89,10 @@ export class TenantController {
     async loginTenant(req: Request, res: Response) {
         try {
             const {email, password} = req.body
-            if(email && password == null|| password == undefined || password == "" ) return res.status(400).json({status: "error", message: "Please enter your password"})
-            if (password && email === null || email === undefined || email === "") return res.status(400).json({status: "error", message: "Please enter your email"})
-        
             const tenant = await prisma.tenant.findUnique({where: {email: email}})
             const emailUser = await prisma.user.findUnique({where: {email: email}})
 
-            if(emailUser) return res.status(409).json({status: "error", message: "email registered as Traveller, please login as Traveller"})
+            if(emailUser) return res.status(409).json({status: "error", message: "email registered as Traveler, please login as Traveler"})
             if (!tenant) return res.status(404).json({status: "error", message: "Email not registered"})
             if (tenant?.isActive === false) return res.status(403).json({status: "error", message: "Email not verified, please check your email for verification"})
             
@@ -118,9 +115,9 @@ export class TenantController {
         try {
             const {email, name, profile, phoneNumber } = req.body
 
-            let tenant = await prisma.tenant.findUnique({where: {email: email}})
+            let tenant = await prisma.tenant.findUnique({where: {email: email}})            
             const existsUserEmail = await prisma.user.findUnique({where: {email: email}})
-            if (existsUserEmail) return res.status(409).json({status: "error", message: "Account already registered as Traveller, please login as Traveller"})
+            if (existsUserEmail) return res.status(409).json({status: "error", message: "Account already registered as Traveler, please login as Traveler"})
             
             if (tenant) {
                 const payload = {id: tenant?.id, role: tenant?.role, name: tenant?.name}
