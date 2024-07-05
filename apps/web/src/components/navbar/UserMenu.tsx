@@ -8,16 +8,17 @@ import { openModal as openLoginModal } from '../../hooks/login/loginModalSlice';
 import { openModal as openRegisterModal } from '../../hooks/signup/signupModalSlice';
 import Cookies from 'js-cookie';
 import { deleteToken } from '@/app/action';
-import { clearUser, setUser } from '@/hooks/features/profile/userSlice';
+import {  setUser } from '@/hooks/features/profile/userSlice';
 import { LogoutAlertDialog } from '../AlertDialog'; // Import the new component
 import { useRouter } from 'next/navigation';
+import { getUser } from '@/lib/account';
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const token = Cookies.get('token');
   const router = useRouter();
-  const [profile, setProfile] = useState<any>({});
+  const userProfile = useAppSelector((state) => state.user.value)
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,27 +34,27 @@ export const UserMenu = () => {
     setIsMenuOpen(false);
   }, [dispatch]);
 
-  const onLogout = () => {
-    deleteToken('token');
-    Cookies.remove('token');
-    localStorage.setItem('logout', 'true'); // Set a flag indicating logout
-    dispatch(clearUser());
-    router.push('/');
-  };
+ const onLogout = () => {
+  dispatch(setUser(null));
+  deleteToken('token');
+  Cookies.remove('token');
+  router.push('/');
+ }
+
+  const profile = async (token:any) => {
+    try {
+      const res = await getUser(token)
+      dispatch(setUser(res))
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    const userInfo = localStorage.getItem('user');
-    if (userInfo) {
-      setProfile(JSON.parse(userInfo));
-    } else {
-      setProfile({});
-    }
-    
-    if (localStorage.getItem('logout') === 'true') {
-      localStorage.removeItem('logout');
-      window.location.reload();
-    }
-  }, []);
+    profile(token)
+  },[])
+  // console.log(userProfile);
 
   return (
     <div className="relative">
@@ -64,7 +65,7 @@ export const UserMenu = () => {
         >
           <AiOutlineMenu className="text-gray-500" />
           <div className="block">
-            <Avatar src={profile?.profile} />
+            <Avatar src={userProfile?.profile} />
           </div>
         </div>
       </div>
@@ -74,7 +75,7 @@ export const UserMenu = () => {
           <div className="flex flex-col">
             {token ? (
               <>
-                {profile.role === 'user' ? (
+                {userProfile?.role === 'user' ? (
                   <>
                     <MenuItem label={profile.name} onClick={() => {}} />
                     <MenuItem label="My reservation" onClick={() => {}} />
@@ -85,10 +86,10 @@ export const UserMenu = () => {
                   </>
                 ) : (
                   <>
-                    <MenuItem label="Management" onClick={() => {}} />
-                    <MenuItem label="Properties" onClick={() => {}} />
+                    <MenuItem label="Management" onClick={() => {router.push('/tenant/management')}} />
+                    <MenuItem label="Properties" onClick={() => {router.push('properties')}} />
                     <MenuItem label="Sales Report" onClick={() => {}} />
-                    <MenuItem label="Profile" onClick={() => {}} />
+                    <MenuItem label="Profile" onClick={()=> router.push('/tenant/profile')} />
                     <hr className="bg-gray-300" />
                     <LogoutAlertDialog label='Logout' onClick={onLogout} />
                   </>

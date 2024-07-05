@@ -44,10 +44,7 @@ const UserLoginPage: React.FC = () => {
         });
       }
 
-      if (
-        res.message ==
-        'Email not registered, please register an account first, you will redirect to register page'
-      ) {
+      if (res.message == 'Email not registered, please register an account first, you will redirect to register page') {
         setTimeout(() => {
           router.push('/signup/user');
         }, 5500);
@@ -64,15 +61,14 @@ const UserLoginPage: React.FC = () => {
     async function registerUserFromGoogle() {
       const {user} = data
       const userData = { name: user.displayName, email: user.email, profile: user.photoURL }
-      
-      setLoading(true)
+      // setLoading(true)
       try {
         const res = await registerUserGoogle(userData , 'users')
         console.log("register user from google : ", res);
-        dispatch(setUser(res.user))
         if (res.status === 'ok') {
+          dispatch(setUser(res.user))
           createToken(res.token)
-          Cookies.set('token', res.token)
+          Cookies.set('token', res.token, { expires: 1 });
           toast({
             title: 'Succes login',
             description: 'You will redirect to home page',
@@ -83,7 +79,7 @@ const UserLoginPage: React.FC = () => {
           }, 3500);
         } else if (res.message === 'Account already registered as tenant please login as tenant'){
           toast({
-            title: 'Account already registered as tenant please login as tenant',
+            title: res.message,
             description: 'You will redirect to home page',
             duration: 3000,
           });
@@ -103,14 +99,16 @@ const UserLoginPage: React.FC = () => {
       }
       setLoading(false)
     }
-    if (data) registerUserFromGoogle()
+    if (data) {
+      registerUserFromGoogle()
+    }
     
-  }, [data, router, toast])
+  }, [data])
 
   return (
     <Suspense>
       <LoginForm
-        title="Login as Traveller"
+        title="Login as Traveler"
         subtitle="Enter your email below to login to your account"
         onSubmit={handleSubmit}
         buttonLabel="Login"

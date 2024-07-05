@@ -1,11 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SingUpForm from '@/components/auth/SignUpForm';
-import { registerAccount } from '@/lib/account';
+import { registerAccount, registerUserGoogle } from '@/lib/account';
 import { useToast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/useAuth';
 import { Heading } from '@/components/Heading';
+import { useAppDispatch } from '@/hooks/hooks';
+import { setUser } from '@/hooks/features/profile/userSlice';
+import { createToken } from '@/app/action';
+import Cookies from 'js-cookie';
 
 const TenantSignup = () => {
   const router = useRouter();
@@ -13,6 +17,7 @@ const TenantSignup = () => {
   const { signInGoogle, data } = useAuth();
   const [loading, setLoading] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false)
+  const dispatch = useAppDispatch()
   const handleSubmit = async (values: any, actions: any) => {
     setLoading(true);
     try {
@@ -38,44 +43,73 @@ const TenantSignup = () => {
       }
     } catch (error: any) {
       console.error('Failed to register account front :', error);
-      // return null;
+      toast({
+        variant : 'destructive',
+        title: 'Failed to register account',
+        description: error.message || error || error.msg,
+        duration: 5000,
+      })
     }
     setLoading(false);
     actions.resetForm();
   };
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    try {
-      await signInGoogle();
-      console.log('user data google signIn : ', data);
-      toast({
-        title: 'Succes login',
-        description: 'You will redirect to home page',
-        duration: 3000,
-      });
-      setTimeout(() => {
-        router.push('/');
-      }, 3500);
-    } catch (error) {
-      console.log('erorr signIn with google : ', error);
-      toast({
-        title: 'Something went wrong please try again!',
-      });
+
+  useEffect(() =>{
+    async function registerUserFromGoogle() {
+      const { user } = data
+      const userData = {name: user.displayName, email: user.email, profile: user.photoURL, phoneNumber: user.phoneNumber}
+
+      try {
+        const res = await registerUserGoogle(userData, 'tenants')
+        if (res.status === 'ok') {
+          dispatch(setUser(res.tenant))
+          createToken(res.token)
+          Cookies.set('token', res.token)
+          toast({
+            title: 'You succesfully login as tenant',
+            description: 'You will redirect to management page',
+            duration: 3000,
+          })
+          setTimeout(() => {router.push('/tenant/management')}, 3500)
+        } else if (res.message === 'Account already registered as Traveler, please login as Traveler') {
+          toast({
+            title: 'Account already registered as Traveler, please login as Traveler',
+            description: 'You will redirect to login as traveler page',
+            duration: 3000,
+          })
+          setTimeout(() => {router.push('/login/user')}, 3500)
+        } else {
+          console.log('something went wrong: ', res);
+          toast({
+            title: 'Something went wrong please try again!',
+          })
+        }
+      } catch (error) {
+        toast({
+          title :"Something went wrong please try again!",
+        })
+      }
     }
-    setLoading(false);
-  };
+    if (data) registerUserFromGoogle()
+  } , [data, toast, router, dispatch])
+
 
   return (
     <div>
       {sentSuccess && (
-        <div>
-          <Heading title='Your account created successfully'/>
-          <p className='text-center text-pretty'>C</p>
+        <div className='min-h-screen flex justify-center flex-col items-center gap-2 px-3'>
+        <Heading 
+        title="New email verification link sent successfully"/>
 
-        </div>
+        <p className='text-pretty text-center'>Check your email inbox
+          <br/>
+          Tip: check your spam folder in case the email was incorrectly identified.
+        </p>
+      </div>
       )}
-      <SingUpForm
+      {!sentSuccess && (
+        <SingUpForm
         initialValues={{ name: '', email: '', phoneNumber: '' }}
         title="Register as Tenant"
         subtitle="Enter your information to create an account"
@@ -102,9 +136,10 @@ const TenantSignup = () => {
         onSubmit={handleSubmit}
         buttonLabel="Create an account"
         linkHref="/login/user"
-        onClickGoogle={handleGoogleSignIn}
+        onClickGoogle={signInGoogle}
         loading={loading}
       />
+      )}
     </div>
   );
 };

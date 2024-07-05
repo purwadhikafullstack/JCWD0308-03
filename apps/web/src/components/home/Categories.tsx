@@ -50,7 +50,6 @@ const Categories = () => {
     categories.map((item) => item.label).indexOf(category as string);
 
   return (
-    <Wrapper>
       <div
       className="
       flex 
@@ -68,7 +67,6 @@ const Categories = () => {
           />
         ))}
       </div>
-    </Wrapper>
   );
 };
 

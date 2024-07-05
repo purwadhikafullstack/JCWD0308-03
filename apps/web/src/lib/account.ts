@@ -22,7 +22,6 @@ export const registerAccount = async (data: any, role: string) => {
     return error.message
   }
 };
-
 export const resendVerifyEmail = async (email: string, role:string) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}${role}/resend-verify`, {
@@ -39,7 +38,6 @@ export const resendVerifyEmail = async (email: string, role:string) => {
     return error
   }
 }
-
 export const VerifyEmail = async (data: any, token: string) => {
   try {
     const response = await fetch(`http://localhost:8000/api/users/verify`, {
@@ -59,9 +57,6 @@ export const VerifyEmail = async (data: any, token: string) => {
     return error;
   }
 };
-
-
-
 export const loginAccount = async (data: any, role: string) => {
   try {
     const response = await fetch(`http://localhost:8000/api/${role}/login`, {
@@ -71,19 +66,15 @@ export const loginAccount = async (data: any, role: string) => {
         'Content-Type': 'application/json',
       },
     });
-
     const res = await response.json();
     createToken(res.token);
     Cookies.set('token', res.token);
     return res;
-
   } catch (error) {
     console.log('failed to login : ', error);
     // return error
   }
 };
-
-
 export const registerUserGoogle = async(user:any, role:string) => {
   // const {email, displayName:name, photoURL:profile , phoneNumber:phoneNumber} = user
   try {
@@ -128,7 +119,6 @@ export const getUser = async (token: any) => {
     return null;
   }
 };
-
 export const uploadImage = async (data: any, token: any) => {
   try {
     const response = await fetch(`http://localhost:8000/api/users/upload-profile`, {

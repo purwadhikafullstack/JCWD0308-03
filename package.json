@@ -36,6 +36,7 @@
     "@types/node": "^20.14.2",
     "axios": "^1.7.2",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "next": "^14.2.4",
     "query-string": "^9.0.0",

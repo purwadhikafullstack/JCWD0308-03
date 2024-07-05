@@ -64,6 +64,7 @@ export class PropertyController {
           Tenant: true,
           rooms: true,
           Reservation: true,
+          PropertyPicture: true,
         },
       });
       if (property) {
@@ -122,31 +123,25 @@ export class PropertyController {
     }
   }
 
-  // upload images at table propertyPicture
-  // async uploadPropertyImages(req: Request, res: Response) {
-  //   try {
-  //     const files  = req.files as Express.Multer.File[] 
-  //     const {id} = req.params
-  //     const numId = +id
-  //     if (!files || files.length === 0) return res.status(404).send({ status: 'error', message: 'file not found' });
+  async getPropertyByTenantId(req: Request, res: Response) {
+    try {
+      const {user} = req
+      const properties = await prisma.property.findMany({
+        where: { tenantId: user?.id },
+        include: {
+          rooms: true,
+          reviews: true,
+          Tenant: true,
+          Reservation: true,
+          PropertyPicture: true,
+        },
+      })
 
-  //     const images = files.map((file) => {
-  //       url : `http:localhost:8000/public/images/${file.filename}`
-  //       propertyId : numId
-  //     })
+      res.status(200).json({msg: 'get property by tenant id' ,properties})
 
-  //     const uploadImgs = await prisma.propertyPicture.createMany({
-  //       data: images   
-
-  //     })
-  //     console.log('uploadImgs : ', images);
-      
-
-  //     res.status(200).send({ status: 'ok', message: 'success upload property image', uploadImgs });
-  //   } catch (error) {
-  //     console.log('failed to upload property image : ', error);
-  //     responseError(res, error);
-  //   }
-  // }
-
+    } catch (error) {
+      console.log('failed to get property by tenant id', error);
+      responseError(res, error);
+    }
+  }
 }

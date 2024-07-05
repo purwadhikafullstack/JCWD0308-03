@@ -40,7 +40,7 @@ export const RegisterModal = () => {
       <Button
         disabled={isLoading}
         onClick={handleSubmitUser}
-        label="For Traveller"
+        label="For Traveler"
       />
     </div>
   );
