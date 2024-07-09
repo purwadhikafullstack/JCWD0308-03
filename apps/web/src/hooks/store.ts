@@ -3,11 +3,13 @@ import { combineReducers } from 'redux';
 import  loginModalReducer  from "./login/loginModalSlice";
 import signupModalReducer from "./signup/signupModalSlice";
 import userReducer from './features/profile/userSlice';
+import roomReducer from "./features/room/roomSlice";
 
 const rootReducer = combineReducers({
   loginModal: loginModalReducer,
   signupModal: signupModalReducer,
-  user : userReducer
+  user : userReducer,
+  room: roomReducer
 });
 
 const store = configureStore({

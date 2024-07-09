@@ -6,6 +6,7 @@ import { addDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
+import { useAppSelector } from '@/hooks/hooks';
 
 export default function ReservationForm() {
   const {toast} = useToast();
@@ -13,9 +14,15 @@ export default function ReservationForm() {
     from: new Date(),
     to: addDays(new Date(), 20),
   })
+  const room = useAppSelector((state) => state.room.currentRoom)
+  const user = useAppSelector((state) => state.user.value)
+
+  console.log("room id : ", room?.id);
+  console.log("room  : ", room);
+  console.log("user : ", user);
+  
+  
   const [propertyId, setPropertyId] = useState('');
-  const [userId, setUserId] = useState('');
-  const [roomId, setRoomId] = useState('');
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,9 +34,9 @@ export default function ReservationForm() {
           // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          propertyId ,
-          userId,
-          roomId,
+          propertyId : room?.propertyId,
+          userId : user?.id,
+          roomId: room?.id,
           date
         })
       });
