@@ -11,12 +11,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Wrapper from "@/components/wrapper"
 import { useState, useEffect } from "react"
 import { useAppSelector } from "@/hooks/hooks"
+import { getTransaction } from "@/lib/transaction"
 
 export default function Management() {
   const userProfile = useAppSelector((state) => state.user.value)
   const [order, setOrder] = useState()
   const getOrder = async () => {
-    // const res = await fetch()
+    const res = await getTransaction()
+    
   }
   useEffect(() => {
     getOrder()
