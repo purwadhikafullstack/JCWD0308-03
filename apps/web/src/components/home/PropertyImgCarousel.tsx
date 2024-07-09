@@ -1,36 +1,33 @@
-import React, { useState } from 'react';
-import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
-import { GoDotFill } from 'react-icons/go';
-import { PropertyPicture } from '@/type/property.type';
-import { HeartButton } from '@/components/home/HeartButton';
+'use client'
+import { PropertyPicture } from '@/type/property.type'
+import React, { useState } from 'react'
+import { GoDotFill } from 'react-icons/go'
+import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md'
 
-interface PropertyImagesProps {
-  propertyPict: PropertyPicture[];
+interface PropertyImgCarouselProps {
+    propertyPict: PropertyPicture[]
 }
+const PropertyImgCarousel: React.FC<PropertyImgCarouselProps> = ({ propertyPict }) => {
+    const [currentSlide, setCurrentSlide] = useState(0);
 
-const PropertyImages: React.FC<PropertyImagesProps> = ({ propertyPict }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const prevSlide = () => {
-    const isFirstSlide = currentSlide === 0;
-    const newIndex = isFirstSlide ? propertyPict.length - 1 : currentSlide - 1;
-    setCurrentSlide(newIndex);
-  };
-
-  const nextSlide = () => {
-    const isLastSlide = currentSlide === propertyPict.length - 1;
-    const newIndex = isLastSlide ? 0 : currentSlide + 1;
-    setCurrentSlide(newIndex);
-  };
-
-  const goToSlide = (slideIndex: number) => {
-    setCurrentSlide(slideIndex);
-  };
+    const prevSlide = () => {
+      const isFirstSlide = currentSlide === 0;
+      const newIndex = isFirstSlide ? propertyPict.length - 1 : currentSlide - 1;
+      setCurrentSlide(newIndex);
+    };
   
-
+    const nextSlide = () => {
+      const isLastSlide = currentSlide === propertyPict.length - 1;
+      const newIndex = isLastSlide ? 0 : currentSlide + 1;
+      setCurrentSlide(newIndex);
+    };
+  
+    const goToSlide = (slideIndex: number) => {
+      setCurrentSlide(slideIndex);
+    };
   return (
-    <div className="h-[60vh] w-full py-10 relative group">
-      <div
+    <div>
+        <div
         style={{ backgroundImage: `url(${propertyPict[currentSlide].url})` }}
         className="w-full h-full rounded-2xl bg-center bg-cover duration-700"
       ></div>
@@ -52,7 +49,7 @@ const PropertyImages: React.FC<PropertyImagesProps> = ({ propertyPict }) => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PropertyImages;
+export default PropertyImgCarousel
