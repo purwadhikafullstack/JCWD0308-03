@@ -21,7 +21,6 @@ export default function ReservationForm() {
   console.log("room  : ", room);
   console.log("user : ", user);
   
-  
   const [propertyId, setPropertyId] = useState('');
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

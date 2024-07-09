@@ -11,6 +11,7 @@ export interface Room {
     propertyId: number;
     createdAt: string;
     updatedAt: string;
+    roomPictures: { url: string }[];
 }
 
 export interface RoomSlice {
