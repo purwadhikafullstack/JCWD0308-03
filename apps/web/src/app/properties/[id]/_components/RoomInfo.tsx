@@ -6,7 +6,7 @@ import { IoBedOutline, IoPeople, IoCheckmarkCircleOutline } from 'react-icons/io
 import Link from 'next/link';
 import  RoomDescription from './RoomDescription';
 import { useAppDispatch } from '@/hooks/hooks';
-import { setRoom } from '@/hooks/features/room/roomSlice';
+import { setRoom, setRoomsDetails } from '@/hooks/features/room/roomSlice';
 import { Button } from '@/components/Button';
 
 interface RoomInfoProps {
@@ -102,7 +102,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <div className="text-lg font-semibold text-[#00a7c4]">
               Rp {room.price.toLocaleString()}
             </div>
-            <Link href={`/transactions`} className="bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition duration-300">
+            <Link onClick={handleChooseRoom} href={`/transactions`} className="bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition duration-300">
               Choose
             </Link>
           </div>

@@ -7,10 +7,12 @@ export class RoomController {
     try {
       const { id } = req.params;
       const rooms = await prisma.room.findMany({
-        where: { propertyId: +id },
+        where: { id: +id },
         include: {
           property: true,
-          
+          roomFacilities: true,
+          bathroomFacilities: true,
+          RoomPicture: true,
         },
       });
       res.status(200).json(rooms);

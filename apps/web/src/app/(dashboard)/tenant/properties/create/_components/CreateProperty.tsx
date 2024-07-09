@@ -18,6 +18,7 @@ import { categories } from '@/components/home/Categories';
 import CategoryInput from './Input/CategoryInput';
 import LocationInput from './Input/LocationInput';
 import { ImageUpload } from './Input/ImageUpload';
+import DescriptionInput from './Input/DescriptionInput';
 
 enum STEPS {
   CATEGORY = 0,
@@ -49,8 +50,7 @@ const validationSchemas = [
   }),
   Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    description: Yup.string().required('Description is required'),
-    image: Yup.string().required('Image is required').min(1, 'Please upload at least one image').max(10, 'Please upload no more than 10 images'),
+    images: Yup.string().required('Image is required').min(1, 'Please upload at least one image').max(10, 'Please upload no more than 10 images'),
   }),
   Yup.object().shape({
     description: Yup.string().required('Description is required'),
@@ -71,8 +71,8 @@ const initialValues = {
   address: '',
   name: '',
   description: '',
-  price: 0,
-  image: '',
+  price: null,
+  images: '',
 }
 
 export default function CreateProperty() {
@@ -141,27 +141,24 @@ export default function CreateProperty() {
               {step === STEPS.INFO && (
                 <div className="grid w-full items-center gap-4">
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Name</Label>
-                    <Field name="name" as={Input} id="name" placeholder="Name" />
+                    <Label htmlFor="name">Property Name</Label>
+                    <Field name="name" as={Input} id="name" placeholder="Your property name" />
                     <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
                   </div>
                 
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="images">Images</Label>
-                    <Field name="image" component={ImageUpload} id="images" />
-                  </div>
+                    <Label htmlFor="images">Show guests what your place looks like!</Label>
+                    <Field name="images" as={Input} component={ImageUpload} id="images" />
                     <ErrorMessage name="images" component="div" className="text-red-500 text-sm" />
+                  </div>
                 </div>
               )}
               {step === STEPS.DESCRIPTION && (
                 <div className="grid w-full items-center gap-4">
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="description">Detailed Description</Label>
                     <Field
                       name="description"
-                      as={Input}
-                      id="description"
-                      placeholder="Detailed Description"
+                      component={DescriptionInput}
                     />
                     <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
                   </div>
