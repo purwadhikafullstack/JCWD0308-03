@@ -13,9 +13,9 @@ export default function ReservationForm() {
     from: new Date(),
     to: addDays(new Date(), 20),
   })
-  const [propertyId, setPropertyId] = useState('1');
-  const [userId, setUserId] = useState('1');
-  const [roomId, setRoomId] = useState('1');
+  const [propertyId, setPropertyId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [roomId, setRoomId] = useState('');
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

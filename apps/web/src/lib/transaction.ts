@@ -1,22 +1,17 @@
-'use server'
-import { cookies } from 'next/headers';
-import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
-
-
-const session = cookies().get('token')?.value;
 
 export const getToken = async () => {
     const token = Cookies.get('token')
     if(!token) return null
     return token
 }
+
 export const getTransaction = async () => {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/transaction`, {
             method: 'GET',
             headers: {
-                Authorization: `Bearer ${session}`,
+                Authorization: `Bearer ${await getToken()}`,
             }
             })
         return res
