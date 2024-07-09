@@ -65,7 +65,7 @@ const TenantSignup = () => {
         if (res.status === 'ok') {
           dispatch(setUser(res.tenant))
           createToken(res.token)
-          Cookies.set('token', res.token)
+          Cookies.set('token', res.token, {expires: 1})
           toast({
             title: 'You succesfully login as tenant',
             description: 'You will redirect to management page',

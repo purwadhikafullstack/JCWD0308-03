@@ -20,24 +20,61 @@ export class RoomController {
     }
   }
 
-  async createRoom(req: Request, res: Response, next: NextFunction) {
+  async createRoom(req: Request, res: Response) {
     try {
-      const {type, price,description, capacity } = req.body;
+      const { type, price, description, capacity, bedDetails, facilities, bathroomFacilities } = req.body;
       const { id } = req.params;
-
+  
+      // Create the room
       const createdRoom = await prisma.room.create({
         data: {
-          ...req.body,
           type,
-          price,
+          price : parseFloat(price),
           description,
+          capacity : parseInt(capacity),
+          bedDetails,
           propertyId: +id,
-          capacity,
-
         },
+        include: {
+          roomFacilities: true,
+          bathroomFacilities: true,
+          RoomPicture: true,
+        }
       });
-      res.status(201).json({status: 'ok',createdRoom});
-      // next()
+  
+      // If facilities are provided, create them
+      if (facilities && facilities.length > 0) {
+        const roomFacilities = facilities.map((facility: string) => ({
+          name: facility,
+          roomId : createdRoom.id
+        }))
+
+        await prisma.roomFacilities.createMany({
+          data: roomFacilities
+        })
+      }
+
+      if (bathroomFacilities && bathroomFacilities.length > 0) {
+        await prisma.bathroomFacilities.createMany({
+          data: bathroomFacilities.map((facility: string) => ({
+            name: facility,
+            roomId: createdRoom.id,
+          }))
+        })
+      }
+
+      const files = req.files as Express.Multer.File[];
+      const fileUrls = files.map((file) => ({
+        url: `http://localhost:8000/public/images/${file?.filename}`,
+        roomId: createdRoom.id 
+      }));
+  
+      const uploadPictures = await prisma.roomPicture.createMany({
+        data: fileUrls,
+        skipDuplicates: true
+      });
+  
+      res.status(201).json({ status: 'ok', createdRoom});
     } catch (error) {
       console.log('failed to create room', error);
       responseError(res, error);

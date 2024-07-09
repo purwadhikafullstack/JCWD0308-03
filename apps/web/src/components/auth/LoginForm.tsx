@@ -150,7 +150,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                       />
                     </div>
                     <div className="mt-4 text-center text-sm">
-                      Don&apos;t have an account?{' '}
+                      First time using Stay Easy?{' '}
                       <Link href={linkHref} className="underline">
                         Sign up
                       </Link>

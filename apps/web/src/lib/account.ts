@@ -67,8 +67,8 @@ export const loginAccount = async (data: any, role: string) => {
       },
     });
     const res = await response.json();
-    createToken(res.token);
-    Cookies.set('token', res.token);
+    await createToken(res.token);
+    Cookies.set('token', res.token, { expires: 1 });
     return res;
   } catch (error) {
     console.log('failed to login : ', error);

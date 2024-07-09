@@ -6,14 +6,16 @@ export interface User {
   email: string;
   profile: string;
   role: string;
-  phoneNumber?: number;
+  phoneNumber?: string;
 }
 export interface UserSlice {
+  user: User | null;
   value: User | null;
 }
 
 const initialState: UserSlice = {
   value: null,
+  user: null
 };
 
 export const userSlice = createSlice({

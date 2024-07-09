@@ -1,7 +1,11 @@
 'use client';
+import { useAppSelector } from '@/hooks/hooks';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
+import { HeartButton } from './HeartButton';
+import { getProperties, getPropertyById } from '@/lib/properties';
+import { Button } from '../Button';
 
 interface PropertieCardProps {
   name: string;
@@ -9,28 +13,32 @@ interface PropertieCardProps {
   country: string;
   city: string;
   category: string;
+  price: number;
   pictures: string;
   disabled?: boolean;
   onAction?: (id: string) => void;
   actionLabel?: string;
   actionId?: string;
   id: number;
+  
 }
 
 const PropertyCard: React.FC<PropertieCardProps> = ({
   name,
   description,
   category,
+  price,
   pictures,
   disabled,
   onAction,
   actionLabel,
-  actionId,
+  actionId = " ",
   country,
   city,
   id,
 }) => {
   const router = useRouter();
+
 
   const handleCancel = useCallback(() => {
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,30 +52,38 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
     };
   }, [onAction, actionId, disabled]);
 
+  const currentUser = useAppSelector((state) => state.user.value);
+
   return (
     <div
       onClick={() => router.push(`/properties/${id}`)}
       className="col-span-1 cursor-pointer group"
     >
-      <div className="max-w-sm">
-        <a href="#" className="">
+      <div className="flex flex-col gap-2 w-full">
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl">
           <Image
-            className="rounded-xl object-cover w-[500px] h-[300px]"
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            className="object-cover w-full h-full transition group-hover:scale-110"
+            src={pictures}
             alt="Property Img"
-            width={500}
-            height={500}
-            
+            fill
           />
-        </a>
-        <div className="p-5">
-          <a href="#">
-            <h5 className="mb-2 text-2xl font-bold">{name}</h5>
-          </a>
-          <p className="mb-3 font-normal">
-            {city},{country}
-          </p>
+          <div className="absolute top-3 right-3">
+            <HeartButton propertyId={1} currentUser={currentUser} />
+          </div>
         </div>
+        <div className="font-semibold text-lg">{name}</div>
+        <div className="font-light text-neutral-500">
+          {/* {city},{country} */}
+          {category}
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold">Rp. {price}</div>{' '}
+          <div className="font-light text-neutral-500">night</div>
+          {onAction && actionLabel && (
+            <Button disabled={disabled} small label={actionLabel} onClick={handleCancel} />
+          )}
+        </div>
+
       </div>
     </div>
   );
