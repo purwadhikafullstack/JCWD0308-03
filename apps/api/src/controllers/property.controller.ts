@@ -29,22 +29,40 @@ export class PropertyController {
     }
   }
 
-  async createProperty(req: Request, res: Response,next:NextFunction) {
+  async createProperty(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, description, category,address } = req.body;
+      const { name, description, category, country, city, province, address } = req.body;
       const { user } = req;
 
       const createdProperty = await prisma.property.create({
         data: {
-          ...req.body,
           name,
           description,
           category,
+          country,
+          city,
+          province,
           address,
           tenantId: Number(user?.id),
+        },
+        include: {
+          PropertyPicture: true,
+
         }
       });
-      res.status(201).json({status: 'ok',createdProperty});
+
+      const files = req.files as Express.Multer.File[];
+      const fileUrls = files.map((file) => ({
+        url: `http://localhost:8000/public/images/${file?.filename}`,
+        propertyId: createdProperty.id,
+      }));
+
+      await prisma.propertyPicture.createMany({
+        data: fileUrls,
+        skipDuplicates: true,
+      });
+
+      res.status(201).json({ status: 'ok', createdProperty });
       // next()
     } catch (error) {
       console.log('failed to create property', error);
@@ -62,7 +80,13 @@ export class PropertyController {
         include: {
           reviews: true,
           Tenant: true,
-          rooms: true,
+          rooms: {
+            include: {
+              RoomPicture: true,
+              roomFacilities: true,
+              bathroomFacilities: true,
+            },
+          },
           Reservation: true,
           PropertyPicture: true,
         },
@@ -125,7 +149,7 @@ export class PropertyController {
 
   async getPropertyByTenantId(req: Request, res: Response) {
     try {
-      const {user} = req
+      const { user } = req;
       const properties = await prisma.property.findMany({
         where: { tenantId: user?.id },
         include: {
@@ -135,10 +159,9 @@ export class PropertyController {
           Reservation: true,
           PropertyPicture: true,
         },
-      })
+      });
 
-      res.status(200).json({msg: 'get property by tenant id' ,properties})
-
+      res.status(200).json({ msg: 'get property by tenant id', properties });
     } catch (error) {
       console.log('failed to get property by tenant id', error);
       responseError(res, error);

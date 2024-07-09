@@ -57,7 +57,7 @@ const UserSignup = () => {
         if (res.status === 'ok') {
           dispatch(setUser(res.user))
           createToken(res.token)
-          Cookies.set('token', res.token)
+          Cookies.set('token', res.token, { expires: 1 })
           toast({
             title: 'Successfully login',
             description : 'You will redirect to home page',

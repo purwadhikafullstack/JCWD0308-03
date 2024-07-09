@@ -135,7 +135,7 @@ export class UserController {
           name, 
           email,
           profile,
-          // phoneNumber,
+          phoneNumber,
           isActive: true,
           isSocialLogin: true
         }

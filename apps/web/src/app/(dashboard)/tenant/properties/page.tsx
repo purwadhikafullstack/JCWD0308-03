@@ -43,7 +43,7 @@ export default  function ManagementProperty() {
     <Wrapper>
       <div className='flex justify-between items-center pe-5 py-8 '>
         <h1 className='text-2xl md:text-3xl font-semibold text-start'>Property List</h1>
-        <Link href='/create' className='bg-gray-100 hover:bg-gray-200 p-2 rounded-full'>
+        <Link href='/tenant/properties/create' className='bg-gray-100 hover:bg-gray-200 p-2 rounded-full'>
         <GoPlus size={32} fill='#4a4a4a' />
         </Link>
       </div>

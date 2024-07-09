@@ -9,11 +9,13 @@ export interface User {
   phoneNumber?: number;
 }
 export interface UserSlice {
+  user: any;
   value: User | null;
 }
 
 const initialState: UserSlice = {
   value: null,
+  user: undefined
 };
 
 export const userSlice = createSlice({
