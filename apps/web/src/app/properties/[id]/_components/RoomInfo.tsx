@@ -5,12 +5,16 @@ import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { IoBedOutline, IoPeople, IoCheckmarkCircleOutline } from 'react-icons/io5';
 import Link from 'next/link';
 import  RoomDescription from './RoomDescription';
+import { useAppDispatch } from '@/hooks/hooks';
+import { setRoom } from '@/hooks/features/room/roomSlice';
+import { Button } from '@/components/Button';
 
 interface RoomInfoProps {
   room: Room;
 }
 
 const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
+  const dispatch = useAppDispatch()
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
@@ -24,6 +28,10 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
       prevIndex === 0 ? room.RoomPicture.length - 1 : prevIndex - 1
     );
   };
+
+  const handleChooseRoom = () => {
+    dispatch(setRoom(room))
+  }
 
   return (
     <div className="border border-gray-300 rounded-lg w-full mx-auto mb-4 overflow-hidden shadow-lg">
@@ -72,8 +80,8 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             </p>
           </div>
             <p className="md:hidden text-gray-600 mb-4"> <RoomDescription room={room}/></p>
-          <Link passHref href={`/transactions`} className="md:hidden bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
-            Choose
+          <Link onClick={handleChooseRoom} passHref href={`/transactions`} className="md:hidden bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
+          Choose
           </Link>
         </div>
       </div>
