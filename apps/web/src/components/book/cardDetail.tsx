@@ -16,6 +16,7 @@ export default function CardDetail() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${id}`);
       setData(await res.json());
+      
     } catch (error) {
       console.log(error);
     }
