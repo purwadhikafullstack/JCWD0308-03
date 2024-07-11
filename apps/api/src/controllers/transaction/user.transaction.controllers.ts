@@ -63,6 +63,18 @@ export class UserTransaction {
     try {
       const reservations = await prisma.reservation.findMany({
         where: { userId: user?.id },
+        select: {
+          id: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+          price: true,
+          room: {
+            include: {
+              property: true,
+            }
+          },
+        }
       });
       res.status(200).json(reservations);
     } catch (error) {
