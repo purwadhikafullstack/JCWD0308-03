@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DatePickerWithRange } from './calendar';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
@@ -18,23 +18,20 @@ export default function ReservationForm({id}:{id:number}) {
   const user = useAppSelector((state) => state.user.value)
 
   const router = useRouter();
-  if (!user) router.push('/login/user')
+  const [room, setRoom] = useState<any>(null)
   
-  const [room, setRoom] = useState<any>(null);
-  const getData = async () => {
-    try {
-      const room = await getRoomsbyId(id);
-      setRoom(room)
-      console.log(id,room);      
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const room = await getRoomsbyId(id);
+        setRoom(room)
+        console.log(id,room);    
+      } catch (error) {
+        console.log(error);
+      }
+    }
     getData()
-  }, [])
-
+  }, [id])      
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,9 +43,9 @@ export default function ReservationForm({id}:{id:number}) {
           // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          propertyId : room.propertyId,
+          propertyId : room?.propertyId,
           userId : user?.id,
-          roomId: room.id,
+          roomId: room?.id,
           date
         })
       });

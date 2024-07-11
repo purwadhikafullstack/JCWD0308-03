@@ -22,7 +22,6 @@ export default function PropertyDetail({params} : {params:Iparams}) {
 
   const [property, setProperty] = useState<Property | null>(null);
 
-
   useEffect(() => {
     async function fetchProperty() {
       try {
