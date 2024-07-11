@@ -4,23 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'akcdn.detik.net.id',
-      },
-      {
-        protocol: 'https',
-        hostname: 'assets.promediateknologi.id',
-      },
-      {
-        protocol: 'https',
-        hostname: 'tourbandung.id',
-      },
-      {
-        protocol: 'https',
-        hostname: 'asset-a.grid.id',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
+        hostname: 'res.cloudinary.com',
       },
       {
         protocol: 'https',

@@ -1,34 +1,28 @@
 'use client';
-import Image from 'next/image';
+import { useAppSelector } from '@/hooks/hooks';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
+import { HeartButton } from './HeartButton';
+import { Button } from '../Button';
+import { Property, Room } from '@/type/property.type';
+import PropertyImgCarousel from './PropertyImgCarousel';
 
 interface PropertieCardProps {
-  name: string;
-  description: string;
-  country: string;
-  city: string;
-  category: string;
-  pictures: string;
+  property: Property;
   disabled?: boolean;
   onAction?: (id: string) => void;
   actionLabel?: string;
   actionId?: string;
-  id: number;
+  room: Room;
 }
 
 const PropertyCard: React.FC<PropertieCardProps> = ({
-  name,
-  description,
-  category,
-  pictures,
   disabled,
   onAction,
   actionLabel,
-  actionId,
-  country,
-  city,
-  id,
+  actionId = ' ',
+  property,
+  room,
 }) => {
   const router = useRouter();
 
@@ -44,30 +38,48 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
     };
   }, [onAction, actionId, disabled]);
 
+  const currentUser = useAppSelector((state) => state.user.value);
+
+  // console.log("halo property :" , property );
+  // console.log("halo rooms :" , room );
+  
+
+  const minPrice = useMemo(() => {
+    if (property.rooms && property.rooms.length > 0) {
+      return Math.min(...property.rooms.map((room) => room.price));
+    }
+    return 0;
+  }, [property.rooms]);
+
   return (
-    <div
-      onClick={() => router.push(`/properties/${id}`)}
-      className="col-span-1 cursor-pointer group"
-    >
-      <div className="max-w-sm">
-        <a href="#" className="">
-          <Image
-            className="rounded-xl object-cover w-[500px] h-[300px]"
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Property Img"
-            width={500}
-            height={500}
-            
-          />
-        </a>
-        <div className="p-5">
-          <a href="#">
-            <h5 className="mb-2 text-2xl font-bold">{name}</h5>
-          </a>
-          <p className="mb-3 font-normal">
-            {city},{country}
-          </p>
+    <div>
+      <div className="flex flex-col gap-2 w-full">
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+          <PropertyImgCarousel propertyPict={property.PropertyPicture} />
+          <div className="absolute top-3 right-3">
+            <HeartButton propertyId={property.id} currentUser={currentUser} />
+          </div>
         </div>
+      <div onClick={() => router.push(`/properties/${property.id}`)}
+      className="col-span-1 cursor-pointer group" >
+        <div className="font-semibold text-lg">{property.name}</div>
+        <div className="font-light text-neutral-500">
+          {/* {city},{country} */}
+          {property.category}
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>{' '}
+          <div className="font-light text-neutral-500">/night</div>
+          {onAction && actionLabel && (
+            <Button
+              disabled={disabled}
+              small
+              label={actionLabel}
+              onClick={handleCancel}
+            />
+          )}
+        </div>
+      </div>
       </div>
     </div>
   );

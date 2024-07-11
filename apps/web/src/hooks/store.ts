@@ -7,7 +7,7 @@ import userReducer from './features/profile/userSlice';
 const rootReducer = combineReducers({
   loginModal: loginModalReducer,
   signupModal: signupModalReducer,
-  user : userReducer
+  user : userReducer,
 });
 
 const store = configureStore({

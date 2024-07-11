@@ -14,13 +14,14 @@ export class PictureController {
             }))
 
             const uploadPictures = await prisma.propertyPicture.createMany({
-                data: fileUrls
+                data: fileUrls,
+                skipDuplicates: true
             })
             res.status(201).json({status : 'ok', uploadPictures})
             // next()
-        } catch (error) {
+        } catch (error:any) {
             console.log('failed to upload pictures property', error);
-            responseError(res, error);
+            responseError(res, error.message);
         }
     }
 
@@ -38,7 +39,8 @@ export class PictureController {
                 data: fileUrls.map(file => ({
                     url : file.url,
                     roomId : file.roomId
-                }))
+                })),
+                skipDuplicates: true
             })
             res.status(201).json({status: 'ok',uploadPictures})
             // next()

@@ -16,13 +16,13 @@ const Search: React.FC<SearchProps> = ({
   return (
     <form
       onSubmit={handleSearch}
-      className="border-[2px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer flex items-center"
+      className="border-[2px] border-[#00a7c4] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer flex items-center bg-white"
     >
       <div className="flex flex-row items-center justify-between w-full">
         <div className="hidden sm:block text-sm font-semibold px-6 text-[#4a4a4a]">
           Anywhere
         </div>
-        <div className="hidden sm:block text-sm  font-semibold px-6 border-x-[2px] flex-1 text-center text-[#4a4a4a]">
+        <div className="hidden sm:block text-sm font-semibold px-6 border-x-[2px] flex-1 text-center text-[#4a4a4a]">
           Any Week
         </div>
         <input

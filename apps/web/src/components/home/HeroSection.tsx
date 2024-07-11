@@ -3,8 +3,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Search from './Search';
 
+interface HeroSectionProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
 
-const HeroSection = () => {
+const HeroSection: React.FC<HeroSectionProps> = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const img = [

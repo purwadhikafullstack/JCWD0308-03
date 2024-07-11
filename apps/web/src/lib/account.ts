@@ -67,12 +67,11 @@ export const loginAccount = async (data: any, role: string) => {
       },
     });
     const res = await response.json();
-    createToken(res.token);
-    Cookies.set('token', res.token);
+    await createToken(res.token);
+    Cookies.set('token', res.token, { expires: 1 });
     return res;
   } catch (error) {
     console.log('failed to login : ', error);
-    // return error
   }
 };
 export const registerUserGoogle = async(user:any, role:string) => {
@@ -87,12 +86,10 @@ export const registerUserGoogle = async(user:any, role:string) => {
     })
     if(!response.ok){
       const errorBody = await response.json()
-      console.log("failed to register user anjuy signInGoogle : ", errorBody);
       return errorBody
     }
 
     const data = await response.json()
-    console.log("data signInGoogle : ", data);
     return data
   } catch (error) {
     console.log("failed to register user signInGoogle : ", error);

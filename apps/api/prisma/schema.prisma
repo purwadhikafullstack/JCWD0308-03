@@ -22,15 +22,14 @@ enum ReservationStatus {
 }
 
 model Property {
-  id                Int     @id @default(autoincrement())
-  name              String
-  description       String  @db.LongText
-  category          String
-  locationCordinate String?
-  country           String
-  city              String
-  province          String
-  address           String
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String @db.LongText
+  category    String
+  province    String
+  city        String
+  district    String
+  address     String
 
   rooms           Room[]
   reviews         Review[]
@@ -61,21 +60,43 @@ model RoomPicture {
 }
 
 model Room {
-  id               Int                @id @default(autoincrement())
-  type             String             @default("Standard")
-  price            Float
-  stock            Int                @default(1)
-  description      String
-  capacity         Int                @default(2)
-  bedDetails       String?
-  propertyId       Int
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  property         Property           @relation(fields: [propertyId], references: [id])
-  reservations     Reservation[]
-  RoomPicture      RoomPicture[]
-  RoomAvailability RoomAvailability[]
-  RoomPeekSeason   RoomPeekSeason[]
+  id                 Int                  @id @default(autoincrement())
+  type               String               @default("Standard")
+  price              Float
+  stock              Int                  @default(1)
+  description        String               @db.LongText
+  capacity           Int                  @default(2)
+  bedDetails         String?
+  propertyId         Int
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  property           Property             @relation(fields: [propertyId], references: [id])
+  reservations       Reservation[]
+  RoomPicture        RoomPicture[]
+  RoomAvailability   RoomAvailability[]
+  RoomPeekSeason     RoomPeakSeason[]
+  roomFacilities     roomFacilities[]
+  bathroomFacilities bathroomFacilities[]
+}
+
+model roomFacilities {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roomId Int
+
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model bathroomFacilities {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roomId Int
+
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RoomAvailability {
@@ -92,15 +113,16 @@ model RoomAvailability {
   @@unique([roomId, start_date, end_date])
 }
 
-model RoomPeekSeason {
+model RoomPeakSeason {
   id         Int      @id @default(autoincrement())
   newPrice   Float
   start_date DateTime
   end_date   DateTime
   roomId     Int
-  room       Room     @relation(fields: [roomId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
 
   @@unique([roomId, start_date, end_date])
 }
