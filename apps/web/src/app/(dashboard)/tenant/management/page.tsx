@@ -11,17 +11,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Wrapper from "@/components/wrapper"
 import { useState, useEffect } from "react"
 import { useAppSelector } from "@/hooks/hooks"
-import { getTransaction } from "@/lib/transaction"
+import { getTransactionById } from "@/lib/transaction"
+import Cookies from "js-cookie"
 
 export default function Management() {
-  const userProfile = useAppSelector((state) => state.user.value)
-  const [order, setOrder] = useState()
-  const getOrder = async () => {
-    const res = await getTransaction()
-    
+  // const userProfile = useAppSelector((state) => state.user.value)
+  const token = Cookies.get('token')
+  const getOrderList = async (token: string | undefined) => {
+    try {
+      const res = await getTransactionById(token)
+      return res
+    } catch (error) {
+      console.log(error);
+    }
   }
   useEffect(() => {
-    getOrder()
+    getOrderList(token)
   }, [])
 
   return (
@@ -47,7 +52,7 @@ export default function Management() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
-                    +25% from last week
+                    +25% from last week 
                   </div>
                 </CardContent>
                 <CardFooter>

@@ -25,10 +25,8 @@ export default function useAuth() {
         // createToken(token)
         // dispatch(setUser(user))
         setData({user, token})
-        console.log("data : ", data.user);
-        
+        console.log("data : ", data.user); 
       }
-
     }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -36,7 +34,5 @@ export default function useAuth() {
       const credential = GoogleAuthProvider.credentialFromError(error);
     });
   }
-  
   return { signInGoogle, data };
-
 }

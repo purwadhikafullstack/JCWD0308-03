@@ -49,7 +49,7 @@ export default function CardDetail({id}:{id:number}) {
             How to position your furniture for positivity
           </h3>
           <h3 className="mt-0.5 text-lg text-gray-900">
-            Room Price:{room?.price.toLocaleString("id-ID" , {style: "currency", currency: "IDR"} )}
+            Room Price : {room?.price.toLocaleString("id-ID" , {style: "currency", currency: "IDR"} )}
           </h3>
         </a>
       </div>

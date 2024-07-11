@@ -1,11 +1,8 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import {
-  calculateNumberOfDays,
-  calculateTotalPrice,
-} from '@/services/reservation.service';
-import { log } from 'console';
+import { calculateNumberOfDays, calculateTotalPrice,} from '@/services/reservation.service';
 import { v4 as uuidv4 } from 'uuid'
+
 const prisma = new PrismaClient();
 export class UserTransaction {
   // Create a new reservation
@@ -61,11 +58,23 @@ export class UserTransaction {
     }
   }
   // Get order list for a user
-  async getUserReservations(req: Request, res: Response) {
-    const { userId } = req.params;
+  async getUserReservationsById(req: Request, res: Response) {
+    const { user } = req
     try {
       const reservations = await prisma.reservation.findMany({
-        where: { userId: parseInt(userId, 10) },
+        where: { userId: user?.id },
+        select: {
+          id: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+          price: true,
+          room: {
+            include: {
+              property: true,
+            }
+          },
+        }
       });
       res.status(200).json(reservations);
     } catch (error) {

@@ -5,6 +5,7 @@ import { UserRouter } from './account/user.router';
 import { TenantRouter } from './account/tenant.router';
 import { RoomRouter } from './room.routers';
 import { TenantManagement } from '@/controllers/tenantManagement/tenant.management.controllers';
+import { TenantManagementRouter } from './tenant.maagement.routers';
 
 export class ApiRouter {
   private userTransactionRouter: UserTransactionRouter;
@@ -12,7 +13,7 @@ export class ApiRouter {
   private userRouter: UserRouter;
   private tenantRouter: TenantRouter;
   private roomRouter: RoomRouter;
-  private tenantManagament: TenantManagement;
+  private tenantManagementRouter: TenantManagementRouter;
   private router: Router;
   constructor() {
     this.router = Router();
@@ -21,7 +22,7 @@ export class ApiRouter {
     this.userRouter = new UserRouter();
     this.tenantRouter = new TenantRouter();
     this.roomRouter = new RoomRouter();
-    this.tenantManagament = new TenantManagement();
+    this.tenantManagementRouter = new TenantManagementRouter();
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
@@ -30,7 +31,7 @@ export class ApiRouter {
     this.router.use('/users', this.userRouter.getRouter());
     this.router.use('/tenants', this.tenantRouter.getRouter());
     this.router.use('/rooms', this.roomRouter.getRouter());
-    this.router.use('/tenantManagements', this.tenantManagament.getOrderList);
+    this.router.use('/tenantManagements', this.tenantManagementRouter.getRouter());
   }
   getRouter(): Router {
     return this.router;
