@@ -1,25 +1,86 @@
-"use client";
-
-import { Formik, Form, Field, ErrorMessage, } from 'formik';
+'use client';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
 import FormField from './FormField';
 import { initialValuesRoom, roomValidationSchema } from './validationSchema';
-import Wrapper from '@/components/wrapper';
 import { Button } from '@/components/Button';
-import roomFacilities from '@/components/RoomFacilities';
-import RoomFaciitiesCheckBox from '../../room/_components/RoomFacilitiesCheckBox';
+import Wrapper from '@/components/wrapper';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { createRoom } from '@/lib/room';
+import { useRouter } from 'next/navigation';
+import { roomFacilities } from '@/components/Facilities';
+import { bathroomFacilities } from '@/components/Facilities';
 
+const CreateRoomForm = ({ id }: { id: number }) => {
+  const [customFacility, setCustomFacility] = useState<string>(''); 
+  const [selectedRoomFacilities, setSelectedRoomFacilities] = useState(roomFacilities); 
+  const [selectedBathroomFacilities, setSelectedBathroomFacilities] = useState(bathroomFacilities); 
+  const toast = useToast();
+  const router = useRouter();
 
-const CreateRoomForm: React.FC = () => {
-  const handleSubmit = (values: typeof initialValuesRoom, actions: any) => {
-    console.log(values);
+  const handleSubmit = async (values: any, actions: any) => {
+    try {
+      const roomFacilityNames = selectedRoomFacilities.map(facility => facility.label);
+      const bathroomFacilityNames = selectedBathroomFacilities.map(facility => facility.label);
+
+      const formData = {
+        ...values,
+        roomFacilities: roomFacilityNames,
+        bathroomFacilities: bathroomFacilityNames,
+      };
+
+      const res = await createRoom(formData, id);
+      console.log("res create room on front fetch: ", res);
+      if (res.status === 'ok') {
+        toast.toast({
+          title: 'Success create room',
+          description: 'Room created successfully, now upload your images',
+          duration: 3000
+        });
+        setTimeout(() => router.push(`/tenant/properties/room/upload-images/${res.createdRoom.id}`), 3500);
+      } else {
+        toast.toast({
+          title: 'Failed to create room',
+          description: res.message || 'Unknown error occurred',
+          variant: 'destructive',
+          duration: 3000
+        });
+      }
+    } catch (error) {
+      toast.toast({
+        title: 'Something went wrong',
+        description: 'Please try again',
+        variant: 'destructive',
+        duration: 3000
+      });
+      console.error(error);
+    }
+
     actions.setSubmitting(false);
-    // Replace with your actual form submission logic
+  };
+
+  const handleAddCustomFacility = () => {
+    if (customFacility.trim() !== '') {
+      const newFacility = { label: customFacility, description: customFacility };
+      setSelectedRoomFacilities([...selectedRoomFacilities, newFacility]); 
+      setCustomFacility('');
+    }
+  };
+
+  const handleAddCustomBathroomFacility = () => {
+    if (customFacility.trim() !== '') {
+      const newFacility = { label: customFacility, description: customFacility };
+      setSelectedBathroomFacilities([...selectedBathroomFacilities, newFacility]); 
+      setCustomFacility('');
+    }
   };
 
   return (
-      <Card className="w-full max-w-lg">
-        <CardHeader>
+    <Wrapper>
+      <Card className="w-full">
+        <CardHeader className='text-center'>
           <CardTitle>Create Room</CardTitle>
           <CardDescription>Fill in the details to create a new room</CardDescription>
         </CardHeader>
@@ -29,15 +90,67 @@ const CreateRoomForm: React.FC = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form className="grid gap-4 p-4">
+            <Form className="flex flex-col gap-4 sm:p-2 md:p-3 lg:p-4">
               <CardContent>
                 <FormField name="type" label='Type' type="text" placeholder="Deluxe / Standard / Suite / etc" />
-                <FormField name="price"  label="Price" type="number" placeholder="6000000"/>
+                <FormField name="price" label="Price" type="number" placeholder="6000000" />
                 <FormField name="description" label='Description' type="textarea" placeholder="Elegant suite with stunning city views and cozy room with modern amenities and etc" />
                 <FormField name="stock" label='Stock' type="number" placeholder="Stock" />
                 <FormField name="capacity" label='Capacity' type="number" placeholder="Capacity" />
                 <FormField name="bedDetails" label='Bed Details' type="text" placeholder="1 King Bed" />
-                <RoomFaciitiesCheckBox />
+                <div className='mt-4 mb-12 relative'>
+                  <Label className="block mb-3 pt-2">Room Facilities</Label>
+                  <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 '>
+                    {selectedRoomFacilities.map((facility, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <Field
+                          type="checkbox"
+                          name={`roomFacilities[${index}]`}
+                          value={facility.label}
+                        />
+                        <span className="ml-2">{facility.label}</span>
+                      </div>
+                    ))}
+                    <div className="absolute -bottom-10 left-0 flex items-center mb-2">
+                      <input
+                        type="text"
+                        value={customFacility}
+                        onChange={(e) => setCustomFacility(e.target.value)}
+                        placeholder="Add facility.."
+                        className="border border-gray-300 rounded-md p-1"
+                      />
+                      <Button label='Add' type='button' outline small onClick={handleAddCustomFacility} className='ml-2 p-2 font-semibold border-2 border-gray-300' />
+                    </div>
+                  </div>
+                  <ErrorMessage name="roomFacilities" component="div" className="text-red-500 text-sm" />
+                </div>
+
+                <div className='mt-4 relative'>
+                  <Label className="block mb-3 pt-2">Bathroom Facilities</Label>
+                  <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 '>
+                    {selectedBathroomFacilities.map((facility, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <Field
+                          type="checkbox"
+                          name={`bathroomFacilities[${index}]`}
+                          value={facility.label}
+                        />
+                        <span className="ml-2">{facility.label}</span>
+                      </div>
+                    ))}
+                    <div className="absolute -bottom-1 left-0 flex items-center mb-2">
+                      <input
+                        type="text"
+                        value={customFacility}
+                        onChange={(e) => setCustomFacility(e.target.value)}
+                        placeholder="Add facility.."
+                        className="border border-gray-300 rounded-md p-1"
+                      />
+                      <Button label='Add' type='button' outline small onClick={handleAddCustomBathroomFacility} className='ml-2 p-2 font-semibold border-2 border-gray-300' />
+                    </div>
+                  </div>
+                  <ErrorMessage name="bathroomFacilities" component="div" className="text-red-500 text-sm" />
+                </div>
               </CardContent>
               <CardFooter>
                 <Button type="submit" label="Create Room" disabled={isSubmitting} />
@@ -46,6 +159,7 @@ const CreateRoomForm: React.FC = () => {
           )}
         </Formik>
       </Card>
+    </Wrapper>
   );
 };
 
