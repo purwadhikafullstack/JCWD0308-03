@@ -22,15 +22,14 @@ enum ReservationStatus {
 }
 
 model Property {
-  id                Int     @id @default(autoincrement())
-  name              String
-  description       String  @db.LongText
-  category          String
-  locationCordinate String?
-  country           String
-  city              String
-  province          String
-  address           String
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String @db.LongText
+  category    String
+  province    String
+  city        String
+  district    String
+  address     String
 
   rooms           Room[]
   reviews         Review[]
@@ -95,7 +94,7 @@ model bathroomFacilities {
   name   String
   roomId Int
 
-  room      Room @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

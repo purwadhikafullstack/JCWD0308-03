@@ -5,19 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useParams } from "next/navigation";
-import Image from 'next/image'
-import { useAppSelector } from "@/hooks/hooks";
-import { Room, RoomPicture } from "@/type/property.type";
 
 export default function CardDetail() {
   const [data, setData] = useState([]);
   const params = useParams();
-  const room = useAppSelector((state) => state.room.currentRoom);
 
   // const totalPrice = data.rooms[params.index].price * data.days
   const getData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${room?.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${params.id}`);
       setData(await res.json());
       
     } catch (error) {
@@ -28,16 +24,15 @@ export default function CardDetail() {
     getData()
   }, [])
 
-  console.log('data room at card detail: ', data);
   
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
-      <Image
+      {/* <Image
         alt="" src={room?.RoomPicture[0].url!}
         width={800} height={500}
         className="h-56 w-full object-cover"
-      />
+      /> */}
       <div className="bg-white p-4 sm:p-6">
         <a href="#">
           <h3 className="mt-0.5 text-lg text-gray-900">

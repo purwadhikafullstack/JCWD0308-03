@@ -3,8 +3,8 @@ import CreateProperty from './_components/CreateProperty'
 
 const Page = () => {
   return (
-    <div className='h-screen grid place-items-center '>
-        <CreateProperty />
+    <div className='min-h-screen flex items-center justify-center'>
+        <CreateProperty /> 
     </div>
   )
 }

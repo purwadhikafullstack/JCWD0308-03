@@ -3,10 +3,10 @@ import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
 
 export class RoomController {
-  async getRooms(req: Request, res: Response) {
+  async getRoomById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const rooms = await prisma.room.findMany({
+      const rooms = await prisma.room.findUnique({
         where: { id: +id },
         include: {
           property: true,
@@ -27,7 +27,6 @@ export class RoomController {
       const { type, price, description, capacity, bedDetails, facilities, bathroomFacilities } = req.body;
       const { id } = req.params;
   
-      // Create the room
       const createdRoom = await prisma.room.create({
         data: {
           type,
@@ -40,22 +39,17 @@ export class RoomController {
         include: {
           roomFacilities: true,
           bathroomFacilities: true,
-          RoomPicture: true,
         }
       });
   
-      // If facilities are provided, create them
       if (facilities && facilities.length > 0) {
-        const roomFacilities = facilities.map((facility: string) => ({
-          name: facility,
-          roomId : createdRoom.id
-        }))
-
-        await prisma.roomFacilities.createMany({
-          data: roomFacilities
-        })
+       await prisma.roomFacilities.createMany({
+         data: facilities.map((facility: string) => ({
+           name: facility,
+           roomId: createdRoom.id,
+         }))
+       })
       }
-
       if (bathroomFacilities && bathroomFacilities.length > 0) {
         await prisma.bathroomFacilities.createMany({
           data: bathroomFacilities.map((facility: string) => ({
@@ -64,17 +58,6 @@ export class RoomController {
           }))
         })
       }
-
-      const files = req.files as Express.Multer.File[];
-      const fileUrls = files.map((file) => ({
-        url: `http://localhost:8000/public/images/${file?.filename}`,
-        roomId: createdRoom.id 
-      }));
-  
-      const uploadPictures = await prisma.roomPicture.createMany({
-        data: fileUrls,
-        skipDuplicates: true
-      });
   
       res.status(201).json({ status: 'ok', createdRoom});
     } catch (error) {

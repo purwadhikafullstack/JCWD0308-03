@@ -7,6 +7,11 @@ export interface User {
   profile: string;
   role: string;
   phoneNumber?: string;
+  bio?: string;
+  dob : Date;
+  gender? : string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface UserSlice {
   user: User | null;

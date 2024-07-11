@@ -51,7 +51,6 @@ export const getPropertyByTenantId = async (token:string) => {
       },
     })
     const res = await response.json();
-    console.log('res get properti by tenant on front fetch: ', res);
     return res
   } catch (error) {
     console.log(" failed to get properties by tenant id: ", error);
@@ -67,9 +66,29 @@ export const getPropertyById = async (id:number) => {
       },
     })
     const res = await response.json();
-    // console.log('res get properti by id on front fetch: ', res);
     return res
   } catch (error) {
     console.log('failed to get property by id : ', error);
+  }
+}
+
+export const uploadImages = async (id: number, data:any, segment: string) => {
+  try {
+    const response = await fetch(`http://localhost:8000/api/${segment}/${id}/uploadPictures`, {
+      method: 'POST',
+      body: data,
+    })
+
+    if (response.ok) {
+      const res = await response.json();
+      console.log('res upload property images on front fetch: ', res);
+      return res
+    } else {
+      const errorText = await response.json();
+      throw new Error(errorText);
+    }
+
+  } catch (error) {
+    console.log(" failed to upload property images : ", );
   }
 }
