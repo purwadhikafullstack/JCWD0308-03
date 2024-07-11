@@ -1,17 +1,19 @@
 'use client'
-import {useEffect} from "react";
+import {useState, useEffect} from "react";
 import { Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Image from 'next/image'
-import { useAppSelector } from "@/hooks/hooks";
+import { getRoomsbyId } from "@/lib/transaction";
 
-export default function CardDetail() {
-  const rooms = useAppSelector((state) => state.room.currentRoom)
+export default function CardDetail({id}:{id:number}) {
+  const [room, setRoom] = useState<any>(null)
   const getData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${rooms?.id}`);
+      const room = await getRoomsbyId(id);
+      setRoom(room)
+      console.log(id,room);      
     } catch (error) {
       console.log(error);
     }
@@ -19,21 +21,22 @@ export default function CardDetail() {
   useEffect(() => {
     getData()
   }, [])
+
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
       <Image
-        alt="" src={rooms?.roomPictures[0].url!}
+        alt="" src={room?.RoomPicture[0].url!}
         width={800} height={500}
         className="h-56 w-full object-cover"
       />
       <div className="bg-white p-4 sm:p-6">
         <a href="#">
           <h3 className="mt-0.5 text-lg text-gray-900">
-            {rooms?.description}
+            How to position your furniture for positivity
           </h3>
           <h3 className="mt-0.5 text-lg text-gray-900">
-            Room Price: {rooms?.price}
+            Room Price: Rp.{room?.price.toLocaleString()}
           </h3>
         </a>
       </div>
@@ -42,7 +45,7 @@ export default function CardDetail() {
           <CardHeader className="flex flex-row items-start bg-muted/50">
             <div className="grid gap-0.5">
               <CardTitle className="group flex items-center gap-2 text-lg">
-                Order ID : {rooms?.id}
+                {room?.id}
                 <Button
                   size="icon"
                   variant="outline"
@@ -51,7 +54,7 @@ export default function CardDetail() {
                   <span className="sr-only">Copy Order ID</span>
                 </Button>
               </CardTitle>
-              <CardDescription>Desc</CardDescription>
+              <CardDescription>{room?.description}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="p-6 text-sm">
@@ -60,7 +63,7 @@ export default function CardDetail() {
               <ul className="grid gap-3">
                 <li className="flex items-center justify-between">
                   <span className="text-muted-foreground">
-                    Glimmer Lamps x <span>2 </span>
+                    {room?.type} x <span>2 </span>
                   </span>
                   <span>$250.00</span>
                 </li>
@@ -69,7 +72,7 @@ export default function CardDetail() {
               <ul className="grid gap-3">
                 <li className="flex items-center justify-between font-semibold">
                   <span className="text-muted-foreground">Total</span>
-                  <span>{rooms?.price}</span>
+                  <span>$329.00</span>
                 </li>
               </ul>
             </div>

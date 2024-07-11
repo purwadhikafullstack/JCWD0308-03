@@ -42,7 +42,6 @@ export default function PropertyDetail({params} : {params:Iparams}) {
     return (
       <div className="flex justify-center items-center">
         <BiLoaderCircle className="size-24 animate-spin h-screen text-[#00a7c4]" />
-        
       </div>
     );
   }

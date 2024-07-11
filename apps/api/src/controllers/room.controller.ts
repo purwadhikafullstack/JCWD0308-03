@@ -6,10 +6,13 @@ export class RoomController {
   async getRooms(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const rooms = await prisma.room.findMany({
-        where: {id: +id },
+      const rooms = await prisma.room.findUnique({
+        where: { id: +id },
         include: {
           property: true,
+          roomFacilities: true,
+          bathroomFacilities: true,
+          RoomPicture: true,
         },
       });
       res.status(200).json(rooms);

@@ -11,7 +11,7 @@ export interface Room {
     propertyId: number;
     createdAt: string;
     updatedAt: string;
-    roomPictures: { url: string }[];
+    RoomPicture : {url :string}[]
 }
 
 export interface RoomSlice {
@@ -31,7 +31,7 @@ export const roomSlice = createSlice({
       setRoom: (state, action) => {
         state.currentRoom = action.payload;
       },
-      setRoomsDetails: (state, action) => {
+      setRoomsDetails: (state, action: PayloadAction<Room[]>) => {
         state.rooms = action.payload;
       },
       resetRoom: (state) => {
