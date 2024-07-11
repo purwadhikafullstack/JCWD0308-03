@@ -6,37 +6,50 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator"
 import Image from 'next/image'
 import { getRoomsbyId } from "@/lib/transaction";
+import { useAppSelector } from "@/hooks/hooks";
+import { BiLoaderCircle } from "react-icons/bi";
 
 export default function CardDetail({id}:{id:number}) {
+  const user = useAppSelector((state) => state.user.value)
   const [room, setRoom] = useState<any>(null)
-  const getData = async () => {
-    try {
-      const room = await getRoomsbyId(id);
-      setRoom(room)
-      console.log(id,room);      
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
+    async function getData() {
+      try {
+        const room = await getRoomsbyId(id);
+        setRoom(room)
+        setLoading(false)
+      } catch (error) {
+        console.log(error);
+      }
+    }
     getData()
-  }, [])
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className='flex justify-center items-center'>
+      {/* <BiLoaderCircle className='size-24 animate-spin h-screen text-[#00a7c4]' />  */}
+    </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
-      {/* <Image
+      <Image
         alt="" src={room?.RoomPicture[0].url!}
         width={800} height={500}
         className="h-56 w-full object-cover"
-      /> */}
+      />
       <div className="bg-white p-4 sm:p-6">
         <a href="#">
           <h3 className="mt-0.5 text-lg text-gray-900">
             How to position your furniture for positivity
           </h3>
           <h3 className="mt-0.5 text-lg text-gray-900">
-            Room Price: Rp.{room?.price.toLocaleString()}
+            Room Price : {room?.price.toLocaleString("id-ID" , {style: "currency", currency: "IDR"} )}
           </h3>
         </a>
       </div>
@@ -82,7 +95,7 @@ export default function CardDetail({id}:{id:number}) {
               <dl className="grid gap-3">
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Customer</dt>
-                  <dd>Liam Johnson</dd>
+                  <dd>{user?.name}</dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Email</dt>

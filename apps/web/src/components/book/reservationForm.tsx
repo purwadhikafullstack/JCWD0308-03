@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DatePickerWithRange } from './calendar';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
@@ -7,8 +7,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
 import { useAppSelector } from '@/hooks/hooks';
+import { getRoomsbyId } from '@/lib/transaction';
 
-export default function ReservationForm() {
+export default function ReservationForm({id}:{id:number}) {
   const {toast} = useToast();
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
@@ -16,6 +17,21 @@ export default function ReservationForm() {
   })
   const user = useAppSelector((state) => state.user.value)
   const router = useRouter();
+  const [room, setRoom] = useState<any>(null)
+  
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const room = await getRoomsbyId(id);
+        setRoom(room)
+        console.log(id,room);    
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData()
+  }, [id])      
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -26,9 +42,9 @@ export default function ReservationForm() {
           // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          // propertyId : room?.propertyId,
-          // userId : user?.id,
-          // roomId: room?.id,
+          propertyId : room?.propertyId,
+          userId : user?.id,
+          roomId: room?.id,
           date
         })
       });

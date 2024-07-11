@@ -4,11 +4,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export class TenantManagement {
     async getOrderList(req: Request, res: Response) {
-        const { id } = req.query;
-        // console.log(req.user);
         try {
+            const { user } = req
             const orders = await prisma.reservation.findMany({
-                where: {Property: { id: +id!}},
+                where: { userId: user?.id},
                 include: {
                     user: true,
                     room: true,

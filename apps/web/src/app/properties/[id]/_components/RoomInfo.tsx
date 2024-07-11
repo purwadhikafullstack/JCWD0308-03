@@ -80,45 +80,12 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
               Rp {room.price.toLocaleString()}
             </p>
-<<<<<<< HEAD
-          </div>
-            <p className="md:hidden text-gray-600 mb-4"> <RoomDescription room={room}/></p>
-          <Link passHref href={`/transactions/${room.id}`} className="md:hidden bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
-=======
           <Link passHref href={`/transactions/${room.id}`} className=" bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
->>>>>>> 39a8c32a2b08621d4df8b0115e5f2fc7943a0c99
           Choose
           </Link>
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* Additional Information for large screens */}
-      <div className="hidden md:flex p-6 border-t border-gray-200">
-        <div className="w-full">
-          <h3 className="text-xl font-semibold mb-2">Room Option(s)</h3>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex flex-col">
-              <span className="font-medium">{room.type} - Without Breakfast</span>
-              <span className="text-sm text-gray-500">Free Cancellation before 12 Jul 2024, 16:59</span>
-              <div className="flex items-center text-gray-600">
-                <IoBedOutline className="mr-2" />
-                1 King Bed
-              </div>
-            </div>
-            <div className="text-lg font-semibold text-[#00a7c4]">
-              Rp {room.price.toLocaleString()}
-            </div>
-            <Link href={`/transactions/${room.id}`} className="bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition duration-300">
-              Choose
-            </Link>
-          </div>
-
-          {/* Repeat above block for other room options if available */}
-        </div>
-      </div>
-=======
->>>>>>> 39a8c32a2b08621d4df8b0115e5f2fc7943a0c99
     </div>
   );
 };

@@ -1,22 +1,30 @@
+'use client'
 import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader,TableRow, } from "@/components/ui/table"
 import Wrapper from "@/components/wrapper"
+import { getUserReservationsById } from "@/lib/transaction"
+import Cookies from "js-cookie"
+import { useEffect, useState } from "react"
 
-export default function UserDash() {
+export default function UserReservation() {
+  const token = Cookies.get('token')
+  const [reservation, setReservation] = useState<any>(null)
+  const res = async(token : any) => {
+    try {
+      const res = await getUserReservationsById(token)
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    
+    res(token)
+  },[])
+
+  console.log(res);
+  
   return (
     <Wrapper>
     <Card>
@@ -28,8 +36,8 @@ export default function UserDash() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Customer</TableHead>
-              <TableHead className="hidden sm:table-cell">Type</TableHead>
+              <TableHead>Property</TableHead>
+              <TableHead className="hidden sm:table-cell">Type Room</TableHead>
               <TableHead className="hidden sm:table-cell">Status</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
               <TableHead className="text-right">Amount</TableHead>
@@ -38,7 +46,7 @@ export default function UserDash() {
           <TableBody>
             <TableRow className="bg-accent">
               <TableCell>
-                <div className="font-medium">Liam Johnson</div>
+                <div className="font-medium">Liam Johnson </div>
                 <div className="hidden text-sm text-muted-foreground md:inline">
                   liam@example.com
                 </div>
@@ -117,54 +125,6 @@ export default function UserDash() {
               </TableCell>
               <TableCell className="hidden md:table-cell">2023-06-23</TableCell>
               <TableCell className="text-right">$250.00</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <div className="font-medium">Liam Johnson</div>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  liam@example.com
-                </div>
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">Sale</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Badge className="text-xs" variant="secondary">
-                  Fulfilled
-                </Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">2023-06-23</TableCell>
-              <TableCell className="text-right">$250.00</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <div className="font-medium">Olivia Smith</div>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  olivia@example.com
-                </div>
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">Refund</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Badge className="text-xs" variant="outline">
-                  Declined
-                </Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">2023-06-24</TableCell>
-              <TableCell className="text-right">$150.00</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <div className="font-medium">Emma Brown</div>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  emma@example.com
-                </div>
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">Sale</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Badge className="text-xs" variant="secondary">
-                  Fulfilled
-                </Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">2023-06-26</TableCell>
-              <TableCell className="text-right">$450.00</TableCell>
             </TableRow>
           </TableBody>
         </Table>
