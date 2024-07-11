@@ -4,18 +4,10 @@ import Wrapper from '@/components/wrapper';
 import HeroSection from '@/components/home/HeroSection';
 import Categories from '@/components/home/Categories';
 import { getProperties } from '@/lib/properties';
-import { useAppSelector } from '@/hooks/hooks';
-import { getUser } from '@/lib/account';
-import Cookies from 'js-cookie';
-import { cookies } from 'next/headers';
 
 export default async function Home() {
   const properties = await getProperties();
-  const token = Cookies.get('token')
   
-  console.log('properties: ', properties);
-  
-
   const isEmpty = false;
   if (isEmpty) {
     return <EmptyState showReset />;

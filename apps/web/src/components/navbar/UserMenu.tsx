@@ -77,7 +77,7 @@ export const UserMenu = () => {
               <>
                 {userProfile?.role === 'user' ? (
                   <>
-                    <MenuItem label="My reservation" onClick={() => {}} />
+                    <MenuItem label="My reservation" onClick={() => {router.push('/user/reservation')}} />
                     <MenuItem label="My favorite" onClick={() => {}} />
                     <MenuItem label="Profile" onClick={() => {router.push('/profile')}} />
                     <hr className="bg-gray-300" />

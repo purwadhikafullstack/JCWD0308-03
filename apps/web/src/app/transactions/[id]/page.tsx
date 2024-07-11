@@ -13,7 +13,7 @@ export default function  transactions({params} : {params:{id:number}}) {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <ReservationForm />
+            <ReservationForm id={params.id}/>
           </div>
           <div>
           <div className="flex flex-col gap-5">
