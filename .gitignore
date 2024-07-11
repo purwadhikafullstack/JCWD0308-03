@@ -37,3 +37,7 @@ yarn-error.log*
 
 # others
 dist
+
+.env
+.env.development
+.package-lock.json
