@@ -4,18 +4,16 @@ import { Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { useParams } from "next/navigation";
+import Image from 'next/image'
+import { getRoomsbyId } from "@/lib/transaction";
 
-export default function CardDetail() {
-  const [data, setData] = useState([]);
-  const params = useParams();
-
-  // const totalPrice = data.rooms[params.index].price * data.days
+export default function CardDetail({id}:{id:number}) {
+  const [room, setRoom] = useState<any>(null)
   const getData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${params.id}`);
-      setData(await res.json());
-      
+      const room = await getRoomsbyId(id);
+      setRoom(room)
+      console.log(id,room);      
     } catch (error) {
       console.log(error);
     }
@@ -24,7 +22,6 @@ export default function CardDetail() {
     getData()
   }, [])
 
-  
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
@@ -39,7 +36,7 @@ export default function CardDetail() {
             How to position your furniture for positivity
           </h3>
           <h3 className="mt-0.5 text-lg text-gray-900">
-            Room Price: {}
+            Room Price: Rp.{room?.price.toLocaleString()}
           </h3>
         </a>
       </div>
@@ -48,7 +45,7 @@ export default function CardDetail() {
           <CardHeader className="flex flex-row items-start bg-muted/50">
             <div className="grid gap-0.5">
               <CardTitle className="group flex items-center gap-2 text-lg">
-                Order Oe31b70H
+                {room?.id}
                 <Button
                   size="icon"
                   variant="outline"
@@ -57,7 +54,7 @@ export default function CardDetail() {
                   <span className="sr-only">Copy Order ID</span>
                 </Button>
               </CardTitle>
-              <CardDescription>Date: November 23, 2023</CardDescription>
+              <CardDescription>{room?.description}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="p-6 text-sm">
@@ -66,15 +63,9 @@ export default function CardDetail() {
               <ul className="grid gap-3">
                 <li className="flex items-center justify-between">
                   <span className="text-muted-foreground">
-                    Glimmer Lamps x <span>2 </span>
+                    {room?.type} x <span>2 </span>
                   </span>
                   <span>$250.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">
-                    Aqua Filters x <span>1</span>
-                  </span>
-                  <span>$49.00</span>
                 </li>
               </ul>
               <Separator className="my-2" />

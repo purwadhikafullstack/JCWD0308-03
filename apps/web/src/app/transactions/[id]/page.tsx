@@ -1,14 +1,9 @@
 import Wrapper from "@/components/wrapper";
 import ReservationForm from "@/components/book/reservationForm";
 import CardDetail from "@/components/book/cardDetail";
-// import { useState } from "react";
+import { param } from "cypress/types/jquery";
 
-export default function  Transaction() {
-  // const [propertyId, setPropertyId] = useState('');
-  // const [userId, setUserId] = useState('');
-  // const [roomId, setRoomId] = useState('');
-  // const [startDate, setStartDate] = useState('');
-  // const [endDate, setEndDate] = useState('');
+export default function  transactions({params} : {params:{id:number}}) {
   return (
     <Wrapper>
     <div className="min-h-screen pt-20">
@@ -22,7 +17,7 @@ export default function  Transaction() {
           </div>
           <div>
           <div className="flex flex-col gap-5">
-            <CardDetail/>
+            <CardDetail id={params.id}/>
           </div> 
           </div>
         </div>
