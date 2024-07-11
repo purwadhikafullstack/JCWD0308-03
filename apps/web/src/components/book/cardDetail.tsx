@@ -30,7 +30,7 @@ export default function CardDetail({id}:{id:number}) {
   if (loading) {
     return (
       <div className='flex justify-center items-center'>
-      {/* <BiLoaderCircle className='size-24 animate-spin h-screen text-[#00a7c4]' />  */}
+      <BiLoaderCircle className='size-24 animate-spin h-screen text-[#00a7c4]' /> 
     </div>
     )
   }

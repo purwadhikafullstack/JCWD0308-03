@@ -16,6 +16,7 @@ export default function ReservationForm({id}:{id:number}) {
     to: addDays(new Date(), 20),
   })
   const user = useAppSelector((state) => state.user.value)
+
   const router = useRouter();
   const [room, setRoom] = useState<any>(null)
   
