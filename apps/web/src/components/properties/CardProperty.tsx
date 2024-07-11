@@ -3,20 +3,30 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export const revalidate = 3600
+export const revalidate = 3600;
 
 interface CardPropertyProps {
   name: string;
   city?: string;
   country?: string;
-  id :number
+  id: number;
 }
 
-export const CardProperty: React.FC<CardPropertyProps> = ({name, city, country, id}) => {
-  const router = useRouter()
+export const CardProperty: React.FC<CardPropertyProps> = ({
+  name,
+  city,
+  country,
+  id,
+}) => {
+  const router = useRouter();
   return (
     <div>
-      <div className="" onClick={() => {router.push(`/properties/editor/${id}`)}}>
+      <div
+        className=""
+        onClick={() => {
+          router.push(`/tenant/properties/editor/${id}`);
+        }}
+      >
         <a href="#" className="">
           <Image
             className="rounded-3xl object-cover w-[500px] h-[350px]"
@@ -30,9 +40,11 @@ export const CardProperty: React.FC<CardPropertyProps> = ({name, city, country, 
           <a href="#">
             <h5 className="mb-2 text-2xl font-bold">{name}</h5>
           </a>
-          <p className="mb-3 font-normal">{city}, {country}</p>
+          <p className="mb-3 font-normal">
+            {city}, {country}
+          </p>
         </div>
       </div>
     </div>
   );
-}
+};

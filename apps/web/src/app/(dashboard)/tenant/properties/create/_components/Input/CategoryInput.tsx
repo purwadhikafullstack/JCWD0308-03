@@ -1,32 +1,3 @@
-// import { Field } from "formik";
-// import { IconType } from "react-icons";
-
-// interface CategoryInputProps {
-//     icon: IconType;
-//     label: string;
-//     selected?: boolean;
-//     onClick: (value: string) => void;
-// }
-
-// const CategoryInput:React.FC<CategoryInputProps> = ({
-//     icon: Icon,
-//     label,
-//     selected,
-//     onClick,
-
-// }) => {
-//     return (
-//         <div 
-//         onClick={() => onClick(label)} 
-//         className={`rounded-xl border-2 p-4 flex flex-col gap-4 hover:border-black cursor-pointer ${selected ? 'border-black' : 'border-neutral-200'}`}>
-//            <Icon size={30} fill={selected ? 'black' : 'gray'} />
-//            <div className="font-semibold">{label}</div>
-//         </div>
-//     );
-// };
-
-// export default CategoryInput
-
 import React from "react";
 import { IconType } from "react-icons";
 
@@ -52,12 +23,12 @@ const CategoryInput: React.FC<CategoryInputProps> = ({
   return (
     <div
       onClick={handleClick}
-      className={`rounded-xl border-2 p-4 flex flex-col gap-4 hover:border-black cursor-pointer ${
-        isSelected ? "border-black" : "border-neutral-200"
+      className={`rounded-xl group border-4 p-4 flex flex-col gap-4 hover:border-[#00a7c4] ${
+        isSelected ? "border-[#00a7c4]" : "border-neutral-200"
       }`}
     >
-      <Icon size={30} fill={isSelected ? "black" : "gray"} />
-      <div className="font-semibold">{label}</div>
+      <Icon size={30} fill={isSelected ? "#00a7c4" : "gray"} className="group-hover:fill-[#00a7c4]" />
+      <div className={`font-semibold group-hover:text-[#00a7c4]  ${isSelected ? "text-[#00a7c4]" : "text-gray-600"}`}>{label}</div>
     </div>
   );
 };

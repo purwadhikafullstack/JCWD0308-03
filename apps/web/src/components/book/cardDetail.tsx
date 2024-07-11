@@ -5,16 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useParams } from "next/navigation";
-import Image from 'next/image'
 
 export default function CardDetail() {
   const [data, setData] = useState([]);
   const params = useParams();
-  const id = '1'
+
   // const totalPrice = data.rooms[params.index].price * data.days
   const getData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/room/${params.id}`);
       setData(await res.json());
       
     } catch (error) {
@@ -24,14 +23,16 @@ export default function CardDetail() {
   useEffect(() => {
     getData()
   }, [])
+
+  
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
-      <Image
-        alt="" src="https://images.unsplash.com/photo-1561501878-aabd62634533?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJvb20lMjBob3RlbHxlbnwwfHwwfHx8MA%3D%3D"
+      {/* <Image
+        alt="" src={room?.RoomPicture[0].url!}
         width={800} height={500}
         className="h-56 w-full object-cover"
-      />
+      /> */}
       <div className="bg-white p-4 sm:p-6">
         <a href="#">
           <h3 className="mt-0.5 text-lg text-gray-900">

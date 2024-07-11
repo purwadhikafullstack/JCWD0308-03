@@ -26,7 +26,6 @@ const EditorProperties = () => {
 
   return (
     <Wrapper>
-     <h1>Editor Properties</h1>
      <EditProperty />
     </Wrapper>
   )

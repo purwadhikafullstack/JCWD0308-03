@@ -79,7 +79,7 @@ export const UserMenu = () => {
                   <>
                     <MenuItem label="My reservation" onClick={() => {}} />
                     <MenuItem label="My favorite" onClick={() => {}} />
-                    <MenuItem label="Profile" onClick={() => {router.push('/user/profile')}} />
+                    <MenuItem label="Profile" onClick={() => {router.push('/profile')}} />
                     <hr className="bg-gray-300" />
                     <LogoutAlertDialog label='Logout' onClick={onLogout} />
                   </>
@@ -88,7 +88,7 @@ export const UserMenu = () => {
                     <MenuItem label="Management" onClick={() => {router.push('/tenant/management')}} />
                     <MenuItem label="Property List" onClick={() => {router.push('/tenant/properties')}} />
                     <MenuItem label="Add Property" onClick={() => {router.push('/tenant/properties/create')}} />
-                    <MenuItem label="Profile" onClick={()=> router.push('/tenant/profile')} />
+                    <MenuItem label="Profile" onClick={()=> router.push('/profile')} />
                     <hr className="bg-gray-300" />
                     <LogoutAlertDialog label='Logout' onClick={onLogout} />
                   </>

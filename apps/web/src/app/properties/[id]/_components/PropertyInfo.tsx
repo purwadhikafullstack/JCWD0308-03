@@ -1,18 +1,19 @@
-"use client";
+'use client';
 import React from 'react';
 import { FiMapPin } from 'react-icons/fi';
 import { FiStar } from 'react-icons/fi';
 import { IoIosArrowForward } from 'react-icons/io';
-import { Avatar } from '@/components/Avatar';
 import { Property } from '@/type/property.type';
 import { DescriptionProperty } from './DescriptionProperty';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface PropertyInfoProps {
   property: Property;
 }
 
 const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
-  const { name, description, address, city, province, country, Tenant } = property;
+  const { name, description, address, city, province, Tenant, district } =
+    property;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-xl">
@@ -21,7 +22,7 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
         <h2 className="text-xl font-bold">{name}</h2>
         <div className="flex items-center gap-2">
           <FiStar className="text-yellow-500" size={20} />
-          <span className="text-lg font-semibold">8.6 Impressive</span>
+          <span className="text-lg font-semibold">4.9</span>
         </div>
       </div>
 
@@ -29,7 +30,9 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
       <div className="border-t border-gray-200 pt-4 pb-6">
         <div className="flex items-center">
           <FiMapPin className="text-gray-500" size={20} />
-          <p className="ml-2 text-gray-700">{address}, {city}, {province}, {country}</p>
+          <p className="ml-2 text-gray-700">
+            {address},{district}, {city}, {province}
+          </p>
           <button className="ml-auto text-blue-500 flex items-center">
             See Map <IoIosArrowForward className="ml-1" />
           </button>
@@ -42,11 +45,14 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({ property }) => {
         <p className="text-gray-700 mt-2">{description}</p>
         <DescriptionProperty property={property} />
       </div>
-     
+
       {/* Tenant Info */}
       <div className="border-2 rounded-lg shadow-lg border-gray-200 pt-4 pb-6">
         <div className="flex items-center p-2">
-          <Avatar src={Tenant.profile} />
+          <Avatar className="w-20 h-20">
+            <AvatarImage src={Tenant?.profile || '/images/placeholder.png'} />
+            <AvatarFallback>{Tenant.name}</AvatarFallback>
+          </Avatar>
           <div className="ml-4">
             <p className="font-bold text-lg">Hosted by {Tenant.name}</p>
             <p className="text-gray-600">{Tenant.email}</p>

@@ -19,9 +19,9 @@ export class PictureController {
             })
             res.status(201).json({status : 'ok', uploadPictures})
             // next()
-        } catch (error) {
+        } catch (error:any) {
             console.log('failed to upload pictures property', error);
-            responseError(res, error);
+            responseError(res, error.message);
         }
     }
 

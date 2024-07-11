@@ -78,7 +78,7 @@ const RoomDescription: React.FC<DescriptionRoomProps> = ({ room }) => {
           <h1 className="font-bold text-lg">{room.type}</h1>
         </div>
         <div className='py-4 border-b-2'>
-          <p className="text-gray-700 text-sm">Total Price {room.stock} Room(s) 3 Night(s)</p>
+          <p className="text-gray-700 text-sm">Room Per Night</p>
           <p className='font-bold text-[#00a7c4]'>Rp {room.price.toLocaleString()}</p>
         </div>
         <div className="py-4 border-b-2">

@@ -1,12 +1,9 @@
 'use client';
 import { useAppSelector } from '@/hooks/hooks';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
 import { HeartButton } from './HeartButton';
-import { getProperties, getPropertyById } from '@/lib/properties';
 import { Button } from '../Button';
-import PropertyImages from '@/app/properties/[id]/_components/PropertyImageCarousel';
 import { Property, Room } from '@/type/property.type';
 import PropertyImgCarousel from './PropertyImgCarousel';
 
@@ -43,20 +40,24 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
 
   const currentUser = useAppSelector((state) => state.user.value);
 
-  console.log('GG', property);
+  // console.log("halo property :" , property );
+  // console.log("halo rooms :" , room );
+  
+
+  const minPrice = useMemo(() => {
+    if (property.rooms && property.rooms.length > 0) {
+      return Math.min(...property.rooms.map((room) => room.price));
+    }
+    return 0;
+  }, [property.rooms]);
 
   return (
     <div>
       <div className="flex flex-col gap-2 w-full">
         <div className="aspect-square w-full relative overflow-hidden rounded-xl">
-          <Image
-            className="object-cover w-full h-full transition group-hover:scale-110"
-            src={property.PropertyPicture[0].url}
-            alt="Property Img"
-            fill
-          />
+          <PropertyImgCarousel propertyPict={property.PropertyPicture} />
           <div className="absolute top-3 right-3">
-            <HeartButton propertyId={1} currentUser={currentUser} />
+            <HeartButton propertyId={property.id} currentUser={currentUser} />
           </div>
         </div>
       <div onClick={() => router.push(`/properties/${property.id}`)}
@@ -67,8 +68,8 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
           {property.category}
         </div>
         <div className="flex flex-row items-center gap-1">
-          {/* <div className="font-semibold">Rp. {room.price}</div>{' '} */}
-          <div className="font-light text-neutral-500">night</div>
+          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>{' '}
+          <div className="font-light text-neutral-500">/night</div>
           {onAction && actionLabel && (
             <Button
               disabled={disabled}
