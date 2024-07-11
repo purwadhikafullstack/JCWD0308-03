@@ -5,7 +5,6 @@ export const getToken = async () => {
     if(!token) return null
     return token
 }
-
 export const getTransaction = async () => {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/transaction`, {

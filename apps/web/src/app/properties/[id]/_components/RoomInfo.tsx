@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import { Room } from '@/type/property.type';
 import Image from 'next/image';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
-import { IoBedOutline, IoPeople, IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { MdBathroom, MdNavigateBefore, MdNavigateNext, MdRoomService } from 'react-icons/md';
+import { IoBedOutline, IoPeople } from 'react-icons/io5';
 import Link from 'next/link';
 import  RoomDescription from './RoomDescription';
-import { useAppDispatch } from '@/hooks/hooks';
-import { setRoom, setRoomsDetails } from '@/hooks/features/room/roomSlice';
-import { Button } from '@/components/Button';
 
 interface RoomInfoProps {
   room: Room;
 }
 
 const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
-  const dispatch = useAppDispatch()
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
@@ -29,15 +25,11 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     );
   };
 
-  const handleChooseRoom = () => {
-    dispatch(setRoom(room))
-  }
-
   return (
     <div className="border border-gray-300 rounded-lg w-full mx-auto mb-4 overflow-hidden shadow-lg">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
-        <div className="relative w-full md:w-1/2 h-[25vh] group">
+        <div className="relative w-full md:w-1/2 md:h-[35vh] h-[25vh] group">
           {room.RoomPicture.length > 0 && (
             <Image
               src={room.RoomPicture[currentImageIndex].url}
@@ -66,26 +58,41 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
         {/* Details Section */}
         <div className="w-full md:w-1/2 p-6 flex flex-col justify-between">
           <div>
-            <h2 className="text-lg font-bold mb-4">{room.type}</h2>
-            <div className="flex items-center text-sm text-gray-600 mb-2">
-              <IoPeople className="mr-2" />
+            <h2 className="text-xl font-bold mb-4">{room.type}</h2>
+            <div className="flex items-center text-lg text-gray-600 mb-2">
+              <IoPeople className="mr-2" size={24} />
               {room.capacity} Guests
             </div>
-            <div className="flex items-center text-sm text-gray-600 mb-2">
-              <IoBedOutline className="mr-2" />
+            <div className="flex items-center text-lg text-gray-600 mb-2">
+              <IoBedOutline className="mr-2" size={24} />
               {room.bedDetails}
             </div>
-            <p className="md:hidden font-semibold text-[#00a7c4] mb-4">
+            <div className="flex items-center text-lg text-gray-600 mb-2">
+              <MdRoomService className="mr-2" size={24} />
+              {room.roomFacilities.map((facility) => facility.name).join(', ')}
+            </div>
+            <div className="flex items-center text-lg text-gray-600 mb-2">
+              <MdBathroom className="mr-2" size={24}/>
+              {room.bathroomFacilities.map((facility) => facility.name).join(', ')}
+            </div>
+            <p className=" text-gray-600"> <RoomDescription room={room}/></p>
+          </div>
+            <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
               Rp {room.price.toLocaleString()}
             </p>
+<<<<<<< HEAD
           </div>
             <p className="md:hidden text-gray-600 mb-4"> <RoomDescription room={room}/></p>
           <Link passHref href={`/transactions/${room.id}`} className="md:hidden bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
+=======
+          <Link passHref href={`/transactions/${room.id}`} className=" bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
+>>>>>>> 39a8c32a2b08621d4df8b0115e5f2fc7943a0c99
           Choose
           </Link>
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Additional Information for large screens */}
       <div className="hidden md:flex p-6 border-t border-gray-200">
         <div className="w-full">
@@ -110,6 +117,8 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
           {/* Repeat above block for other room options if available */}
         </div>
       </div>
+=======
+>>>>>>> 39a8c32a2b08621d4df8b0115e5f2fc7943a0c99
     </div>
   );
 };

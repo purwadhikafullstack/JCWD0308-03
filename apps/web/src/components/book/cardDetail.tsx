@@ -25,11 +25,11 @@ export default function CardDetail({id}:{id:number}) {
   return (
     <div className="flex flex-col gap-5">
     <article className="overflow-hidden rounded-lg shadow-lg transition hover:shadow-lg">
-      <Image
+      {/* <Image
         alt="" src={room?.RoomPicture[0].url!}
         width={800} height={500}
         className="h-56 w-full object-cover"
-      />
+      /> */}
       <div className="bg-white p-4 sm:p-6">
         <a href="#">
           <h3 className="mt-0.5 text-lg text-gray-900">

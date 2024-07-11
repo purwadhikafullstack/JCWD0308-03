@@ -8,6 +8,7 @@ interface ButtonProps {
   small?: boolean;
   icon?: IconType;
   type?: 'button' | 'submit' | 'reset' | undefined;
+  className?: string
 }
 export const Button: React.FC<ButtonProps> = ({
   label,
@@ -17,6 +18,7 @@ export const Button: React.FC<ButtonProps> = ({
   small,
   icon: Icon,
   type,
+  className
 }) => {
   return (
     <button
@@ -31,6 +33,7 @@ export const Button: React.FC<ButtonProps> = ({
       ${small ? 'text-sm' : 'text-md'}
       ${small ? 'font-light' : 'font-semibold'}
       ${small ? 'border-[1px]' : 'border-2'}
+      ${className}
       `}
     >
       {Icon && (

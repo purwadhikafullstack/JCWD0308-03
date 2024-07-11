@@ -6,7 +6,7 @@ import PropertyInfo from './PropertyInfo';
 import PropertyImages from './PropertyImageCarousel';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
-import { DatePickerWithRange } from '@/components/book/calendar';
+import { CalendarReservation } from './calendar';
 
 interface PropertyClientProps {
   property: Property;
@@ -27,9 +27,7 @@ export const PropertyClient: React.FC<PropertyClientProps> = ({ property }) => {
       <div className="flex flex-col gap-3">
         <PropertyImages propertyPict={property.PropertyPicture} />
         <PropertyInfo property={property} />
-        <div className="my-5 flex justify-center">
-          <DatePickerWithRange date={date} setDate={setDate} />
-        </div>
+        <CalendarReservation date={date} setDate={setDate} />
         <div className="grid grid-cols-1 md:grid-cols-2 md:gap-10 mt-6">
           <div className="md:col-span-5">
             {property.rooms.map((room) => (

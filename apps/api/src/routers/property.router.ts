@@ -22,8 +22,8 @@ export class PropertyRouter {
   private initializeRoutes(): void {
     this.router.get('/', this.propertyController.getProperties);
     this.router.get('/by-tenant-id', this.userMiddleware.verifyToken, this.propertyController.getPropertyByTenantId)
-    this.router.post('/', this.userMiddleware.verifyToken, uploader('IMG', '/images').array('files' ,10),this.propertyController.createProperty);
-    this.router.post('/:id/uploadPictures', uploader('IMG', '/images').array('files' ,10) ,this.pictureController.uploadPicturesProperty);
+    this.router.post('/', this.userMiddleware.verifyToken,this.propertyController.createProperty);
+    this.router.post('/:id/uploadPictures', uploader('IMG', '/images').array('files') ,this.pictureController.uploadPicturesProperty);
     
 
     this.router.get('/:id', this.propertyController.getPropertyById);

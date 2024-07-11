@@ -14,7 +14,6 @@ export default function ReservationForm() {
     from: new Date(),
     to: addDays(new Date(), 20),
   })
-  const room = useAppSelector((state) => state.room.currentRoom)
   const user = useAppSelector((state) => state.user.value)
   const router = useRouter();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -27,9 +26,9 @@ export default function ReservationForm() {
           // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          propertyId : room?.propertyId,
-          userId : user?.id,
-          roomId: room?.id,
+          // propertyId : room?.propertyId,
+          // userId : user?.id,
+          // roomId: room?.id,
           date
         })
       });

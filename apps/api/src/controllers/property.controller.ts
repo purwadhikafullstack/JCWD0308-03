@@ -31,7 +31,7 @@ export class PropertyController {
 
   async createProperty(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, description, category, country, city, province, address } = req.body;
+      const { name, description, category, city, province, address, district } = req.body;
       const { user } = req;
 
       const createdProperty = await prisma.property.create({
@@ -39,31 +39,14 @@ export class PropertyController {
           name,
           description,
           category,
-          country,
-          city,
           province,
+          city,
+          district,
           address,
           tenantId: Number(user?.id),
-        },
-        include: {
-          PropertyPicture: true,
-
         }
       });
-
-      const files = req.files as Express.Multer.File[];
-      const fileUrls = files.map((file) => ({
-        url: `http://localhost:8000/public/images/${file?.filename}`,
-        propertyId: createdProperty.id,
-      }));
-
-      await prisma.propertyPicture.createMany({
-        data: fileUrls,
-        skipDuplicates: true,
-      });
-
       res.status(201).json({ status: 'ok', createdProperty });
-      // next()
     } catch (error) {
       console.log('failed to create property', error);
       responseError(res, error);

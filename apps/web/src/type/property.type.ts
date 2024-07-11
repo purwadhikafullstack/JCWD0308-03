@@ -4,10 +4,10 @@ export interface Property {
   description: string;
   category: string;
   locationCordinate?: string | null; // Assuming it can be null based on your response
-  country: string;
   city: string;
   province: string;
   address: string;
+  district: string;
   rooms: Room[];
   createdAt: Date;
   updatedAt: Date;
