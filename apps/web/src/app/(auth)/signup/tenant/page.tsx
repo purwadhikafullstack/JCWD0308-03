@@ -135,7 +135,7 @@ const TenantSignup = () => {
         ]}
         onSubmit={handleSubmit}
         buttonLabel="Create an account"
-        linkHref="/login/user"
+        linkHref="/login/tenant"
         onClickGoogle={signInGoogle}
         loading={loading}
       />

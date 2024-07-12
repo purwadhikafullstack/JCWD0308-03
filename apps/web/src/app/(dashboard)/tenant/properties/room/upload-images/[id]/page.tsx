@@ -13,7 +13,6 @@ import { uploadImages } from '@/lib/properties';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
-import { BiLoaderCircle } from 'react-icons/bi';
 import { TbPhotoPlus } from 'react-icons/tb';
 
 const UploadImage = ({ params }: { params: { id: number } }) => {
@@ -30,7 +29,8 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
   const handleChange = () => {
     if (imageRef.current && imageRef.current.files) {
       const filesArray = Array.from(imageRef.current.files);
-      setImage(filesArray);
+      setImage((previewImg) => [...previewImg, ...filesArray]);
+
 
       filesArray.forEach((file) => {
         const reader = new FileReader();
@@ -77,15 +77,13 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
     }
   };
 
-  console.log("image ada : ", image);
-  
   return (
     <Wrapper>
       <Card>
-        <CardHeader>
-          <CardTitle>Upload Image</CardTitle>
-          <CardDescription>
-            Show how your property looks like to guest
+        <CardHeader className='text-center'>
+          <CardTitle>Upload Room Image</CardTitle>
+          <CardDescription >
+            Show how your room looks like to guest
           </CardDescription>
         </CardHeader>
         <CardContent>

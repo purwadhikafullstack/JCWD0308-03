@@ -88,7 +88,7 @@ export class PropertyController {
   async updateProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, description, category } = req.body;
+      const { name, description, category, address , city, province, district} = req.body;
       const updatedProperty = await prisma.property.update({
         where: {
           id: +id,
@@ -97,6 +97,10 @@ export class PropertyController {
           name,
           description,
           category,
+          address,
+          city,
+          province,
+          district
         },
       });
 

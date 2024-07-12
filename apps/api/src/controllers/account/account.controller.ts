@@ -80,10 +80,7 @@ export class AccountController {
           where: { id: req.user?.id },
           include: { properties: true },
         });
-        if (!user)
-          return res
-            .status(404)
-            .json({ status: 'error', message: 'Account not found' });
+        if (!user) return res.status(404).json({ status: 'error', message: 'Account not found' });
         res.status(200).json(dataTenant);
       } else {
         return res.status(403).json({ status: 'error', message: 'Forbidden' });

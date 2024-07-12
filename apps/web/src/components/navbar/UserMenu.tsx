@@ -54,7 +54,6 @@ export const UserMenu = () => {
   useEffect(() => {
     profile(token)
   },[])
-  // console.log(userProfile);
 
   return (
     <div className="relative">
