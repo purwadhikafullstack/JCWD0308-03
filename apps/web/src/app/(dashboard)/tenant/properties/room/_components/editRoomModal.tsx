@@ -104,7 +104,7 @@ export function EditRoomButton({ room, onUpdateRoom }: EditRoomButtonProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="bg-[#00a7c4]">Save Changes</Button>
+            <Button type="submit" className="bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70">Save Changes</Button>
           </DialogFooter>
         </form>
       </DialogContent>

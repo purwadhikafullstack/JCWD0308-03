@@ -35,7 +35,7 @@ export function EditProperty({ property }: { property: Property }) {
     setRooms(updatedRooms);
   };
   return (
-    <div className="flex flex-col space-y-4 md:flex-row md:space-x-4">
+    <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 pb-5">
       <div className="w-full sm:w-1/2">
         <Tabs defaultValue="details" className="sticky top-32">
           <TabsList className="grid w-full grid-cols-2">
@@ -122,7 +122,7 @@ export function EditProperty({ property }: { property: Property }) {
             </CardHeader>
             <CardContent className="relative">
               <div className="absolute -top-14 right-5">
-                <DeleteRoomButton />
+                <DeleteRoomButton roomId={room.id}/>
                 <EditRoomButton room={room} onUpdateRoom={updateRoom} />
               </div>
               <div className="space-y-2">
@@ -154,7 +154,7 @@ export function EditProperty({ property }: { property: Property }) {
           onClick={() =>
             router.push(`/tenant/properties/create/room/${property.id}`)
           }
-          label="Add Room"
+          label="Add New Room"
         />
       </div>
     </div>

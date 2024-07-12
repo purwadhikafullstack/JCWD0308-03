@@ -110,7 +110,6 @@ export class RoomController {
   async deleteRoom(req: Request, res: Response) {
     try {
       const { id } = req.params;  
-      const findRoomID = await prisma.room.findUnique({where: {id: +id}})
 
       await prisma.roomPicture.deleteMany({where: { roomId: +id }})
       await prisma.roomFacilities.deleteMany({where: { roomId: +id }})

@@ -13,8 +13,10 @@ interface CardPropertyProps {
 
 export const CardProperty: React.FC<CardPropertyProps> = ({
   property: { id, name, address, province, city, category, district},
-  imgProperty: {  url},
+  imgProperty
 }) => {
+  // imgProperty.url
+  const url =  '/images/placeholder.png';
   const router = useRouter();
   return (
     <div>

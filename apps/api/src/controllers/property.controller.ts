@@ -121,16 +121,23 @@ export class PropertyController {
   async deleteProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
+      await prisma.propertyPicture.deleteMany({where : {propertyId : +id}})
+      await prisma.reservation.deleteMany({where : {room: {propertyId : +id}}})
+      await prisma.roomPeakSeason.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.review.deleteMany({where : {propertyId : +id}})
+      await prisma.roomPicture.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.roomFacilities.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.bathroomFacilities.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.roomAvailability.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.room.deleteMany({where : {propertyId : +id}})
+
       const deletedProperty = await prisma.property.delete({
         where: {
-          id: Number(id),
+          id: +id,
         },
       });
-      if (deletedProperty) {
-        res.status(200).json(deletedProperty);
-      } else if (!deletedProperty) {
-        res.status(404).json({ message: 'Property not found' });
-      }
+     res.status(200).json({ status: 'ok', deletedProperty });
     } catch (error) {
       console.log('failed to delete property', error);
       responseError(res, error);
