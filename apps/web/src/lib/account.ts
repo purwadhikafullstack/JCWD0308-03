@@ -14,7 +14,6 @@ export const registerAccount = async (data: any, role: string) => {
     });
 
     const responseData = await response.json();
-    console.log('registered account : ', responseData);
 
     return responseData;
   } catch (error: any) {
@@ -40,7 +39,7 @@ export const resendVerifyEmail = async (email: string, role:string) => {
 }
 export const VerifyEmail = async (data: any, token: string) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/users/verify`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/verify`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +49,6 @@ export const VerifyEmail = async (data: any, token: string) => {
     });
 
     const res = await response.json();
-    // console.log('data verify : ', res);
     return res;
   } catch (error) {
     console.log('failed to verify email : ', error);
@@ -59,7 +57,7 @@ export const VerifyEmail = async (data: any, token: string) => {
 };
 export const loginAccount = async (data: any, role: string) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/${role}/login`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}${role}/login`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -75,9 +73,8 @@ export const loginAccount = async (data: any, role: string) => {
   }
 };
 export const registerUserGoogle = async(user:any, role:string) => {
-  // const {email, displayName:name, photoURL:profile , phoneNumber:phoneNumber} = user
   try {
-    const response = await fetch(`http://localhost:8000/api/${role}/signIn-with-google`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}${role}/signIn-with-google`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -98,7 +95,7 @@ export const registerUserGoogle = async(user:any, role:string) => {
   }
 export const getUser = async (token: any) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/users/profile`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/profile`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +115,7 @@ export const getUser = async (token: any) => {
 };
 export const uploadImage = async (data: any, token: any) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/users/upload-profile`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/upload-profile`, {
       method: 'PATCH',
       body: data,
       headers: {

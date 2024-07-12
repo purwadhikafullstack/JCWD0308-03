@@ -40,9 +40,6 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
 
   const currentUser = useAppSelector((state) => state.user.value);
 
-  // console.log("halo property :" , property );
-  // console.log("halo rooms :" , room );
-  
 
   const minPrice = useMemo(() => {
     if (property.rooms && property.rooms.length > 0) {

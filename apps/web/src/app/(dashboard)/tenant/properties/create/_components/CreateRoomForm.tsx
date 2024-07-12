@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,7 +14,9 @@ import { roomFacilities } from '@/components/Facilities';
 import { bathroomFacilities } from '@/components/Facilities';
 
 const CreateRoomForm = ({ id }: { id: number }) => {
-  const [customFacility, setCustomFacility] = useState<string>(''); 
+  const [customRoomFacility, setCustomRoomFacility] = useState<string>(''); 
+  const [customBathroomFacility, setCustomBathroomFacility] = useState<string>(''); 
+  
   const [selectedRoomFacilities, setSelectedRoomFacilities] = useState(roomFacilities); 
   const [selectedBathroomFacilities, setSelectedBathroomFacilities] = useState(bathroomFacilities); 
   const toast = useToast();
@@ -49,31 +51,25 @@ const CreateRoomForm = ({ id }: { id: number }) => {
         });
       }
     } catch (error) {
-      toast.toast({
-        title: 'Something went wrong',
-        description: 'Please try again',
-        variant: 'destructive',
-        duration: 3000
-      });
       console.error(error);
     }
 
     actions.setSubmitting(false);
   };
 
-  const handleAddCustomFacility = () => {
-    if (customFacility.trim() !== '') {
-      const newFacility = { label: customFacility, description: customFacility };
+  const handleAddCustomRoomFacility = () => {
+    if (customRoomFacility.trim() !== '') {
+      const newFacility = { label: customRoomFacility, description: customRoomFacility };
       setSelectedRoomFacilities([...selectedRoomFacilities, newFacility]); 
-      setCustomFacility('');
+      setCustomRoomFacility('');
     }
   };
 
   const handleAddCustomBathroomFacility = () => {
-    if (customFacility.trim() !== '') {
-      const newFacility = { label: customFacility, description: customFacility };
+    if (customBathroomFacility.trim() !== '') {
+      const newFacility = { label: customBathroomFacility, description: customBathroomFacility };
       setSelectedBathroomFacilities([...selectedBathroomFacilities, newFacility]); 
-      setCustomFacility('');
+      setCustomBathroomFacility('');
     }
   };
 
@@ -114,12 +110,12 @@ const CreateRoomForm = ({ id }: { id: number }) => {
                     <div className="absolute -bottom-10 left-0 flex items-center mb-2">
                       <input
                         type="text"
-                        value={customFacility}
-                        onChange={(e) => setCustomFacility(e.target.value)}
+                        value={customRoomFacility}
+                        onChange={(e) => setCustomRoomFacility(e.target.value)}
                         placeholder="Add facility.."
                         className="border border-gray-300 rounded-md p-1"
                       />
-                      <Button label='Add' type='button' outline small onClick={handleAddCustomFacility} className='ml-2 p-2 font-semibold border-2 border-gray-300' />
+                      <Button label='Add' type='button' outline small onClick={handleAddCustomRoomFacility} className='ml-2 p-2 font-semibold border-2 border-gray-300' />
                     </div>
                   </div>
                   <ErrorMessage name="roomFacilities" component="div" className="text-red-500 text-sm" />
@@ -138,11 +134,11 @@ const CreateRoomForm = ({ id }: { id: number }) => {
                         <span className="ml-2">{facility.label}</span>
                       </div>
                     ))}
-                    <div className="absolute -bottom-1 left-0 flex items-center mb-2">
+                    <div className="absolute -bottom-10 left-0 flex items-center mb-2">
                       <input
                         type="text"
-                        value={customFacility}
-                        onChange={(e) => setCustomFacility(e.target.value)}
+                        value={customBathroomFacility}
+                        onChange={(e) => setCustomBathroomFacility(e.target.value)}
                         placeholder="Add facility.."
                         className="border border-gray-300 rounded-md p-1"
                       />

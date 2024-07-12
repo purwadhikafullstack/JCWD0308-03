@@ -42,7 +42,7 @@ export const roomValidationSchema = Yup.object().shape({
   stock: Yup.number().required('Stock is required').min(0, 'Stock cannot be negative'),
   description: Yup.string().required('Description is required'),
   capacity: Yup.number().required('Capacity is required').min(1, 'Capacity must be at least 1'),
-  bedDetails: Yup.string().nullable(),
+  bedDetails: Yup.string(),
   roomFacilities: Yup.array().required('Room facilities are required'),
   bathroomFacilities: Yup.array().required('Bathroom facilities are required'),
 });

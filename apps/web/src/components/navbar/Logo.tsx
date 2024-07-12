@@ -1,11 +1,14 @@
+import { useAppSelector } from '@/hooks/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export const Logo = () => {
+  const user = useAppSelector((state) => state.user.value);
+
   return (
     <div>
-      <Link href="/">
+      <Link href={user?.role === 'tenant' ? '/tenant/properties' : '/'}>
         <Image
           src="/images/logo SE.png"
           alt="logo"
