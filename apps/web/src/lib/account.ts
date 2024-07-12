@@ -14,7 +14,6 @@ export const registerAccount = async (data: any, role: string) => {
     });
 
     const responseData = await response.json();
-    console.log('registered account : ', responseData);
 
     return responseData;
   } catch (error: any) {
@@ -50,7 +49,6 @@ export const VerifyEmail = async (data: any, token: string) => {
     });
 
     const res = await response.json();
-    // console.log('data verify : ', res);
     return res;
   } catch (error) {
     console.log('failed to verify email : ', error);
@@ -75,7 +73,6 @@ export const loginAccount = async (data: any, role: string) => {
   }
 };
 export const registerUserGoogle = async(user:any, role:string) => {
-  // const {email, displayName:name, photoURL:profile , phoneNumber:phoneNumber} = user
   try {
     const response = await fetch(`http://localhost:8000/api/${role}/signIn-with-google`, {
       method: 'POST',

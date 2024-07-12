@@ -18,6 +18,7 @@ export const Navbar = () => {
     return null;
   }
 
+
   return (
     <div className="fixed w-full bg-white z-20 shadow-sm">
       <div className="border-b-[1px]">

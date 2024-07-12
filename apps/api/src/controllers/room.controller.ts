@@ -81,9 +81,98 @@ export class RoomController {
         }
       })
 
+      res.status(200).json({ status: 'ok', availability });
     } catch (error) {
       console.log('failed to set room availability', error);
       responseError(res, error);
+    }
+  }
+
+  async updateRoom(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities } = req.body;
+
+      const updatedRoom = await prisma.room.update({
+        where: { id: +id },
+        data: {
+          type,
+          price : parseFloat(price),
+          description,
+          capacity : parseInt(capacity),
+          bedDetails,
+        },
+        include: {
+          roomFacilities: true,
+          bathroomFacilities: true,
+        }
+      });
+      if (roomFacilities && roomFacilities.length > 0) {
+        await prisma.roomFacilities.updateMany({
+          where: { roomId: +id },
+          data: {
+            name: roomFacilities
+          }
+        })
+      }
+
+      if (bathroomFacilities && bathroomFacilities.length > 0) {
+        await prisma.bathroomFacilities.updateMany({
+          where: { roomId: +id },
+          data: {
+            name: bathroomFacilities
+          }
+        })
+      }
+
+      res.status(200).json({ status: 'ok', updatedRoom });
+    } catch (error) {
+      console.log('failed to update room', error);
+      responseError(res, error);
+    }
+  }
+
+  async deleteRoom(req: Request, res: Response) {
+    try {
+      const { id } = req.params;  
+      const deletedRoom = await prisma.room.delete({
+        where: { id: +id },
+      })   
+      res.status(200).json({ status: 'ok', deletedRoom });
+    } catch (error) {
+      console.log('failed to delete room', error);
+      responseError(res, error);
+    }
+  }
+
+  async roomPeakSeasom(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { start_date, end_date, newPrice } = req.body;
+      const room = await prisma.room.findUnique({where: {id: +id}})
+
+      if (room) {
+        res.status(200).json({ status: 'ok', room });
+      } else {
+        res.status(404).json({ error: 'Room not found' });
+      }
+
+      const createPeakSeason = await prisma.roomPeakSeason.createMany({
+        data: [
+          {
+            roomId: +id,
+            start_date,
+            end_date,
+            newPrice
+          }
+        ]
+      })
+
+      res.status(200).json({ status: 'ok', createPeakSeason })
+      
+    } catch (error) {
+      console.log('failed to delete room', error);
+      responseError(res, error);  
     }
   }
 }

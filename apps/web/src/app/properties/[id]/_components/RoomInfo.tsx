@@ -5,6 +5,10 @@ import { MdBathroom, MdNavigateBefore, MdNavigateNext, MdRoomService } from 'rea
 import { IoBedOutline, IoPeople } from 'react-icons/io5';
 import Link from 'next/link';
 import  RoomDescription from './RoomDescription';
+import Cookies from 'js-cookie';
+import { useAppSelector } from '@/hooks/hooks';
+import { Button } from '@/components/Button';
+import { useRouter } from 'next/navigation';
 
 interface RoomInfoProps {
   room: Room;
@@ -12,6 +16,8 @@ interface RoomInfoProps {
 
 const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const user = useAppSelector((state) => state.user.value);
+  const router = useRouter()
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -80,9 +86,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
               {room.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
             </p>
-          <Link passHref href={`/transactions/${room.id}`} className=" bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
-          Choose
-          </Link>
+          <Button label='Choose' disabled={user?.role !== 'user' || !user} onClick={() => router.push(`/transactions/${room.id}`)}/>
         </div>
       </div>
     </div>
