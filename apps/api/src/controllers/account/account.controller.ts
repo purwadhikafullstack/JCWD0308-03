@@ -74,7 +74,6 @@ export class AccountController {
           return res
             .status(404)
             .json({ status: 'error', message: 'Account not found' });
-        console.log('get user : ', dataUser);
         res.status(200).json(dataUser);
       } else if (user?.role === 'tenant') {
         const dataTenant = await prisma.tenant.findUnique({
@@ -85,7 +84,6 @@ export class AccountController {
           return res
             .status(404)
             .json({ status: 'error', message: 'Account not found' });
-        console.log('get tenant : ', dataTenant);
         res.status(200).json(dataTenant);
       } else {
         return res.status(403).json({ status: 'error', message: 'Forbidden' });

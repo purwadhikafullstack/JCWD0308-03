@@ -11,6 +11,7 @@ export class TenantManagement {
                 include: {
                     user: true,
                     room: true,
+                    Property: true
                 },
             });
             res.status(200).json(orders);
