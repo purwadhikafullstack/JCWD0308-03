@@ -35,6 +35,7 @@ export interface Room {
   RoomPicture: RoomPicture[];
   roomFacilities: Facility[]; // Assuming you have a Facility type defined
   bathroomFacilities: Facility[]; // Assuming you have a Facility type defined
+  roomPeakSeason : roomPeakSeason[]
 }
 
 export interface PropertyPicture {
@@ -59,4 +60,12 @@ export interface Facility {
   roomId: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface roomPeakSeason {
+  id : number;
+  newPrice : number
+  startDate : Date
+  endDate : Date
+  roomId : number
 }

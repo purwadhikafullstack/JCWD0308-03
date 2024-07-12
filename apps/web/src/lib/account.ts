@@ -109,7 +109,6 @@ export const getUser = async (token: any) => {
     const res = await response.json();
     return res;
   } catch (error) {
-    console.error('Error fetching user:', error);
     return null;
   }
 };
@@ -129,5 +128,39 @@ export const uploadImage = async (data: any, token: any) => {
   
   } catch (error) {
     console.log('failed to upload image : ', error);
+  }
+}
+
+export const forgotPassword = async (data: any) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/send-forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log('failed to forgot password : ', error);
+  }
+}
+
+export const resetPassword = async (data: any, token: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/reset-password`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+    const res = await response.json();
+    return res
+  } catch (error) {
+    console.log("failed to reset password : ", error);
+    
   }
 }
