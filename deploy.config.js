@@ -8,7 +8,7 @@ module.exports = {
           PORT: 3083,
           NODE_ENV: 'production',
         },
-        cwd: '/var/www/html/jcwd030801.purwadhikabootcamp.com/apps/web',
+        cwd: '/var/www/html/jcwd030803.purwadhikabootcamp.com/apps/web',
       },
       {
         name: 'jcwd030803-api',
@@ -18,7 +18,7 @@ module.exports = {
           PORT: 3183,
           NODE_ENV: 'production',
         },
-        cwd: '/var/www/html/jcwd030801.purwadhikabootcamp.com/apps/api',
+        cwd: '/var/www/html/jcwd030803.purwadhikabootcamp.com/apps/api',
       },
     ],
    };
