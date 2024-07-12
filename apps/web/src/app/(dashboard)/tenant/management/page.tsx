@@ -1,28 +1,33 @@
 'use client'
-import { ListFilter } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Progress } from "@/components/ui/progress"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import Wrapper from "@/components/wrapper"
 import { useState, useEffect } from "react"
-import { getTransactionById } from "@/lib/transaction"
 import Cookies from "js-cookie"
 import { formatDateTime, formatToIDR } from "@/lib/user.service"
+import { getSales } from "@/lib/tanantSales"
+import { SalesDatePickerWithRange } from "@/components/salesReport/calendar"
+import { DateRange } from 'react-day-picker';
+import { addDays } from 'date-fns';
 
 export default function Management() {
   const [orderList, setOrderList] = useState<any>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const token = Cookies.get('token')
+  const total = orderList.filter((order : any) => order.status == 'Confirmed').reduce((a:number ,b:any) => a + b.price, 0)
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 20),
+  })
+  
   useEffect(() => {
     const getOrderList = async (token: string | undefined) => {
     try {
-      const res = await getTransactionById(token)
-      setOrderList(res)
+      const sales = await getSales(token, date!)
+      setOrderList(sales)
     } catch (error) {
       console.log(error);
       setError('Failed to fetch order list')
@@ -31,7 +36,7 @@ export default function Management() {
     }
   }
   getOrderList(token)
-}, [token])
+}, [token, date])
 if (isLoading) return <div>Loading...</div>
 if (error) return <div>Error: {error}</div>
 return (
@@ -50,53 +55,17 @@ return (
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card x-chunk="dashboard-05-chunk-1">
-                <CardHeader className="pb-2">
-                  <CardDescription>This Week</CardDescription>
-                  <CardTitle className="text-4xl">$1,329</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +25% from last week 
-                  </div>
-                </CardContent>
-              </Card>
               <Card x-chunk="dashboard-05-chunk-2">
                 <CardHeader className="pb-2">
-                  <CardDescription>This Month</CardDescription>
-                  <CardTitle className="text-4xl">$5,329</CardTitle>
+                  <CardDescription>Total Sales</CardDescription>
+                  <CardTitle className="text-4xl">{formatToIDR(total)}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +10% from last month
-                  </div>
-                </CardContent>
               </Card>
             </div>
             <Tabs defaultValue="week">
               <div className="flex items-center">
                 <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-7 gap-1 text-sm">
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filter</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Fulfilled
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Declined
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Refunded
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <SalesDatePickerWithRange date={date} setDate={setDate}/>
                 </div>
               </div>
               <TabsContent value="week">

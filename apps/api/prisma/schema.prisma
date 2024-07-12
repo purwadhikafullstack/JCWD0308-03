@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 enum Gender {
@@ -22,15 +23,14 @@ enum ReservationStatus {
 }
 
 model Property {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String @db.LongText
-  category    String
-  province    String
-  city        String
-  district    String
-  address     String
-
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String            @db.LongText
+  category        String
+  province        String
+  city            String
+  district        String
+  address         String
   rooms           Room[]
   reviews         Review[]
   createdAt       DateTime          @default(now())
@@ -159,22 +159,21 @@ model User {
 }
 
 model Tenant {
-  id            Int       @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   name          String
-  email         String    @unique
+  email         String     @unique
   password      String?
   dob           DateTime?
   gender        Gender?
   phoneNumber   String?
-  bio           String?   @db.LongText
-  profile       String?   @db.LongText
-  isActive      Boolean   @default(false)
-  role          String    @default("tenant")
-  isSocialLogin Boolean   @default(false)
-
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  properties Property[]
+  bio           String?    @db.LongText
+  profile       String?    @db.LongText
+  isActive      Boolean    @default(false)
+  role          String     @default("tenant")
+  isSocialLogin Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  properties    Property[]
 }
 
 model Reservation {
@@ -191,7 +190,6 @@ model Reservation {
   updatedAt  DateTime  @updatedAt
   Property   Property? @relation(fields: [propertyId], references: [id])
   propertyId Int?
-  // Payment      Payment[]
 }
 
 // model Payment {

@@ -138,7 +138,7 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
           <Button
             label="Upload"
             onClick={handleUpload}
-            disabled={loading || image.length <2}
+            disabled={loading || image.length ==0}
           />
           {previewImg.length > 0 && (
             

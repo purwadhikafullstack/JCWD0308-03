@@ -15,7 +15,7 @@ export class TenantManagementRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/orderList', this.tenantManagement.getOrderList);
+    this.router.post('/sales', this.tenantManagement.salesReport)
   }
 
   getRouter(): Router {
