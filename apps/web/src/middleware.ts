@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { verify } from 'jsonwebtoken';
 import { getUser } from './lib/account';
 
+
 const protectPage = [
   '/profile',
   '/tenant/management',
@@ -15,11 +16,11 @@ const protectPage = [
   '/user/reservations',
 ];
 
-const protectUser = ['user/reservations'];
+const protectUser = ['/user/reservations'];
 
 const protectTenant = [
-  'tenant/properties',
-  'tenant/properties/create/[id]',
+  '/tenant/properties',
+  '/tenant/properties/create',
   '/tenant/properties/editor/[id]',
   '/tenant/properties/create/room/[id]',
   '/tenant/properties/create/upload-images/[id]',
@@ -29,7 +30,7 @@ const protectTenant = [
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value
-  console.log(token);
+//   console.log(token);
 
   const url = req.nextUrl.pathname;
   if (protectPage.includes(url)) {
@@ -39,7 +40,7 @@ export async function middleware(req: NextRequest) {
 
     try {
       const user = await getUser(token);
-      console.log(user.role);
+      console.log("user middleware: " , user.role);
       
       if (!user) {
         return NextResponse.redirect(new URL(`/?redirect=${url}`, req.url));

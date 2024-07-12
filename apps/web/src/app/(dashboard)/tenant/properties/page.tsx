@@ -9,6 +9,8 @@ import Wrapper from '@/components/wrapper';
 import { CardProperty } from '@/components/properties/CardProperty';
 import { Button } from '@/components/Button';
 import { useRouter } from 'next/navigation';
+import { property } from 'cypress/types/lodash';
+import { Property } from '@/type/property.type';
 
 export default function ManagementProperty() {
   const [propertyList, setPropertyList] = useState([]);
@@ -59,8 +61,8 @@ export default function ManagementProperty() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {propertyList.map((items: any) => (
-            <CardProperty id={items.id} city={items.city} name={items.name} country={items.country} key={items.id} />
+          {propertyList.map((property: Property) => (
+            <CardProperty key={property.id} property={property} imgProperty={property.PropertyPicture[0]} />
           ))}
         </div>
       )}

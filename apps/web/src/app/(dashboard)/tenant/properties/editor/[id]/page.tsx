@@ -1,6 +1,5 @@
 'use client'
-import { EditProperty } from "@/components/properties/EditProperty";
-import Wrapper from "@/components/wrapper";
+import EditProperty from "@/components/properties/EditProperty";
 import { getPropertyById } from "@/lib/properties";
 import { Property } from "@/type/property.type";
 import React, { useEffect, useState } from 'react';
@@ -23,9 +22,9 @@ const EditorProperties = ({ params }: { params: { id: number } }) => {
   }, [params.id]);
 
   return (
-    <Wrapper>
+    <div className="h-screen pt-32 px-3">
       {property ? <EditProperty property={property} /> : <div>Loading...</div>}
-    </Wrapper>
+    </div>
   )
 }
 
