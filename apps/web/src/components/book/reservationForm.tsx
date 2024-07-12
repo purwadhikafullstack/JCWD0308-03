@@ -9,17 +9,15 @@ import { useToast } from '../ui/use-toast';
 import { useAppSelector } from '@/hooks/hooks';
 import { getRoomsbyId } from '@/lib/transaction';
 
-export default function ReservationForm({id}:{id:number}) {
+export default function ReservationForm({id, setRangeDate} : {id:number, setRangeDate: (value:number) => void }) {
   const {toast} = useToast();
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 20),
   })
   const user = useAppSelector((state) => state.user.value)
-
   const router = useRouter();
   const [room, setRoom] = useState<any>(null)
-  
   useEffect(() => {
     const getData = async () => {
       try {
@@ -75,7 +73,7 @@ export default function ReservationForm({id}:{id:number}) {
             <div className="card shadow-md text-black p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
               <div className="flex flex-col justify-between mb-4 gap-5">
-              <DatePickerWithRange date={date} setDate={setDate} />
+              <DatePickerWithRange date={date} setDate={setDate} setRangeDate={setRangeDate!}/>
               </div>
             </div>
             <div className="mt-6 text-black">
