@@ -1,19 +1,16 @@
 import prisma from '@/prisma';
 import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 
-// controller for user & tenant
 export class AccountController {
-  // after register before vefication input password
+
   async setupAccount(req: Request, res: Response, next: NextFunction) {
     try {
       const { password } = req.body;
 
       const salt = await genSalt(10);
       const hashPW = await hash(password, salt);
-
-      console.log('setting up account for : ' + req.user?.name);
 
       if (req.user?.role === 'user') {
         const user = await prisma.user.update({
@@ -109,7 +106,7 @@ export class AccountController {
     try {
       const { file, user} = req
       if (!file) return res.status(404).send({ status: 'error', message: 'file not found' });
-      const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
+      const imgUrl = `${process.env.API_URL}/public/images/${file?.filename}`
       if (user?.role === 'user') {
         await prisma.user.update({
           where: { id: req.user?.id },
@@ -128,6 +125,63 @@ export class AccountController {
     } catch (error) {
       console.log('failed to upload profile image : ', error);
       responseError(res, error);
+    }
+  }
+  async changePassword(req: Request, res: Response) {
+    try {
+      const { password, newPassword } = req.body
+      if( req.user?.role === 'user') {
+        const checkPassword = await prisma.user.findFirst({
+          where: {
+            id: req.user?.id,
+          }
+        })
+        if(checkPassword == null) throw "account not found"
+        const isVallPass = await compare(password, checkPassword.password!)
+        const isSamePass = await compare(newPassword, checkPassword.password!)
+        console.log(isVallPass, isSamePass);
+        
+        if(isVallPass == false) throw "password not match"
+        if(isSamePass == true) throw "new password same with old password"
+        if(isVallPass){
+          const salt = await genSalt(10)
+          const hashPassword = await hash(newPassword, salt)
+          await prisma.user.update({
+            data : {password: hashPassword},
+            where : {id: req.user?.id},
+          })
+          return res.status(200).send({
+            status: 'ok',
+            message: 'success change password'
+          })
+        }
+      }
+      if( req.user?.role === 'tenant') {
+        const checkPassword = await prisma.tenant.findFirst({
+          where: {
+            id: req.user?.id,
+          }
+        })
+        if (checkPassword == null) throw "account not found"
+        const isVallPass = await compare(password, checkPassword.password!) 
+        const isSamePass = await compare(newPassword, checkPassword.password!)
+        if(isVallPass == false) throw "password not match"
+        if(isSamePass == true) throw "new password same with old password"
+        if(isVallPass){
+          await prisma.tenant.update({
+            data : {password: newPassword},
+            where : {id: req.user?.id},
+          })
+        }
+        return res.status(200).send({
+          status: 'ok',
+        })
+    }
+   } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        error,
+      })
     }
   }
 }

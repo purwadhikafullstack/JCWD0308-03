@@ -15,7 +15,10 @@ export class PropertyController {
           [(sortBy as string) || 'createdAt']: order || 'asc',
         },
         include: {
-          rooms: true,
+          rooms: {include : {
+            RoomPeekSeason: true,
+            
+          }},
           reviews: true,
           Tenant: true,
           Reservation: true,

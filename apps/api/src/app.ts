@@ -10,7 +10,7 @@ import express, {
 import cors from 'cors';
 import { PORT } from './config';
 import { ApiRouter } from './routers/api.routers';
-import path from 'path';
+import { join } from 'path';
 
 export default class App {
   private app: Express;
@@ -26,7 +26,7 @@ export default class App {
     this.app.use(cors());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
-    this.app.use('/public', express.static("public"));
+    this.app.use('/api/public', express.static(join(__dirname, '../public')));
   }
 
   private handleError(): void {
