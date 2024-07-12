@@ -15,7 +15,7 @@ export const getProperties = async () => {
     return data;
   } catch (error) {
     console.log(" failed to get properties : ", error);
-    return null;
+    return [];
   }
 };
 
