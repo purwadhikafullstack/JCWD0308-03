@@ -1,9 +1,9 @@
 import CreateRoomForm from "../../_components/CreateRoomForm"
 
-const CreateRoom = () => {
+const CreateRoom = ({params}: {params: {id: number}}) => {
   return (
-    <div className="grid place-items-center w-full h-screen">
-      <CreateRoomForm />
+    <div className="flex justify-center items-center pt-10">
+      <CreateRoomForm id={params.id}/>
     </div>
   )
 }

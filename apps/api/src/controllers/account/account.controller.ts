@@ -67,7 +67,7 @@ export class AccountController {
       const { user } = req;
       if (user?.role === 'user') {
         const dataUser = await prisma.user.findUnique({
-          where: { id: req.user?.id },
+          where: { id: user?.id },
           include: { reviews: true, Reservation: true },
         });
         if (!user)

@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik';
-import * as Yup from 'yup';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,9 +24,8 @@ import { createProperty } from '@/lib/properties';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
-import { title } from 'process';
 
-const CreateProperty: React.FC = () => {
+const CreateProperty = () => {
   const token = Cookies.get('token');
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -53,10 +51,10 @@ const CreateProperty: React.FC = () => {
         
         if (res.status === 'ok') {
           toast.toast({
-            title: 'Success save property information, now you can upload images',
+            title: 'Success save property information, now you can upload your property images',
             duration: 3000,
           })
-          setTimeout(() => router.push(`/tenant/properties/create/upload-image/${res.createdProperty.id}`), 3500)
+          setTimeout(() => router.push(`/tenant/properties/create/upload-images/${res.createdProperty.id}`), 3500)
       } else{
         toast.toast({
           title : "Your Session Has Expired",

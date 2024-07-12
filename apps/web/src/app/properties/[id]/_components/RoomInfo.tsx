@@ -78,14 +78,13 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <p className=" text-gray-600"> <RoomDescription room={room}/></p>
           </div>
             <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
-              Rp {room.price.toLocaleString()}
+              {room.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
             </p>
           <Link passHref href={`/transactions/${room.id}`} className=" bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
           Choose
           </Link>
         </div>
       </div>
-
     </div>
   );
 };

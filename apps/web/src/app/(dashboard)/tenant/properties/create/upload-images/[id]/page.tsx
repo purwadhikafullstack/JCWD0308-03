@@ -119,6 +119,7 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
                 p-20
                 gap-4
                 text-neutral-600
+                mb-3
               `}
             >
               <TbPhotoPlus size={50} />
