@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Report Transaction</title>
+    <link rel="stylesheet" href="style.css" media="all" />
+  </head>
+  <body>
+    <header class="clearfix">
+      <div id="logo">
+        <img src="">
+      </div>
+      <div id="company">
+        <h2 class="name">Stay Easy</h2>
+        <div>Jakarta, Indonesia</div>
+        <div>(602) 519-0450</div>
+        <div><a href="gostayeasy@gmail.com">gostayeasy@gmail.com</a></div>
+      </div>
+      </div>
+    </header>
+    <main>
+      <div id="details" class="clearfix">
+        <div id="client">
+          <div class="to">INVOICE TO:</div>
+          <h2 class="name">{{name}}</h2>
+          <div class="email"><a href="mailto:john@example.com">{{email}}</a></div>
+        </div>
+        <div id="invoice">
+          <div class="date">Date of Invoice: {{invoiceDate}}</div>
+        </div>
+      </div>
+      <table cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th >No</th>
+            <th class="desc">Property</th>
+            <th >Room</th>
+            <th >Guest</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td >01</td>
+            <td class="desc" >
+              <h3>{{propertyName}}</h3>
+              {{startDate}} - {{endDate}}</td>
+            <td >{{roomName}}</td>
+            <td >{{name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="peraturan">
+        <h2>Catatan Penting</h2>
+        <ul>
+          <li>The check-in schedule is 14.00 and the maximum check-out schedule is 12.00</li>
+          <li>Upon check-in, government-issued photo identification and a credit card or cash deposit are required to cover incidentals.</li>
+          <li>Additional costs such as parking, deposit, telephone, room service are handled directly between you and the accommodation.</li>
+        </ul>
+        <h2>Hotel Cancellation Policy</h2>
+        <ul>
+          <li>Orders cannot be refunded</li>
+          <li>The time displayed is according to the property's local time</li>
+          <li>TDate of stay and room/unit type cannot be changed.</li>
+        </ul>
+      </div>
+      <div id="thanks">Thank you!</div>
+      <div id="notices">
+        <div>NOTICE:</div>
+        <div class="notice">FOR ANY QUESTIONS CONTACT HOLISTAY HELP CENTER</div>
+      </div>
+    </main>
+    <footer>
+        Happy to accompany your holiday, Keep Enjoy !
+    </footer>
+  </body>
+</html>

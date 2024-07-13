@@ -8,12 +8,13 @@ import Image from 'next/image'
 import { getRoomsbyId } from "@/lib/transaction";
 import { useAppSelector } from "@/hooks/hooks";
 import { BiLoaderCircle } from "react-icons/bi";
+import { formatToIDR } from "@/lib/user.service";
 
-export default function CardDetail({id}:{id:number}) {
+export default function CardDetail({id, rangeDate}:{id:number, rangeDate : number}) {
   const user = useAppSelector((state) => state.user.value)
   const [room, setRoom] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-
+  
   useEffect(() => {
     async function getData() {
       try {
@@ -76,16 +77,9 @@ export default function CardDetail({id}:{id:number}) {
               <ul className="grid gap-3">
                 <li className="flex items-center justify-between">
                   <span className="text-muted-foreground">
-                    {room?.type} x <span>2 </span>
+                    {room?.type} x <span> {rangeDate} </span>
                   </span>
-                  <span>$250.00</span>
-                </li>
-              </ul>
-              <Separator className="my-2" />
-              <ul className="grid gap-3">
-                <li className="flex items-center justify-between font-semibold">
-                  <span className="text-muted-foreground">Total</span>
-                  <span>$329.00</span>
+                  <span>{formatToIDR(room.price * rangeDate)}</span>
                 </li>
               </ul>
             </div>

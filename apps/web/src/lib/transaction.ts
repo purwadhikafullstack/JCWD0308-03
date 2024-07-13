@@ -7,8 +7,9 @@ export const getTransactionById = async (token: any) => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             }
-            })
-        return res
+        })
+        const data = await res.json()
+        return data 
     } catch (error) {
         console.log(error);   
     }
