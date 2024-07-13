@@ -1,6 +1,9 @@
-// components/Search.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
+import { DateRange } from 'react-day-picker';
+import { addDays } from 'date-fns';
+import { CalendarPick } from './CalenderPick';
+import ProvinceSelect from './InputSelectLocation';
 
 interface SearchProps {
   searchQuery: string;
@@ -13,29 +16,36 @@ const Search: React.FC<SearchProps> = ({
   setSearchQuery,
   handleSearch,
 }) => {
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 20),
+  });
+  const [selectedProvince, setSelectedProvince] = useState<string>('');
+
   return (
     <form
       onSubmit={handleSearch}
-      className="border-[2px] border-[#00a7c4] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer flex items-center bg-white"
+      className="border-[2px] border-[#00a7c4] py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer flex items-center bg-white"
     >
       <div className="flex flex-row items-center justify-between w-full">
         <div className="hidden sm:block text-sm font-semibold px-6 text-[#4a4a4a]">
-          Anywhere
+          {/* <ProvinceSelect selectedProvince={selectedProvince} setSelectedProvince={setSelectedProvince} /> */}
+          Any Where
         </div>
-        <div className="hidden sm:block text-sm font-semibold px-6 border-x-[2px] flex-1 text-center text-[#4a4a4a]">
-          Any Week
+        <div className=" hidden sm:block text-sm font-semibold px-6 border-x-[2px] flex-1 text-center text-[#4a4a4a]">
+          <CalendarPick setDate={setDate} date={date}/>
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search"
+          placeholder="Where to?"
           className="flex-1 bg-transparent outline-none text-[#4a4a4a] px-4 py-2"
         />
       </div>
       <button
         type="submit"
-        className="p-2 bg-[#00a7c4] rounded-full text-white mr-2 "
+        className="p-2 bg-[#00a7c4] rounded-full text-white mr-2"
       >
         <BiSearch size={18} />
       </button>

@@ -130,18 +130,19 @@ export class AccountController {
   async changePassword(req: Request, res: Response) {
     try {
       const { password, newPassword } = req.body
+      if (!password)  throw "password is required"
+      if (!newPassword)  throw "new password is required"
       if( req.user?.role === 'user') {
         const checkPassword = await prisma.user.findFirst({
           where: {
             id: req.user?.id,
-          }
-        })
+          }})
         if(checkPassword == null) throw "account not found"
         const isVallPass = await compare(password, checkPassword.password!)
         const isSamePass = await compare(newPassword, checkPassword.password!)
         console.log(isVallPass, isSamePass);
         
-        if(isVallPass == false) throw "password not match"
+        if(isVallPass == false) throw "password wrong"
         if(isSamePass == true) throw "new password same with old password"
         if(isVallPass){
           const salt = await genSalt(10)
@@ -165,7 +166,7 @@ export class AccountController {
         if (checkPassword == null) throw "account not found"
         const isVallPass = await compare(password, checkPassword.password!) 
         const isSamePass = await compare(newPassword, checkPassword.password!)
-        if(isVallPass == false) throw "password not match"
+        if(isVallPass == false) throw "password wrong"
         if(isSamePass == true) throw "new password same with old password"
         if(isVallPass){
           await prisma.tenant.update({
@@ -182,6 +183,32 @@ export class AccountController {
         status: 'error',
         error,
       })
+    }
+  }
+
+  async updateProfile (req: Request, res: Response) {
+    try {
+      const { name, dob, phoneNumber, gender } = req.body;
+      const { user } = req;
+  
+      if (!user) return res.status(400).json({ status: 'error', message: 'User information is missing.' });
+  
+      const isUser = user.role === 'user';
+      const isTenant = user.role === 'tenant';
+  
+      const findAccount = isUser ? await prisma.user.findUnique({ where: { id: user.id } })
+        : isTenant ? await prisma.tenant.findUnique({ where: { id: user.id } }) : null;
+  
+      if (!findAccount) return res.status(404).json({ status: 'error', message: 'User not found.' });
+  
+      const updatedAccount = isUser 
+        ? await prisma.user.update({ where: { id: user.id }, data: { name, dob, phoneNumber, gender } })
+        : await prisma.tenant.update({ where: { id: user.id }, data: { ...req.body, name, dob, phoneNumber, gender  } });
+  
+      return res.status(200).json({ status: 'ok', message: 'User updated successfully.', data: updatedAccount });
+    } catch (error) {
+      console.error("Failed to update user: ", error);
+      responseError(res, error);
     }
   }
 }

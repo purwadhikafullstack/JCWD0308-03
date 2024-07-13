@@ -34,10 +34,12 @@ export class UserRouter{
 
 
         // account (user&tenant)
+        this.router.patch('/update' ,this.userMiddleware.verifyToken, this.accountController.updateProfile)
         this.router.patch('/verify' ,this.userMiddleware.verifyToken, this.validatorMiddleware.validateSetupAccount,this.accountController.setupAccount,  this.accountController.verifyAccount)
         this.router.get("/profile" , this.userMiddleware.verifyToken, this.accountController.getProfileById)
         this.router.get("/accountRole", this.userMiddleware.verifyToken, this.accountController.getAccountRole)
         this.router.patch('/upload-profile' ,this.userMiddleware.verifyToken,uploader("IMG", "/images").single("file"), this.validatorMiddleware.uploadImage,this.accountController.uploadProfileImage)
+        this.router.patch('/change-password' ,this.userMiddleware.verifyToken, this.accountController.changePassword)
     }
     getRouter()  {
         return this.router

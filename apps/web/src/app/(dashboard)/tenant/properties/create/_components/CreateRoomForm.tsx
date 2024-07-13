@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
@@ -35,6 +35,7 @@ const CreateRoomForm = ({ id }: { id: number }) => {
 
       const res = await createRoom(formData, id);
       console.log("res create room on front fetch: ", res);
+      
       if (res.status === 'ok') {
         toast.toast({
           title: 'Success create room',

@@ -5,9 +5,9 @@ import { responseError } from '@/helpers/responseError';
 export class PropertyController {
   async getProperties(req: Request, res: Response) {
     try {
-      const { page, size, sortBy, order, category } = req.query;
+      const { page, size, sortBy, order, category, province ,name} = req.query;
       const properties = await prisma.property.findMany({
-        where: { category: category?.toString().toLowerCase() || undefined },
+        where: { category: category?.toString().toLowerCase() || undefined , province: province?.toString().toLowerCase() || undefined , name :name?.toString().toLowerCase() || undefined},
         take: parseInt(size as string) || 10,
         skip:
           (parseInt(page as string) || 0) * (parseInt(size as string) || 10),
@@ -108,7 +108,7 @@ export class PropertyController {
       });
 
       if (updatedProperty) {
-        res.status(200).json(updatedProperty);
+        res.status(200).json({ status: 'ok', updatedProperty});
       } else if (!updatedProperty) {
         res.status(404).json({ message: 'Property not found' });
       }

@@ -17,7 +17,6 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
 }) => {
   const router = useRouter();
   const params = useSearchParams();
-  const [scrollPosition, setScrollPosition] = useState<number | null>(null);
 
   const handleClick = useCallback(() => {
     let currentQuery = {};
@@ -45,7 +44,7 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
 
     router.push(url);
   }, [label, params, router]);
-
+  
   return (
     <div
       onClick={handleClick}
@@ -56,7 +55,6 @@ const CategoriesBox: React.FC<CategoriesBoxProps> = ({
                 justify-center
                 gap-2
                 p-3
-                
                 border-b-2
                 hover:text-[#00a7c4]
                 transition

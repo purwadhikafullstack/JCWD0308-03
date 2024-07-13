@@ -11,7 +11,6 @@ export const createRoom = async (data:any, id : number) => {
         })
 
         const res = await response.json()
-        console.log('res create room on front fetch: ', res);
         return res
         
     } catch (error:any) {
@@ -32,7 +31,6 @@ export const editRoom = async (data:any, id : number) => {
         })
 
         const res = await response.json()
-        console.log('res edit room on front fetch: ', res);
         return res
     } catch (error:any) {
         console.log(" failed to edit room : ", error);
@@ -51,5 +49,23 @@ export const deleteRoom = async (id : number) => {
     } catch (error) {
         console.log('failed to delete room : ', error);
         
+    }
+}
+
+export const createPeakSeason = async (data:any, id : number) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}rooms/${id}/peak-season`, {
+            method : 'POST',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(data)
+        })
+
+        const res = await response.json()
+        return res 
+
+    } catch (error:any) {
+        console.log(" failed to create peak season : ", error)
     }
 }

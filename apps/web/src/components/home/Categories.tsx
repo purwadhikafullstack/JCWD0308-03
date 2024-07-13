@@ -57,11 +57,9 @@ export const categories = [
     icon: FaBed,
     description: 'Find your hostel',
   },
-
-
 ];
 
-const Categories = () => {
+const Categories= () => {
   const params = useSearchParams();
   const category = params?.get('category');
   const pathname = usePathname();
@@ -71,10 +69,6 @@ const Categories = () => {
   if (!isMainPage) {
     return null;
   }
-
-  const filter =
-    category &&
-    categories.map((item) => item.label).indexOf(category as string);
 
   return (
       <div
@@ -94,6 +88,7 @@ const Categories = () => {
             icon={item.icon}
             selected={category === item.label}
           />
+
         ))}
       </div>
   );

@@ -224,29 +224,4 @@ export class UserController {
     }
   }
 
-  async updateUser (req: Request, res: Response) {
-    try {
-      const { name, dob, phoneNumber, gender } = req.body;
-      const { user } = req;
-  
-      if (!user) return res.status(400).json({ status: 'error', message: 'User information is missing.' });
-  
-      const isUser = user.role === 'user';
-      const isTenant = user.role === 'tenant';
-  
-      const findAccount = isUser ? await prisma.user.findUnique({ where: { id: user.id } })
-        : isTenant ? await prisma.tenant.findUnique({ where: { id: user.id } }) : null;
-  
-      if (!findAccount) return res.status(404).json({ status: 'error', message: 'User not found.' });
-  
-      const updatedAccount = isUser 
-        ? await prisma.user.update({ where: { id: user.id }, data: { name, dob, phoneNumber, gender } })
-        : await prisma.tenant.update({ where: { id: user.id }, data: { ...req.body, name, dob, phoneNumber, gender  } });
-  
-      return res.status(200).json({ status: 'ok', message: 'User updated successfully.', data: updatedAccount });
-    } catch (error) {
-      console.error("Failed to update user: ", error);
-      responseError(res, error);
-    }
-  }
 }

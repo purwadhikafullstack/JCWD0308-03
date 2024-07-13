@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { deleteRoom } from "@/lib/room";
 import { useState } from "react";
 
@@ -33,7 +33,7 @@ export function DeleteRoomButton({ roomId }: { roomId: number }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Delete Room</Button>
+        <Button variant="destructive">Delete Room</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -47,7 +47,7 @@ export function DeleteRoomButton({ roomId }: { roomId: number }) {
           <AlertDialogCancel>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} className="bg-[#00a7c4]">Delete Room</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete} className="bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70">Delete Room</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -61,7 +61,6 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
       className="col-span-1 cursor-pointer group" >
         <div className="font-semibold text-lg">{property.name}</div>
         <div className="font-light text-neutral-500">
-          {/* {city},{country} */}
           {property.category}
         </div>
         <div className="flex flex-row items-center gap-1">
