@@ -122,8 +122,10 @@ const RoomDetailsEdit: React.FC<RoomDetailsEditProps> = ({ room, onUpdateRoom, r
                   className="col-span-3"
                 />
               </div>
+              <div className=' flex gap-3 flex-row items-center justify-end'>
               <Button type='submit' className='bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70 my-3'>Save Changes</Button>
               <DeleteRoomButton roomId={room.id} />
+              </div>
             </div>
           </form>
     </div>

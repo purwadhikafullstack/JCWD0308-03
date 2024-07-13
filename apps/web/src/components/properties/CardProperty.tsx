@@ -15,8 +15,7 @@ export const CardProperty: React.FC<CardPropertyProps> = ({
   property: { id, name, address, province, city, category, district},
   imgProperty
 }) => {
-  // imgProperty.url
-  const url =  '/images/placeholder.png';
+  const url = imgProperty?.url
   const router = useRouter();
   return (
     <div>

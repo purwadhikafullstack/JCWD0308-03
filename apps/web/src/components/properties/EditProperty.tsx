@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { IoIosAddCircle } from 'react-icons/io';
 import RoomDetailsEdit from './RoomEditDetail';
 import { SetRoomPeakSeason } from '@/app/(dashboard)/tenant/properties/room/_components/SetRoomPeakSeasons';
+import { Label } from '../ui/label';
 
 export function EditProperty({ property }: { property: Property }) {
   const {toast} = useToast()
@@ -64,8 +65,8 @@ export function EditProperty({ property }: { property: Property }) {
 
 
   return (
-    <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 pb-5">
-      <div className="w-full sm:w-1/2">
+    <div className="flex flex-col space-y-4 pb-5">
+      <div className="w-full ">
         <Tabs defaultValue="details" className="sticky top-32">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="details">Information</TabsTrigger>
@@ -113,7 +114,8 @@ export function EditProperty({ property }: { property: Property }) {
           </TabsContent>
         </Tabs>
       </div>
-      <div className="w-full md:w-2/3 space-y-4">
+      <div className='text-xl font-bold text-center py-5 border-[#4a4a4a]'>Property Room List</div>
+      <div className="w-full space-y-4">
         {property.rooms.map((room) => (
           <Card key={room.id} className="shadow-lg ">
             <CardHeader>
