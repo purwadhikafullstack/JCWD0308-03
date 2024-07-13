@@ -84,7 +84,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
               {room.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" }) || room.roomPeakSeason[0].newPrice.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
             </p>
-          <Button label='Choose' disabled={user?.role !== 'user' || !user} onClick={() => router.push(`/transactions/${room.id}`)}/>
+          <Button label='Choose' disabled={user?.role !== 'tenant' } onClick={ user?.id === undefined || null ? () => router.push('/login/user') : () => router.push(`/transactions/${room.id}`)}/>
         </div>
       </div>
     </div>
