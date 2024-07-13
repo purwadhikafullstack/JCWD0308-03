@@ -38,7 +38,6 @@ export default function ReservationForm({id, setRangeDate} : {id:number, setRang
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           propertyId : room?.propertyId,
@@ -48,7 +47,7 @@ export default function ReservationForm({id, setRangeDate} : {id:number, setRang
         })
       });
       const result = await response.json();
-      const paymentLink = result.redirect_url;
+      const paymentLink = result.redirect_url; //result.redirect_url
       router.push(paymentLink)
       if (!response.ok) {
         throw new Error('Failed to create reservation');
@@ -58,11 +57,6 @@ export default function ReservationForm({id, setRangeDate} : {id:number, setRang
       if (!response.ok) {
         throw new Error('Failed to create reservation');
       }
-      // toast({
-      //   title: 'Reservation successful',
-      //   description: 'You have' + responseData.message
-      // })
-      
     } catch (error) {
       console.error('Failed to create reservation:', error);
     }
