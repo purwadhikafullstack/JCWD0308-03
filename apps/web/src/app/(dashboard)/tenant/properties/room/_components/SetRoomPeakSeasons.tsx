@@ -12,11 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createPeakSeason } from '@/lib/room';
-import { DatePickerWithRange } from '@/components/book/calendar';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { DatePickerWithRange } from './calendarSetDate';
 
 interface SetRoomPeakSeasonProps {
   roomId: number;

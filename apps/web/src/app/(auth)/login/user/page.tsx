@@ -27,8 +27,6 @@ const UserLoginPage: React.FC = () => {
 
       if (res.status === 'ok') {
         dispatch(setUser(res.user))
-        console.log("user login :", user );
-        
         toast({
           title: 'Login successful',
           description: 'You have successfully logged in.',
@@ -39,7 +37,7 @@ const UserLoginPage: React.FC = () => {
         console.log('login error : ', res);
         toast({
           title: 'Login failed',
-          description: res.message || res,
+          description: res.message ,
           duration: 5000,
         });
       }
