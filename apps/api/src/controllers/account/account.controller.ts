@@ -4,7 +4,6 @@ import { responseError } from '@/helpers/responseError';
 import { compare, genSalt, hash } from 'bcrypt';
 
 export class AccountController {
-
   async setupAccount(req: Request, res: Response, next: NextFunction) {
     try {
       const { password } = req.body;

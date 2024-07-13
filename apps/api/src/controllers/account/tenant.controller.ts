@@ -52,7 +52,6 @@ export class TenantController {
             responseError(res, error)
         }
     }
-
     async resendEmailVerification(req: Request, res: Response) {
         try {
             const {email} = req.body
@@ -84,8 +83,7 @@ export class TenantController {
             console.log("failed to resend email verification :", error);
             responseError(res, error)
         }
-    }
-         
+    }     
     async loginTenant(req: Request, res: Response) {
         try {
             const {email, password} = req.body
@@ -110,7 +108,6 @@ export class TenantController {
             responseError(res, error)
         }
     }
-
     async signInGoogle(req: Request, res: Response) {
         try {
             const {email, name, profile, phoneNumber } = req.body

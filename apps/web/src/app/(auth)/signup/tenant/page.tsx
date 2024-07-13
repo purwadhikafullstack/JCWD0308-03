@@ -37,7 +37,6 @@ const TenantSignup = () => {
         toast({
           variant : 'destructive',
           title: 'Failed to register account',
-          description: response.message || response || response.msg,
           duration: 5000,
         });
       }

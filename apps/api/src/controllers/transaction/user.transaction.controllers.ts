@@ -8,7 +8,7 @@ export class UserTransaction {
   // Create a new reservation
   async createReservation(req: Request, res: Response) {
     try {
-      const { propertyId, userId, roomId, date } = req.body;
+      const { propertyId, userId, roomId, date, } = req.body;
       const room = await prisma.room.findUnique({ where: { id: +roomId } });
       if (!room) {
         return res.status(404).json({ message: 'Room not found' });
@@ -40,7 +40,6 @@ export class UserTransaction {
       const secret = process.env.MIDTRANS_PUBLIC_SECRET as string;
       const encededSecret = Buffer.from(secret).toString('base64');
       const basicAuth = `Basic ${encededSecret}`;
-      // console.log(data);
       const response = await fetch(`${process.env.MIDTRANS_PUBLIC_API}`, {
         method: 'POST',
         headers: {

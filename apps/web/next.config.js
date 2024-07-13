@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -14,7 +15,7 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
-        pathname: '/public/images/**',
+        pathname: '/api/public/images/**',
       },
       {
         protocol: 'https',
@@ -45,7 +46,6 @@ const nextConfig = {
       },
     ];
   },
-  
 };
 
 module.exports = nextConfig;
