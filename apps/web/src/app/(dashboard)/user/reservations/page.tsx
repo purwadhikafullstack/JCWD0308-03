@@ -1,12 +1,10 @@
 'use client'
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader,TableRow, } from "@/components/ui/table"
 import Wrapper from "@/components/wrapper"
 import { getUserReservationsById } from "@/lib/transaction"
 import { formatDateTime, formatToIDR } from "@/lib/user.service"
 import { Reservation } from "@/type/reservation.type"
-import { set } from "cypress/types/lodash"
 import Cookies from "js-cookie"
 import { useEffect, useState } from "react"
 
@@ -56,7 +54,6 @@ if (error) return <div>Error: {error}</div>
             {reservation?.map((reservation : Reservation)=> {
               const checkIn = new Date(reservation.startDate)
               const checkOut = new Date(reservation.endDate)
-
               return (
               <TableRow className="bg-accent" key={reservation.id}>
               <TableCell>{reservation.room.property.name}</TableCell>
