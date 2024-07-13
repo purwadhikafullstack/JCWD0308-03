@@ -10,7 +10,7 @@ export class PictureController {
 
             const fileUrls = files.map((file) => ({
                 propertyId : +id,
-                url : `http://localhost:8000/public/images/${file?.filename}`,
+                url : `${process.env.API_URL}/public/images/${file?.filename}`,
             }))
 
             const uploadPictures = await prisma.propertyPicture.createMany({
@@ -31,7 +31,7 @@ export class PictureController {
             const files = req.files as Express.Multer.File[]
 
             const fileUrls = files.map((file) => ({
-                url : `http://localhost:8000/public/images/${file?.filename}`,
+                url : `${process.env.API_URL}/public/images/${file?.filename}`,
                 roomId : +id
             }))
 

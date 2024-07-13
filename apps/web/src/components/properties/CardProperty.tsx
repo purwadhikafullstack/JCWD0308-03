@@ -13,8 +13,9 @@ interface CardPropertyProps {
 
 export const CardProperty: React.FC<CardPropertyProps> = ({
   property: { id, name, address, province, city, category, district},
-  imgProperty: {  url},
+  imgProperty
 }) => {
+  const url = imgProperty?.url
   const router = useRouter();
   return (
     <div>

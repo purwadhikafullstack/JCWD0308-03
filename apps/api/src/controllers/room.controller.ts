@@ -110,7 +110,6 @@ export class RoomController {
   async deleteRoom(req: Request, res: Response) {
     try {
       const { id } = req.params;  
-      const findRoomID = await prisma.room.findUnique({where: {id: +id}})
 
       await prisma.roomPicture.deleteMany({where: { roomId: +id }})
       await prisma.roomFacilities.deleteMany({where: { roomId: +id }})
@@ -137,26 +136,11 @@ export class RoomController {
       if (!room) res.status(404).json({ error: 'Room not found' });
       
 
-      const updatePeakSeason = await prisma.roomPeakSeason.upsert({
-        where: {
-          roomId_start_date_end_date: {
-            roomId: +id,
-            start_date: new Date(start_date),
-            end_date: new Date(end_date),
-          },
-        },
-        update: {
-          start_date,
-          end_date,
-          newPrice,
-        },
-        create: {
-          start_date,
-          end_date,
-          newPrice,
-          roomId: +id,
-        },
-      });
+      const updatePeakSeason = await prisma.roomPeakSeason.create({
+        data: {
+          start_date, end_date, newPrice, roomId: +id
+        }
+      })
       res.status(200).json({ status: 'ok', updatePeakSeason })
       
     } catch (error) {

@@ -5,9 +5,9 @@ import { responseError } from '@/helpers/responseError';
 export class PropertyController {
   async getProperties(req: Request, res: Response) {
     try {
-      const { page, size, sortBy, order, category } = req.query;
+      const { page, size, sortBy, order, category, province ,name} = req.query;
       const properties = await prisma.property.findMany({
-        where: { category: category?.toString().toLowerCase() || undefined },
+        where: { category: category?.toString().toLowerCase() || undefined , province: province?.toString().toLowerCase() || undefined , name :name?.toString().toLowerCase() || undefined},
         take: parseInt(size as string) || 10,
         skip:
           (parseInt(page as string) || 0) * (parseInt(size as string) || 10),
@@ -15,7 +15,10 @@ export class PropertyController {
           [(sortBy as string) || 'createdAt']: order || 'asc',
         },
         include: {
-          rooms: true,
+          rooms: {include : {
+            RoomPeekSeason: true,
+            
+          }},
           reviews: true,
           Tenant: true,
           Reservation: true,
@@ -105,7 +108,7 @@ export class PropertyController {
       });
 
       if (updatedProperty) {
-        res.status(200).json(updatedProperty);
+        res.status(200).json({ status: 'ok', updatedProperty});
       } else if (!updatedProperty) {
         res.status(404).json({ message: 'Property not found' });
       }
@@ -118,16 +121,23 @@ export class PropertyController {
   async deleteProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
+      await prisma.propertyPicture.deleteMany({where : {propertyId : +id}})
+      await prisma.reservation.deleteMany({where : {room: {propertyId : +id}}})
+      await prisma.roomPeakSeason.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.review.deleteMany({where : {propertyId : +id}})
+      await prisma.roomPicture.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.roomFacilities.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.bathroomFacilities.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.roomAvailability.deleteMany({where : {room : {propertyId : +id}}})
+      await prisma.room.deleteMany({where : {propertyId : +id}})
+
       const deletedProperty = await prisma.property.delete({
         where: {
-          id: Number(id),
+          id: +id,
         },
       });
-      if (deletedProperty) {
-        res.status(200).json(deletedProperty);
-      } else if (!deletedProperty) {
-        res.status(404).json({ message: 'Property not found' });
-      }
+     res.status(200).json({ status: 'ok', deletedProperty });
     } catch (error) {
       console.log('failed to delete property', error);
       responseError(res, error);

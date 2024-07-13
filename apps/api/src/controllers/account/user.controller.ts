@@ -1,12 +1,13 @@
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
 import { sign } from 'jsonwebtoken';
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 import { transporter } from '@/helpers/nodemailer';
-import { compare } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
+import { checkExistingUserTenant, sendVerificationEmail } from '@/services/user.service';
 
 export class UserController {
   async getUsers(req: Request, res: Response) {
@@ -21,36 +22,11 @@ export class UserController {
   async registerUser(req: Request, res: Response) {
     try {
       const { email, name } = req.body;
-
-      let existsUserEmail = await prisma.user.findUnique({where: { email: email }})
-      let existsTenantEmail = await prisma.tenant.findUnique({where: { email: email }})
-      
-      if(existsTenantEmail) return res.status(409).json({ status: 'error', message: 'Email already registered as tenant please login as tenant' })
-      if (existsUserEmail?.isActive === false) return res.status(400).json({ status: 'error', message: 'Email already registered but not verified, please check your email for verification' })
-      if (existsUserEmail) return res.status(400).json({ status: 'error', message: 'Email already registered' })
+      await checkExistingUserTenant(email, res);
 
       const createUser = await prisma.user.create({ data: { name, email } });
+      const token = await sendVerificationEmail(createUser);
 
-      const payload = { id: createUser.id, role: createUser.role };
-      const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h' });
-      const link = `http://localhost:3000/verify/user/${token}`;
-
-      const templatePath = path.join(__dirname,'../../templates','registerUser.html');
-      const templateSource = fs.readFileSync(templatePath, 'utf-8');
-      const compiledTemplate = Handlebars.compile(templateSource);
-      const html = compiledTemplate({
-        name: createUser.name,
-        role: createUser.role,
-        link,
-      });
-
-      await transporter.sendMail({
-        from: process.env.MAIL_USER,
-        to: createUser.email,
-        subject: 'Verify your account',
-        html: html,
-      });
-      console.log('token sign up user : ', token);
       return res.status(201).json({ status: 'ok', createUser, token });
     } catch (error) {
       console.log('failed to register user : ', error);
@@ -149,7 +125,6 @@ export class UserController {
     }
   }
 
-  // update email
   async updateEmail(req: Request, res: Response) {
     try {
       const user = await prisma.user.findUnique({ where: { id: req.user?.id } });
@@ -157,7 +132,7 @@ export class UserController {
       
       const { email } = req.body;
       const existsEmail = await prisma.user.findUnique({ where: { email: email } });
-      if(existsEmail) return res.status(409).json({ status: 'error', message: 'Email already registered, please use different email' });
+      if(existsEmail) return res.status(409).json({ status: 'error', message: 'Email already used, please use different email' });
 
       const updateEmail = await prisma.user.update({ where: { id: user.id }, data: { email: email } });
       const payload = {id: updateEmail.id, role: updateEmail.role, name: updateEmail.name};
@@ -184,4 +159,69 @@ export class UserController {
       responseError(res, error);
     }
   }
+
+  async sendForgotPassword (req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      if (!email) return res.status(400).json({ status: 'error', message: 'Email is required!' });
+      const user = await prisma.user.findUnique({ where: { email: email } }) || await prisma.tenant.findUnique({ where: { email: email } })
+
+      if (!user) return res.status(404).json({ status: 'error', message: 'Account not found!' });
+      if (user.isSocialLogin == true) return res.status(409).json({ status: 'error', message: 'Account registered with social media cannot reset password' });
+      if (user.isActive == false) return res.status(400).json({ status: 'error', message: 'Email already registered but not verified, please check your email for verification' });
+
+      const payload = {id: user.id, role: user.role, name: user.name};
+      const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
+      const link = `http://localhost:3000/reset-password/${token}`;
+      const templatePath = path.join(__dirname,'../../templates','forgotPassword.html');
+      const templateSource = fs.readFileSync(templatePath, 'utf-8');
+      const compiledTemplate = Handlebars.compile(templateSource);
+      const html = compiledTemplate({ name: user.name, link });
+      await transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: user.email,
+        subject: "Forgot Password Confirmation",
+        html
+      })
+
+      return res.status(200).json({ status: 'ok', message: 'success send email', email, token });
+
+    } catch (error) {
+      console.log("failed to forgot password user : ", error);
+      responseError(res, error);
+    }
+  }
+
+  async resetPassword (req: Request, res: Response) {
+    try {
+      const { password } = req.body;
+      const { user } = req;
+
+    if (!user)  return res.status(400).json({ status: 'error', message: 'User information is missing.' })
+    const isUser = user.role === 'user';
+    const isTenant = user.role === 'tenant';
+
+    const findAccount = isUser ? await prisma.user.findUnique({ where: { id: user.id } }) 
+    : isTenant ? await prisma.tenant.findUnique({ where: { id: user.id } }) : null;
+
+    if (!findAccount) return res.status(404).json({ status: 'error', message: 'User not found.' });
+
+    if (findAccount.isSocialLogin) return res.status(409).json({ status: 'error', message: 'Account registered with social login cannot reset password.' })
+
+    const salt = await genSalt(10);
+    const hashPassword = await hash(password, salt);
+
+    if (isUser) {
+      await prisma.user.update({ where: { id: user.id }, data: { password: hashPassword } });
+    } else if (isTenant) {
+      await prisma.tenant.update({ where: { id: user.id }, data: { password: hashPassword } });
+    }
+
+    return res.status(200).json({ status: 'ok', message: 'Password successfully reset.' , isUser});
+    } catch (error) {
+      console.log("failed to reset password user : ", error);
+      responseError(res, error);
+    }
+  }
+
 }

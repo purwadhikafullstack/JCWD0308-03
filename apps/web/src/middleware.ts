@@ -30,7 +30,6 @@ const protectTenant = [
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value
-//   console.log(token);
 
   const url = req.nextUrl.pathname;
   if (protectPage.includes(url)) {
@@ -40,7 +39,6 @@ export async function middleware(req: NextRequest) {
 
     try {
       const user = await getUser(token);
-      console.log("user middleware: " , user.role);
       
       if (!user) {
         return NextResponse.redirect(new URL(`/?redirect=${url}`, req.url));

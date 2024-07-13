@@ -63,7 +63,7 @@ export const UserMenu = () => {
           className="px-2 py-1 border-[1px] border-neutral-200 flex items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu className="text-gray-500" />
-          <div className="block">
+          <div className="md:block hidden">
             <Avatar src={userProfile?.profile} />
           </div>
         </div>

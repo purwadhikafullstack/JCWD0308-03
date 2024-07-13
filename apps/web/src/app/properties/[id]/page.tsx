@@ -24,13 +24,15 @@ export default function PropertyDetail({params} : {params:Iparams}) {
 
   useEffect(() => {
     async function fetchProperty() {
+
       try {
+        setLoading(true);
         const property = await getPropertyById(params.id);
         setProperty(property);
+        setLoading(false)
       } catch (error) {
         console.log('failed to get properties on properties[id] : ', error);
         setError('Failed to fetch property details.');
-      } finally {
         setLoading(false);
       }
     }

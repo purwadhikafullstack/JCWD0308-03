@@ -1,44 +1,64 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Search from './Search';
+import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { GoDotFill } from 'react-icons/go';
 
-interface HeroSectionProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+const HeroSection: React.FC = () => {
   const router = useRouter();
-  const img = [
-    'https://images.unsplash.com/photo-1605181063694-e64a8e7a267f?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  ]
 
-  const handleSearch = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+  const img = [
+    '/images/1.png',
+    '/images/7.png',
+    '/images/9.png',
+    '/images/10.png',
+    '/images/12.png',
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const prevSlide = () => {
+    const isFirstSlide = currentSlide === 0;
+    const newIndex = isFirstSlide ? img.length - 1 : currentSlide - 1;
+    setCurrentSlide(newIndex);
+  };
+
+  const nextSlide = () => {
+    const isLastSlide = currentSlide === img.length - 1;
+    const newIndex = isLastSlide ? 0 : currentSlide + 1;
+    setCurrentSlide(newIndex);
+  };
+
+  const goToSlide = (slideIndex: number) => {
+    setCurrentSlide(slideIndex);
   };
 
   return (
-    <section
-      className="py-52 w-full h-[500px] bg-cover bg-center text-center text-white"
-      style={{ backgroundImage: `url(${img[0]})` }}
-    >
-      <div className="container mx-auto">
-        <h1 className="text-4xl text-[#4a4a4a] font-bold mb-4">
-          Booking a room has never been easier!
-        </h1>
-        <Search
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          handleSearch={handleSearch}
-        />  
-        
+    <section className="relative h-[50vh] bg-cover bg-center bg-no-repeat opacity-90" style={{ backgroundImage: `url(https://images.unsplash.com/photo-1532204153975-d02c743d220b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)` }}>
+
+      <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-full lg:items-center lg:px-8">
+        <div className="w-full h-[40vh] bg-cover rounded-lg bg-center bg-no-repeat" style={{ backgroundImage: `url(${img[currentSlide]})`, backgroundSize: 'contain' }}>
+          <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-full lg:items-center lg:px-8">
+          </div>
+
+          <div className="transition duration-700 absolute top-[50%] -translate-x-0 translate-y-[50%] left-5 text-2xl rounded-full p-2 bg-white text-[#00a7c4] cursor-pointer">
+            <MdNavigateBefore onClick={prevSlide} size={32} />
+          </div>
+          <div className="transition duration-700 absolute top-[50%] -translate-x-0 translate-y-[50%] right-5 text-3xl rounded-full p-2 bg-white text-[#00a7c4] cursor-pointer">
+            <MdNavigateNext onClick={nextSlide} size={32} />
+          </div>
+          <div className="absolute flex bottom-10 left-1/2 -translate-x-1/2 justify-center py-2">
+            {img.map((pict, pictIndex) => (
+              <div
+                key={pictIndex}
+                className={`mx-1 cursor-pointer ${currentSlide === pictIndex ? 'text-[#00a7c4]' : 'text-white'}`}
+                onClick={() => goToSlide(pictIndex)}
+              >
+                <GoDotFill size={24} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

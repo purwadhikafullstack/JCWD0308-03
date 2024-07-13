@@ -112,7 +112,7 @@ const UserLoginPage: React.FC = () => {
         subtitle="Enter your email below to login to your account"
         onSubmit={handleSubmit}
         buttonLabel="Login"
-        forgotPasswordHref="#"
+        forgotPasswordHref="/forgot-password"
         linkHref="/signup/user"
         onClickGoogle={signInGoogle}
         loading={loading}
