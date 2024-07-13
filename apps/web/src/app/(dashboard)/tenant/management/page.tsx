@@ -50,8 +50,7 @@ return (
                 <CardHeader className="pb-3">
                   <CardTitle>Your Orders</CardTitle>
                   <CardDescription className="max-w-lg text-balance leading-relaxed">
-                    Introducing Our Dynamic Orders Dashboard for Seamless
-                    Management and Insightful Analysis.
+                  Details of the items purchased, including quantity, price per item, and total cost.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -102,7 +101,7 @@ return (
                             <TableCell className="hidden sm:table-cell">{orderList.Property.name}</TableCell>
                             <TableCell className="hidden sm:table-cell">{orderList.room.type}</TableCell>
                             <TableCell className="hidden sm:table-cell">
-                              <Badge className="text-xs" variant="secondary">{orderList.status}</Badge>
+                              <Badge className="text-xs" variant={orderList.status == 'Confirmed' ? 'default' : 'destructive' }>{orderList.status}</Badge>
                             </TableCell>
                             <TableCell className="hidden md:table-cell">{formatDateTime(checkIn).dateOnly}</TableCell>
                             <TableCell className="hidden md:table-cell">{formatDateTime(checkOut).dateOnly}</TableCell>

@@ -1,3 +1,4 @@
+
 import PropertyCard from '@/components/home/PropertyCard';
 import EmptyState from '@/components/EmptyState';
 import { getProperties } from '@/lib/properties';

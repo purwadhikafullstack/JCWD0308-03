@@ -5,7 +5,6 @@ import qs from "query-string";
 export const getProperties = async (category: string = '', search: string = '') => {
   try {
     const query = qs.stringify({ category });
-
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}properties?${query}`,
       {
         next : { revalidate:10},

@@ -37,7 +37,7 @@ const UserSignup = () => {
       } else {
         toast({
           title: 'Failed to register account',
-          description: response.message || "Unknown error, please try again!",
+          description: response.message ,
           duration: 5000,
         });
       }

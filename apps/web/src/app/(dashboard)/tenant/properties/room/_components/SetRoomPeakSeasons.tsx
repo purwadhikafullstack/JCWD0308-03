@@ -22,7 +22,6 @@ interface SetRoomPeakSeasonProps {
   roomId: number;
   onUpdatePeakSeason: () => void;
 }
-
 const validationSchema = Yup.object().shape({
   newPrice: Yup.number()
     .required('Price is required')
@@ -31,15 +30,12 @@ const validationSchema = Yup.object().shape({
   start_date: Yup.date().required('Start date is required'),
   end_date : Yup.date().required('End date is required'),
 });
-
 export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason }: SetRoomPeakSeasonProps) {
 
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 20),
   })
-
-
   const formik = useFormik({
     initialValues: {
       newPrice: '',
@@ -79,7 +75,7 @@ export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason }: SetRoomPeakSea
                 <Label htmlFor="dateRange" className="text-right">
                   Date Range
                 </Label>
-                <DatePickerWithRange date={date} setDate={setDate} />
+                {/* <DatePickerWithRange date={date} setDate={setDate} /> */}
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="newPrice" className="text-right">

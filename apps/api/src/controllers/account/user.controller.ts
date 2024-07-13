@@ -33,7 +33,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async resendEmailVerification(req: Request, res: Response) {
     try {
       const {email} = req.body
@@ -67,7 +66,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async loginUser(req: Request, res: Response) {
     try {
       const { email, password } = req.body
@@ -91,7 +89,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async singInGoogle(req: Request, res: Response) {
     try {
       const { name, email, profile, phoneNumber } = req.body
@@ -124,7 +121,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async updateEmail(req: Request, res: Response) {
     try {
       const user = await prisma.user.findUnique({ where: { id: req.user?.id } });
@@ -159,7 +155,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async sendForgotPassword (req: Request, res: Response) {
     try {
       const { email } = req.body;
@@ -191,7 +186,6 @@ export class UserController {
       responseError(res, error);
     }
   }
-
   async resetPassword (req: Request, res: Response) {
     try {
       const { password } = req.body;
@@ -223,5 +217,4 @@ export class UserController {
       responseError(res, error);
     }
   }
-
 }
