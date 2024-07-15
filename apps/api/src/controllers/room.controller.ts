@@ -1,20 +1,14 @@
 import prisma from '@/prisma';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
+import { createRoom, deleteRoomService, getRoomById, updateRoom } from '@/services/room.service';
 
 export class RoomController {
   async getRoomById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const rooms = await prisma.room.findUnique({
-        where: { id: +id },
-        include: {
-          property: true,
-          roomFacilities: true,
-          bathroomFacilities: true,
-          RoomPicture: true,
-        },
-      });
+      const rooms = await getRoomById(+id);
+      if (!rooms) res.status(404).json({ error: 'Room not found' });
       res.status(200).json(rooms);
     } catch (error) {
       console.log('failed to get rooms', error);
@@ -27,37 +21,16 @@ export class RoomController {
       const { type, price, description, capacity, bedDetails, facilities, bathroomFacilities } = req.body;
       const { id } = req.params;
   
-      const createdRoom = await prisma.room.create({
-        data: {
-          type,
-          price : parseFloat(price),
-          description,
-          capacity : parseInt(capacity),
-          bedDetails,
-          propertyId: +id,
-        },
-        include: {
-          roomFacilities: true,
-          bathroomFacilities: true,
-        }
+      const createdRoom = await createRoom({
+        type,
+        price: parseFloat(price),
+        description,
+        capacity: parseInt(capacity),
+        bedDetails,
+        propertyId: +id,
+        facilities,
+        bathroomFacilities,
       });
-  
-      if (facilities && facilities.length > 0) {
-       await prisma.roomFacilities.createMany({
-         data: facilities.map((facility: string) => ({
-           name: facility,
-           roomId: createdRoom.id,
-         }))
-       })
-      }
-      if (bathroomFacilities && bathroomFacilities.length > 0) {
-        await prisma.bathroomFacilities.createMany({
-          data: bathroomFacilities.map((facility: string) => ({
-            name: facility,
-            roomId: createdRoom.id,
-          }))
-        })
-      }
   
       res.status(201).json({ status: 'ok', createdRoom});
     } catch (error) {
@@ -71,34 +44,16 @@ export class RoomController {
       const { id } = req.params;
       const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities } = req.body;
 
-    const updatedRoom = await prisma.room.update({
-      where: { id: +id },
-      data: {
-        type,
-        price: parseFloat(price),
-        description,
-        capacity: parseInt(capacity),
-        bedDetails,
-      },
-    });
-
-    if (roomFacilities && roomFacilities.length > 0) {
-      await prisma.roomFacilities.deleteMany({ where: { roomId: +id } }); // Delete existing roomFacilities
-      const createRoomFacilities = roomFacilities.map((name: string) => ({
-        name,
-        roomId: +id,
-      }));
-      await prisma.roomFacilities.createMany({ data: createRoomFacilities });
-    }
-
-    if (bathroomFacilities && bathroomFacilities.length > 0) {
-      await prisma.bathroomFacilities.deleteMany({ where: { roomId: +id } }); // Delete existing bathroomFacilities
-      const createBathroomFacilities = bathroomFacilities.map((name: string) => ({
-        name,
-        roomId: +id,
-      }));
-      await prisma.bathroomFacilities.createMany({ data: createBathroomFacilities });
-    }
+    const updatedRoom =  await updateRoom({
+      id: +id,
+      type,
+      price: parseFloat(price),
+      description,
+      capacity: parseInt(capacity),
+      bedDetails,
+      roomFacilities,
+      bathroomFacilities,
+    })
 
     res.status(200).json({ status: 'ok', updatedRoom });
     } catch (error) {
@@ -111,15 +66,7 @@ export class RoomController {
     try {
       const { id } = req.params;  
 
-      await prisma.roomPicture.deleteMany({where: { roomId: +id }})
-      await prisma.roomFacilities.deleteMany({where: { roomId: +id }})
-      await prisma.bathroomFacilities.deleteMany({where: { roomId: +id }})
-      await prisma.roomPeakSeason.deleteMany({where: { roomId: +id }})
-      await prisma.roomAvailability.deleteMany({where: { roomId: +id }})
-
-      const deletedRoom = await prisma.room.delete({
-        where: { id: +id },
-      })   
+      const deletedRoom = await deleteRoomService(+id);
       res.status(200).json({ status: 'ok', deletedRoom });
     } catch (error) {
       console.log('failed to delete room', error);
