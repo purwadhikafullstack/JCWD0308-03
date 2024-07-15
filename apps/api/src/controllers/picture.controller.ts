@@ -7,12 +7,10 @@ export class PictureController {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
-
             const fileUrls = files.map((file) => ({
                 propertyId : +id,
                 url : `${process.env.API_URL}/public/images/${file?.filename}`,
             }))
-
             const uploadPictures = await prisma.propertyPicture.createMany({
                 data: fileUrls,
                 skipDuplicates: true
@@ -24,17 +22,14 @@ export class PictureController {
             responseError(res, error.message);
         }
     }
-
     async uploadPicturesRoom(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
-
             const fileUrls = files.map((file) => ({
                 url : `${process.env.API_URL}/public/images/${file?.filename}`,
                 roomId : +id
             }))
-
             const uploadPictures = await prisma.roomPicture.createMany({
                 data: fileUrls.map(file => ({
                     url : file.url,
@@ -49,6 +44,4 @@ export class PictureController {
             responseError(res, error);
         }
     }
-
-
 }

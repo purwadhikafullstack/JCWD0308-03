@@ -39,7 +39,7 @@ export class TenantManagement {
             })
             res.status(200).json(sales)
         } catch (error) {
-            console.log(error);
+            res.status(500).json({error})
         }
     }
     // async submitReview(req: Request, res: Response) {
