@@ -144,7 +144,7 @@ export function UserProfile() {
             {[
               { label: 'Name', value: userProfile?.name },
               { label: 'Email address', value: userProfile?.email },
-              { label: 'Phone Numbers', value: userProfile?.phoneNumber },
+              { label: 'Phone Numbers', value: userProfile?.phoneNumber ? userProfile.phoneNumber : 'Not set' },
               { label: 'Date of Birth', value: userProfile?.dob ? format(new Date(userProfile.dob), 'dd/MM/yyyy') : 'Not set' },
               { label: 'Gender', value: userProfile?.gender ? userProfile.gender : 'Not set' },
             ].map((item, index) => (

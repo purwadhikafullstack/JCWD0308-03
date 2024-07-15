@@ -17,7 +17,6 @@ const UserLoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { signInGoogle , data} = useAuth();
   const dispatch = useAppDispatch()
-  const user = useAppSelector((state) => state.user);
 
   const handleSubmit = async (values: any, actions: any) => {
     setLoading(true);

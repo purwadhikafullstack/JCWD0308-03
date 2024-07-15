@@ -8,20 +8,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAppSelector } from '@/hooks/hooks';
-import { values } from 'cypress/types/lodash';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { useToast } from '../ui/use-toast';
 import { editProfile } from '@/lib/account';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { ChangePassword } from './changePassword';
 
 
 const validationSchema = yup.object({
   name: yup.string(),
+  password : yup.string(),
   dob: yup.date().nullable(),
   phoneNumber: yup.string().nullable(),
   gender: yup.string().nullable(),
@@ -55,6 +55,11 @@ export function EditButton() {
           duration: 3000,
         })
         setTimeout(() => {window.location.reload()}, 3000) 
+      } else {
+        toast({
+          title : "Something went wrong please try again!",
+          variant: 'destructive'
+        })
       }
       
     } catch (error) {
@@ -76,7 +81,7 @@ export function EditButton() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='hidden md:block'>
             Make changes to your profile here. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
@@ -86,6 +91,7 @@ export function EditButton() {
             phoneNumber: user?.phoneNumber,
             dob: user?.dob,
             gender: user?.gender,
+            password : '',
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -101,6 +107,21 @@ export function EditButton() {
               />
               <ErrorMessage name="name" />
             </div>
+            {user?.isSocialLogin === false && (
+            <div className="grid">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <ChangePassword />
+              </div>
+              <Field
+                id="password"
+                name="password"
+                placeholder="****"
+                className="p-3 rounded-sm ring-1 ring-neutral-600"
+              />
+              <ErrorMessage name="password" />
+            </div>
+            )}
             <div className="grid gap-4 py-4">
               <Label htmlFor="phoneNumber">Phone Number</Label>
               <Field
@@ -145,7 +166,7 @@ export function EditButton() {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" className="bg-[#00a7c4]">
+              <Button type="submit" className="bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70">
                 Save changes
               </Button>
             </DialogFooter>
