@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
 
 export class RoomController {
@@ -21,12 +21,10 @@ export class RoomController {
       responseError(res, error);
     }
   }
-
   async createRoom(req: Request, res: Response) {
     try {
       const { type, price, description, capacity, bedDetails, facilities, bathroomFacilities } = req.body;
       const { id } = req.params;
-  
       const createdRoom = await prisma.room.create({
         data: {
           type,
@@ -58,28 +56,25 @@ export class RoomController {
           }))
         })
       }
-  
       res.status(201).json({ status: 'ok', createdRoom});
     } catch (error) {
       console.log('failed to create room', error);
       responseError(res, error);
     }
   }
-
   async updateRoom(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities } = req.body;
-
-    const updatedRoom = await prisma.room.update({
-      where: { id: +id },
-      data: {
-        type,
-        price: parseFloat(price),
-        description,
-        capacity: parseInt(capacity),
-        bedDetails,
-      },
+      const updatedRoom = await prisma.room.update({
+        where: { id: +id },
+        data: {
+          type,
+          price: parseFloat(price),
+          description,
+          capacity: parseInt(capacity),
+          bedDetails,
+        },
     });
 
     if (roomFacilities && roomFacilities.length > 0) {
@@ -106,17 +101,14 @@ export class RoomController {
       responseError(res, error);
     }
   }
-
   async deleteRoom(req: Request, res: Response) {
     try {
       const { id } = req.params;  
-
       await prisma.roomPicture.deleteMany({where: { roomId: +id }})
       await prisma.roomFacilities.deleteMany({where: { roomId: +id }})
       await prisma.bathroomFacilities.deleteMany({where: { roomId: +id }})
       await prisma.roomPeakSeason.deleteMany({where: { roomId: +id }})
       await prisma.roomAvailability.deleteMany({where: { roomId: +id }})
-
       const deletedRoom = await prisma.room.delete({
         where: { id: +id },
       })   
@@ -126,34 +118,27 @@ export class RoomController {
       responseError(res, error);
     }
   }
-
   async roomPeakSeasom(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { start_date, end_date, newPrice } = req.body;
       const room = await prisma.room.findUnique({where: {id: +id}})
-
       if (!room) res.status(404).json({ error: 'Room not found' });
-      
-
       const updatePeakSeason = await prisma.roomPeakSeason.create({
         data: {
           start_date, end_date, newPrice, roomId: +id
         }
       })
       res.status(200).json({ status: 'ok', updatePeakSeason })
-      
     } catch (error) {
       console.log('failed to delete room', error);
       responseError(res, error);  
     }
   }
-
   async setRooomAvailability(req: Request, res: Response) {
     try {
       const {id} = req.params
       const {start_data, end_date , isAvailable} = req.body
-
       const availability = await prisma.roomAvailability.create({
         data: {
           ...req.body,
@@ -163,13 +148,10 @@ export class RoomController {
           roomId: +id
         }
       })
-
       res.status(200).json({ status: 'ok', availability });
     } catch (error) {
       console.log('failed to set room availability', error);
       responseError(res, error);
     }
   }
-
-  
 }

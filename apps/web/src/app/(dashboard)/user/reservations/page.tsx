@@ -1,4 +1,5 @@
 'use client'
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader,TableRow, } from "@/components/ui/table"
 import Wrapper from "@/components/wrapper"
@@ -27,6 +28,7 @@ export default function UserReservation() {
       }
     }
     fetchReservations(token)
+    
   },[token])
 if (isLoading) return <div>Loading...</div>
 if (error) return <div>Error: {error}</div>
@@ -35,8 +37,8 @@ if (error) return <div>Error: {error}</div>
     <Wrapper>
     <Card>
       <CardHeader className="px-7">
-        <CardTitle>Orders</CardTitle>
-        <CardDescription>Recent orders from your store.</CardDescription>
+        <CardTitle>Your Trip</CardTitle>
+        <CardDescription>Recent trip from your reservations.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -58,7 +60,9 @@ if (error) return <div>Error: {error}</div>
               <TableRow className="bg-accent" key={reservation.id}>
               <TableCell>{reservation.room.property.name}</TableCell>
               <TableCell className="hidden sm:table-cell">{reservation.room.type}</TableCell>
-              <TableCell className="hidden sm:table-cell">{reservation.status}</TableCell>
+              <TableCell className="hidden sm:table-cell">
+                <Badge className="text-xs" variant={reservation.status == 'Confirmed' ? 'default' : 'destructive' }>{reservation.status}</Badge>
+              </TableCell>
               <TableCell className="hidden md:table-cell">{formatDateTime(checkIn).dateOnly}</TableCell>
               <TableCell className="hidden md:table-cell">{formatDateTime(checkOut).dateOnly}</TableCell>
               <TableCell className="text-right">{formatToIDR(reservation.price)}</TableCell>

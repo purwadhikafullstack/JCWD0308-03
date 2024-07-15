@@ -31,12 +31,10 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async createProperty(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, description, category, city, province, address, district } = req.body;
       const { user } = req;
-
       const createdProperty = await prisma.property.create({
         data: {
           name,
@@ -55,7 +53,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async getPropertyById(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -87,7 +84,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async updateProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -117,11 +113,9 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async deleteProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
-
       await prisma.propertyPicture.deleteMany({where : {propertyId : +id}})
       await prisma.reservation.deleteMany({where : {room: {propertyId : +id}}})
       await prisma.roomPeakSeason.deleteMany({where : {room : {propertyId : +id}}})
@@ -143,7 +137,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async getPropertyByTenantId(req: Request, res: Response) {
     try {
       const { user } = req;
