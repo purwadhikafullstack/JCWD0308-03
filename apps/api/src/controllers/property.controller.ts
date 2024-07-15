@@ -23,7 +23,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async createProperty(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, description, category, city, province, address, district } = req.body;
@@ -48,7 +47,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async getPropertyById(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -63,7 +61,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async updateProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -93,7 +90,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async deleteProperty(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -105,7 +101,6 @@ export class PropertyController {
       responseError(res, error);
     }
   }
-
   async getPropertyByTenantId(req: Request, res: Response) {
     try {
       const { user } = req;

@@ -1,40 +1,34 @@
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
-import {Request, Response, NextFunction} from 'express'
+import {Request, Response} from 'express'
 
 export class PictureController {
-    async uploadPicturesProperty(req: Request, res: Response, next: NextFunction) {
+    async uploadPicturesProperty(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
-
             const fileUrls = files.map((file) => ({
                 propertyId : +id,
                 url : `${process.env.API_URL}/public/images/${file?.filename}`,
             }))
-
             const uploadPictures = await prisma.propertyPicture.createMany({
                 data: fileUrls,
                 skipDuplicates: true
             })
             res.status(201).json({status : 'ok', uploadPictures})
-            // next()
         } catch (error:any) {
             console.log('failed to upload pictures property', error);
             responseError(res, error.message);
         }
     }
-
-    async uploadPicturesRoom(req: Request, res: Response, next: NextFunction) {
+    async uploadPicturesRoom(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
-
             const fileUrls = files.map((file) => ({
                 url : `${process.env.API_URL}/public/images/${file?.filename}`,
                 roomId : +id
             }))
-
             const uploadPictures = await prisma.roomPicture.createMany({
                 data: fileUrls.map(file => ({
                     url : file.url,
@@ -43,12 +37,9 @@ export class PictureController {
                 skipDuplicates: true
             })
             res.status(201).json({status: 'ok',uploadPictures})
-            // next()
         } catch (error) {
             console.log('failed to upload pictures room', error);
             responseError(res, error);
         }
     }
-
-
 }
