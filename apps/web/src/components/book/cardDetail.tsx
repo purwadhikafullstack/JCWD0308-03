@@ -77,7 +77,7 @@ export default function CardDetail({id, rangeDate}:{id:number, rangeDate : numbe
               <ul className="grid gap-3">
                 <li className="flex items-center justify-between">
                   <span className="text-muted-foreground">
-                    {room?.type} x <span> {rangeDate} </span>
+                    {room?.type} x <span> {rangeDate} night </span>
                   </span>
                   <span>{formatToIDR(room.price * rangeDate)}</span>
                 </li>
