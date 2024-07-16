@@ -1,9 +1,9 @@
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
-import {Request, Response, NextFunction} from 'express'
+import {Request, Response} from 'express'
 
 export class PictureController {
-    async uploadPicturesProperty(req: Request, res: Response, next: NextFunction) {
+    async uploadPicturesProperty(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
@@ -16,13 +16,12 @@ export class PictureController {
                 skipDuplicates: true
             })
             res.status(201).json({status : 'ok', uploadPictures})
-            // next()
         } catch (error:any) {
             console.log('failed to upload pictures property', error);
             responseError(res, error.message);
         }
     }
-    async uploadPicturesRoom(req: Request, res: Response, next: NextFunction) {
+    async uploadPicturesRoom(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const files = req.files as Express.Multer.File[]
@@ -38,7 +37,6 @@ export class PictureController {
                 skipDuplicates: true
             })
             res.status(201).json({status: 'ok',uploadPictures})
-            // next()
         } catch (error) {
             console.log('failed to upload pictures room', error);
             responseError(res, error);

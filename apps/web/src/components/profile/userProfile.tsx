@@ -137,14 +137,14 @@ export function UserProfile() {
       <div className="grid md:grid-cols-1 gap-8 pt-12">
         <Card className="shadow-2xl rounded-xl">
           <CardHeader className="flex flex-row justify-between ">
-            <div className="text-3xl font-bold ">Personal Information</div>
+            <div className="text-2xl md:text-3xl font-bold ">Personal Information</div>
             <EditButton />
           </CardHeader>
           <CardContent className="flex flex-col justify-between">
             {[
               { label: 'Name', value: userProfile?.name },
               { label: 'Email address', value: userProfile?.email },
-              { label: 'Phone Numbers', value: userProfile?.phoneNumber },
+              { label: 'Phone Numbers', value: userProfile?.phoneNumber ? userProfile.phoneNumber : 'Not set' },
               { label: 'Date of Birth', value: userProfile?.dob ? format(new Date(userProfile.dob), 'dd/MM/yyyy') : 'Not set' },
               { label: 'Gender', value: userProfile?.gender ? userProfile.gender : 'Not set' },
             ].map((item, index) => (

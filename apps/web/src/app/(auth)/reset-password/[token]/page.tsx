@@ -29,7 +29,6 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
     setLoading(true);
     try {
       const response = await resetPassword(values, token);
-      console.log('res ResetPassword : ', response);
 
       if (response.status === 'ok') {
         toast({
@@ -71,9 +70,9 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
         title="Reset Password"
         subtitle="Please enter your new password"
         buttonLabel="Reset Password"
-        linkHref="/login"
-        linkTitle="Already have an account?"
-        linkDescription="Login"
+        linkHref="/"
+        linkTitle="Don't want to reset your password?"
+        linkDescription="Back to home page"
         fields={[
           {
             name: 'password',

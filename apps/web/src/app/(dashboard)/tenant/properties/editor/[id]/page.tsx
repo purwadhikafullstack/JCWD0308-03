@@ -22,7 +22,7 @@ const EditorProperties = ({ params }: { params: { id: number } }) => {
   }, [params.id]);
 
   return (
-    <div className="h-screen pt-32 px-3">
+    <div className="h-screen pt-32 px-3 md:px-10">
       {property ? <EditProperty property={property} /> : <div>Loading...</div>}
     </div>
   )

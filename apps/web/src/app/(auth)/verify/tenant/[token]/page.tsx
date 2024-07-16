@@ -32,7 +32,8 @@ const VerifyPageTenant = () => {
       }else if (response.message.name === 'JsonWebTokenError') {
         toast({
           title: 'Invalid link verify, please check your email and click the verify button',
-          duration: 3000
+          duration: 3000,
+          variant: 'destructive',
         })
       } else if (response.message.name === 'TokenExpiredError') {
         setVerificationError(response.message.name)

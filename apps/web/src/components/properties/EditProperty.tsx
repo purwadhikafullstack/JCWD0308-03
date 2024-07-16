@@ -10,8 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ImageSection from './ImageSection';
 import { Property, Room, roomPeakSeason } from '@/type/property.type';
 import { Button } from "@/components/ui/button";
-import { useState } from 'react';
-import PropertyDetailsForm from './PropertyDetailsForm'; // Import the refactored component
+import { useEffect, useState } from 'react';
+import PropertyDetailsForm from './PropertyDetailsForm'; 
 import { updateProperty } from '@/lib/properties';
 import { useToast } from '../ui/use-toast';
 import { useRouter } from 'next/navigation';
@@ -54,7 +54,7 @@ export function EditProperty({ property }: { property: Property }) {
       const res = await updateProperty(property.id, editedProperty);
       if (res.status = 'ok') {
         toast({title: 'Property updated successfully', duration: 3000})
-        window.location.reload()
+        setTimeout(() => window.location.reload(), 4000)
       } else {
         toast({title: 'Failed to update property',description: res.message, duration: 3000})
       }
@@ -123,7 +123,7 @@ export function EditProperty({ property }: { property: Property }) {
             </CardHeader>
             <CardContent className="relative">
                 <div className="absolute flex -top-14 right-3">
-                  <SetRoomPeakSeason roomId={room.id}
+                  <SetRoomPeakSeason roomId={room.id} room={room}
                   onUpdatePeakSeason={() => {updateRoom}}
                   />
                 </div>
