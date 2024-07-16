@@ -17,7 +17,6 @@ export const getProperties = async (category: string = '', search: string = '') 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log(" failed to get properties : ", error);
     return [];
   }
 };
@@ -35,7 +34,6 @@ export const createProperty = async (data:any, token: string) => {
     const res = await response.json();
     return res
   } catch (error:any) {
-    console.log(" failed to create properties : ", error);
     return error.message
   }
 }

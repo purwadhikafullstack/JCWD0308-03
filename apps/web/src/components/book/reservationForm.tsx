@@ -23,7 +23,6 @@ export default function ReservationForm({id, setRangeDate} : {id:number, setRang
       try {
         const room = await getRoomsbyId(id);
         setRoom(room)
-        console.log(id,room);    
       } catch (error) {
         console.log(error);
       }
@@ -47,13 +46,12 @@ export default function ReservationForm({id, setRangeDate} : {id:number, setRang
         })
       });
       const result = await response.json();
-      const paymentLink = result.redirect_url; //result.redirect_url
+      const paymentLink = result.redirect_url; 
       router.push(paymentLink)
       if (!response.ok) {
         throw new Error('Failed to create reservation');
       }
       const responseData = await response.json();
-      console.log('Server response:', responseData);
       if (!response.ok) {
         throw new Error('Failed to create reservation');
       }

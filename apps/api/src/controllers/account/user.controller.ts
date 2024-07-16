@@ -15,7 +15,6 @@ export class UserController {
       const allUsers = await prisma.user.findMany();
       res.json(allUsers);
     } catch (error) {
-      console.log('failed to get users :', error);
       responseError(res, error);
     }
   }
@@ -29,7 +28,6 @@ export class UserController {
 
       return res.status(201).json({ status: 'ok', createUser, token });
     } catch (error) {
-      console.log('failed to register user : ', error);
       responseError(res, error);
     }
   }
@@ -40,7 +38,6 @@ export class UserController {
       const token = await sendVerificationEmail(user);
       return res.status(200).json({ status: 'ok', user, token });
     } catch (error) {
-      console.log(error);
       responseError(res, error);
     }
   }
@@ -49,7 +46,6 @@ export class UserController {
       const { email, password } = req.body;
       await loginUserService(email, password, res);
     } catch (error) {
-      console.log('FAILED TO LOGIN USER : ', error);
       responseError(res, error);
     }
   }
@@ -58,7 +54,6 @@ export class UserController {
       const { name, email, profile, phoneNumber } = req.body
       await singInGoogleService(name, email, profile, phoneNumber, res);
     } catch (error) {
-      console.log("failed to singIn google backEnd : ", error);
       responseError(res, error);
     }
   }
@@ -67,7 +62,6 @@ export class UserController {
       const {user} = req
       await sendUpdateEmailService(user, res);
     } catch (error) {
-      console.log("failed to update email user : ", error);
       responseError(res, error);
     }
   }
@@ -78,7 +72,6 @@ export class UserController {
       const {user} = req
       await updateEmailService(email, user, res);
     } catch (error) {
-      console.log("failed to update email user : ", error);
       responseError(res, error);
     }
   }
@@ -87,7 +80,6 @@ export class UserController {
       const { email } = req.body;
       await sendForgotPasswordService(email, res);
     } catch (error) {
-      console.log("failed to forgot password user : ", error);
       responseError(res, error);
     }
   }
@@ -96,7 +88,6 @@ export class UserController {
       const { password } = req.body;
       await resetPasswordService(password, req, res);
     } catch (error) {
-      console.log("failed to reset password user : ", error);
       responseError(res, error);
     }
   }

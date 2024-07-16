@@ -33,7 +33,6 @@ export default function ManagementProperty() {
           }
         }
       } catch (error: any) {
-        console.log("failed to get properties : ", error);
         toast({
           title: 'Failed to get properties',
           description: error.message,

@@ -28,8 +28,6 @@ export function ChangePassword() {
     const handleSubmit = async (values: any) => {
         try {
          const res = await changePassword(values, token!)   
-         console.log("res : ", res);
-         
          if (res.status === 'ok') {
              toast({
                  title: 'Password changed successfully',
@@ -41,8 +39,6 @@ export function ChangePassword() {
          }
 
         } catch (error) {
-            console.log(error);
-            
         toast({title: 'Failed to change password please try agai!', duration: 3000 , variant: "destructive"})
         }
     }

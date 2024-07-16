@@ -35,8 +35,6 @@ export function ChangeEmail() {
       }
       if (token){
         const res = await sendUpdateEmail(token)
-        console.log('res : ', res);
-        console.log("token : ", token);
         if (res.status === 'ok'){
           toast({
             title: 'Email has been sent, please check your email',

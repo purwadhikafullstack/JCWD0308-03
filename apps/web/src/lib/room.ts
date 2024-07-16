@@ -14,7 +14,6 @@ export const createRoom = async (data:any, id : number) => {
         return res
         
     } catch (error:any) {
-        console.log(" failed to create room : ", error);
         return error.message || error || error.message.name
     }
 }

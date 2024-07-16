@@ -59,8 +59,12 @@ const VerifyPageTenant = () => {
         setSentSuccess(true);
       }
     } catch (error) {
-      console.log(error);
-    alert(error)
+      toast({
+        title: 'Failed to resend verification link',
+        description: 'Please try again later',
+        duration: 3000,
+        variant: 'destructive',
+      })
     }
     setLoading(false);
     actions.resetForm();

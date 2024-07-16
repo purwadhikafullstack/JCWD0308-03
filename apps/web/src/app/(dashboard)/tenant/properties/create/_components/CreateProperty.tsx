@@ -47,8 +47,6 @@ const CreateProperty = () => {
     try {
       if (token) {
         const res =  await createProperty(transformedValues, token);
-        console.log(res);
-        
         if (res.status === 'ok') {
           toast.toast({
             title: 'Success save property information, now you can upload your property images',

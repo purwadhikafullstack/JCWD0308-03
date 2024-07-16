@@ -55,8 +55,11 @@ const VerifyPage = () => {
         setSentSuccess(true)
       }
     } catch (error) {
-      console.log(error);
-      alert(error)
+      toast({
+        title: 'Failed to resend verification email',
+        description: 'Please try again later',
+        variant: 'destructive',
+      })
     } finally {
       setLoading(false);
       actions.resetForm();

@@ -12,7 +12,6 @@ export class UserMiddleware {
       req.user = verifyUser as User;
       next();
     } catch (error:any) {
-      console.log('error verify token back : ', error);
       responseError(res, error);
     }
   }

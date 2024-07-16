@@ -19,7 +19,6 @@ export class PropertyController {
 
       res.status(200).json(properties);
     } catch (error) {
-      console.log('failed to get properties : ', error);
       responseError(res, error);
     }
   }
@@ -43,7 +42,6 @@ export class PropertyController {
       })
       res.status(201).json({ status: 'ok', createdProperty });
     } catch (error) {
-      console.log('failed to create property', error);
       responseError(res, error);
     }
   }
@@ -57,7 +55,6 @@ export class PropertyController {
         res.status(404).json({ error: 'Property not found' });
       }
     } catch (error) {
-      console.log('failed to get property by id', error);
       responseError(res, error);
     }
   }
@@ -86,7 +83,6 @@ export class PropertyController {
         res.status(404).json({ message: 'Property not found' });
       }
     } catch (error) {
-      console.log('failed to update property', error);
       responseError(res, error);
     }
   }
@@ -97,7 +93,6 @@ export class PropertyController {
      const deletedProperty = await deletePropertyService(+id);
      res.status(200).json({ status: 'ok', deletedProperty });
     } catch (error) {
-      console.log('failed to delete property', error);
       responseError(res, error);
     }
   }
@@ -109,7 +104,6 @@ export class PropertyController {
       const properties = await getPropertiesByTenantId(user.id);
       res.status(200).json({ msg: 'get property by tenant id', properties });
     } catch (error) {
-      console.log('failed to get property by tenant id', error);
       responseError(res, error);
     }
   }
