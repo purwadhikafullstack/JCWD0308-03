@@ -69,6 +69,7 @@ export async function updateRoom(data: {
     bedDetails: string;
     roomFacilities?: string[];
     bathroomFacilities?: string[];
+    stock?: number;
 }) {
     const updatedRoom = await prisma.room.update({
         where: { id: data.id },
@@ -78,6 +79,7 @@ export async function updateRoom(data: {
             description: data.description,
             capacity: data.capacity,
             bedDetails: data.bedDetails,
+            stock: data.stock
         },
     });
 

@@ -14,13 +14,6 @@ export async function getPropertiesService(
       category: category?.toLowerCase() || undefined,
       province: province?.toLowerCase() || undefined,
       name: name?.toLowerCase() || undefined,
-      rooms: {
-        every: {
-          stock: {
-            lte: 0, 
-          },
-        },
-      },
     },
     take: size || 10,
     skip: (page || 0) * (size || 10),
@@ -100,5 +93,20 @@ export async function getPropertiesByTenantId(tenantId: number) {
             Reservation: true,
             PropertyPicture: true,
         },
+    });
+}
+
+export async function updatePropertyById(id: number, data: {
+    name: string;
+    description: string;
+    category: string;
+    address: string;
+    city: string;
+    province: string;
+    district: string;
+}) {
+    return prisma.property.update({
+        where: { id },
+        data,
     });
 }

@@ -21,41 +21,6 @@ const Footer = () => {
           priority
         /> 
         </div>
-
-        <div className="mt-8 space-y-4 lg:mt-0">
-          <span className="hidden h-1 w-10 rounded bg-teal-500 lg:block"></span>
-
-          <div>
-            <h2 className="text-2xl font-medium text-gray-900">Request a Demo</h2>
-
-            <p className="mt-4 max-w-lg text-gray-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, harum deserunt
-              nesciunt praesentium, repellendus eum perspiciatis ratione pariatur a aperiam eius
-              numquam doloribus asperiores sunt.
-            </p>
-          </div>
-
-          <form className="mt-6 w-full">
-            <label htmlFor="UserEmail" className="sr-only"> Email </label>
-
-            <div
-              className="rounded-md border border-gray-100 p-2 focus-within:ring sm:flex sm:items-center sm:gap-4"
-            >
-              <input
-                type="email"
-                id="UserEmail"
-                placeholder="john@rhcp.com"
-                className="w-full border-none focus:border-transparent focus:ring-transparent sm:text-sm"
-              />
-
-              <button
-                className="mt-1 w-full rounded bg-teal-500 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:shrink-0"
-              >
-                Sign Up
-              </button>
-            </div>
-          </form>
-        </div>
       </div>
 
       <div className="py-8 lg:py-16 lg:pe-16">

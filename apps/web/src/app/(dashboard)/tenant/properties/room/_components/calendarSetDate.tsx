@@ -12,7 +12,7 @@ interface DatePickerWithRangeProps {
   date: DateRange | undefined
   setDate: (date: DateRange | undefined) => void
 }
-export function DatePickerWithRange({ date, setDate }:DatePickerWithRangeProps) {
+export function CalendarPeakSeaon({ date, setDate }:DatePickerWithRangeProps) {
   const handleSelect = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate);
   }

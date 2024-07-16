@@ -25,7 +25,7 @@ export async function loginTenantService(email: string, password: string, res: R
     const match = await compare(password, tenant.password!)
     if (!match) return res.status(401).json({status: "error", message: "Wrong password, please try again"})
 
-    const payload = { id : tenant.id, role : tenant.role, name: tenant.name }
+    const payload = { id : tenant.id, role : tenant.role, name: tenant.name , email: tenant.email}
     const token = sign(payload, process.env.KEY_JWT!, {expiresIn: "1d"})
     return res.status(200).json({status: "ok", tenant, token})
 }

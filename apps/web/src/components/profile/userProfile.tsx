@@ -137,7 +137,7 @@ export function UserProfile() {
       <div className="grid md:grid-cols-1 gap-8 pt-12">
         <Card className="shadow-2xl rounded-xl">
           <CardHeader className="flex flex-row justify-between ">
-            <div className="text-3xl font-bold ">Personal Information</div>
+            <div className="text-2xl md:text-3xl font-bold ">Personal Information</div>
             <EditButton />
           </CardHeader>
           <CardContent className="flex flex-col justify-between">

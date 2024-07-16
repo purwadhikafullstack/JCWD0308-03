@@ -40,7 +40,7 @@ export class RoomController {
   async updateRoom(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities } = req.body;
+      const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities,stock } = req.body;
 
     const updatedRoom =  await updateRoom({
       id: +id,
@@ -51,6 +51,7 @@ export class RoomController {
       bedDetails,
       roomFacilities,
       bathroomFacilities,
+      stock: +stock,
     })
 
     res.status(200).json({ status: 'ok', updatedRoom });

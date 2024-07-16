@@ -201,3 +201,37 @@ export const changePassword = async (data: any, token: string) => {
     
   }
 }
+
+export const sendUpdateEmail = async (token: string) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/send-update-email`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const response = await res.json();
+    return response
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+export const updateEmail = async (data: any, token: string) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}users/update-email`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    const res = await response.json();
+    return res
+  } catch (error) {
+    console.log(error);
+  }
+}

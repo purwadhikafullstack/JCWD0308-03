@@ -7,6 +7,7 @@ import  RoomDescription from './RoomDescription';
 import { useAppSelector } from '@/hooks/hooks';
 import { Button } from '@/components/Button';
 import { useRouter } from 'next/navigation';
+import getCurrentRoomPrice from '@/lib/getCurrentPrice';
 
 interface RoomInfoProps {
   room: Room;
@@ -29,6 +30,9 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     );
   };
 
+  const currentPrice = getCurrentRoomPrice(room.price, room.roomPeakSeason);
+  const isRoomAvailable = room.stock > 0
+    
   return (
     <div className="border border-gray-300 rounded-lg w-full mx-auto mb-4 overflow-hidden shadow-lg">
       <div className="flex flex-col md:flex-row">
@@ -81,10 +85,22 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             </div>
             <p className=" text-gray-600"> <RoomDescription room={room}/></p>
           </div>
-            <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
-              {room.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" }) || room.roomPeakSeason[0].newPrice.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
+          {isRoomAvailable ? (
+            <>
+              <p className="font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
+                {currentPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+              </p>
+              <Button
+                label="Choose"
+                onClick={user?.id === undefined || null ? () => router.push('/login/user') : () => router.push(`/transactions/${room.id}`)}
+                disabled={user?.role === 'tenant'}
+              />
+            </>
+          ) : (
+            <p className="font-semibold text-red-500 pt-5 pb-2 md:-mb-3">
+              Room not available
             </p>
-          <Button label='Choose' onClick={ user?.id === undefined || null ? () => router.push('/login/user') : () => router.push(`/transactions/${room.id}`)} disabled={user?.role == 'tenant' } />
+          )}
         </div>
       </div>
     </div>

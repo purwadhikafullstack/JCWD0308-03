@@ -7,7 +7,7 @@ import fs from 'fs';
 import Handlebars from 'handlebars';
 import { transporter } from '@/helpers/nodemailer';
 import { compare, genSalt, hash } from 'bcrypt';
-import { checkExistingUserTenant, findUserByEmail, loginUserService, resetPasswordService, sendForgotPasswordService, sendVerificationEmail, singInGoogleService, updateEmailService } from '@/services/user.service';
+import { checkExistingUserTenant, findUserByEmail, loginUserService, resetPasswordService, sendForgotPasswordService, sendUpdateEmailService, sendVerificationEmail, singInGoogleService, updateEmailService } from '@/services/user.service';
 
 export class UserController {
   async getUsers(req: Request, res: Response) {
@@ -62,11 +62,21 @@ export class UserController {
       responseError(res, error);
     }
   }
+  async sendUpdateEmail(req: Request, res: Response) {
+    try {
+      const {user} = req
+      await sendUpdateEmailService(user, res);
+    } catch (error) {
+      console.log("failed to update email user : ", error);
+      responseError(res, error);
+    }
+  }
+
   async updateEmail(req: Request, res: Response) {
     try {
       const { email } = req.body;
-      const {id} = req.user!
-      await updateEmailService(id, email, res);
+      const {user} = req
+      await updateEmailService(email, user, res);
     } catch (error) {
       console.log("failed to update email user : ", error);
       responseError(res, error);

@@ -44,7 +44,7 @@ export async function loginUserService(email: string, password: string, res: Res
       const match = await compare(password, user.password!);
       if (!match) return res.status(401).json({ status: 'error', message: 'Wrong password, please try again!' });
 
-      const payload = { id: user.id, role: user.role , name :user.name};
+      const payload = { id: user.id, role: user.role , name :user.name, email: user.email};
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
       return res.status(200).send({ status: 'ok', user, token });
 }
@@ -75,35 +75,46 @@ export async function singInGoogleService (name: string, email: string, profile:
   res.status(201).json({ status: 'ok', user, token });
 }
 
-export async function updateEmailService(userId: number, newEmail: string, res: Response) {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) return res.status(404).json({ status: 'error', message: 'User not found' });
-  const existsEmail = await prisma.user.findUnique({ where: { email: newEmail } });
-  if(existsEmail) return res.status(409).json({ status: 'error', message: 'Email already used, please use different email' });
-  const updateEmail = await prisma.user.update({ where: { id: user.id }, data: { email: newEmail } });
-  const payload = {id: updateEmail.id, role: updateEmail.role, name: updateEmail.name};
+export async function sendUpdateEmailService(user:any, res: Response) {
+  const validateEmail = await prisma.user.findFirst({ where: { email: user.email } }) || await prisma.tenant.findUnique({ where: { email: user.email } });
+  if (!validateEmail) return res.status(404).json({ status: 'error', message: 'User not found' });
+
+  const payload = {id: user.id, role: user.role, name: user.name};
   const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
   const link = `http://localhost:3000/update-email/${token}`;
   const templatePath = path.join(__dirname,'../templates','updateEmail.html');
   const templateSource = fs.readFileSync(templatePath, 'utf-8');
   const compiledTemplate = Handlebars.compile(templateSource);
   const html = compiledTemplate({
-    name: updateEmail.name,
+    name: user.name,
     link
   })
 
   await transporter.sendMail({
     from: process.env.MAIL_USER,
-    to: updateEmail.email,
-    subject: "Update Email Confirmation",
+    to: user.email,
+    subject: "Request Change Email Confirmation",
     html
   })
-  return res.status(200).json({ status: 'ok', message: 'success update email', newEmail, token });  
+  return res.status(200).json({ status: 'ok', message: 'success update email', token });  
+}
+
+export async function updateEmailService(newEmail:string, user:any, res: Response) {
+  if (!newEmail) return res.status(400).json({ status: 'error', message: 'Email is required!' });
+  const checkEmailExist = await prisma.user.findFirst({ where: { email: newEmail } }) || await prisma.tenant.findUnique({ where: { email: newEmail } })
+  if (checkEmailExist) return res.status(409).json({ status: 'error', message: 'Email already used another user!' });
+
+  if (user.role === 'user') {
+    await prisma.user.update({ where: { id: user.id }, data: { email: newEmail } });
+  } else if (user.role === 'tenant') {
+    await prisma.tenant.update({ where: { id: user.id }, data: { email: newEmail } });
+  }
+  return res.status(200).json({ status: 'ok', message: 'success update email', newEmail, user });
 }
 
 export async function sendForgotPasswordService(email: string, res: Response) {
   if (!email) return res.status(400).json({ status: 'error', message: 'Email is required!' });
-      const user = await prisma.user.findUnique({ where: { email: email } }) || await prisma.tenant.findUnique({ where: { email: email } })
+      const user = await prisma.user.findFirst({ where: { email: email } }) || await prisma.tenant.findUnique({ where: { email: email } })
 
       if (!user) return res.status(404).json({ status: 'error', message: 'Account not found!' });
       if (user.isSocialLogin == true) return res.status(409).json({ status: 'error', message: 'Account registered with social media cannot reset password' });
@@ -148,3 +159,4 @@ export async function resetPasswordService(password: string,req: Request, res: R
 
   return res.status(200).json({ status: 'ok', message: 'Password successfully reset.' , isUser});
 }
+

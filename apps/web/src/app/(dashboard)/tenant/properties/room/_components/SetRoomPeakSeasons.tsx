@@ -16,11 +16,14 @@ import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { DatePickerWithRange } from './calendarSetDate';
+import { CalendarPeakSeaon } from './calendarSetDate';
+import { Room } from '@/type/property.type';
+import { toast } from '@/components/ui/use-toast';
 
 interface SetRoomPeakSeasonProps {
   roomId: number;
   onUpdatePeakSeason: () => void;
+  room: Room
 }
 const validationSchema = Yup.object().shape({
   newPrice: Yup.number()
@@ -30,15 +33,17 @@ const validationSchema = Yup.object().shape({
   start_date: Yup.date().required('Start date is required'),
   end_date : Yup.date().required('End date is required'),
 });
-export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason }: SetRoomPeakSeasonProps) {
+export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason, room }: SetRoomPeakSeasonProps) {
 
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 20),
   })
+
+
   const formik = useFormik({
     initialValues: {
-      newPrice: '',
+      newPrice: room.price,
       start_date : date?.from || new Date(),
       end_date : date?.to || new Date(),
     },
@@ -46,8 +51,23 @@ export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason }: SetRoomPeakSea
     onSubmit: async (values) => {
       try {
         const response = await createPeakSeason(values, roomId);
-        console.log('Peak season created:', response);
-        window.location.reload();
+        
+        if (response.status === 'ok') {
+          toast({
+            title: 'Peak Season created successfully',
+            duration: 3000
+          })
+          setTimeout(() => {
+            window.location.reload();
+          }, 5000);
+        } else {
+          toast({
+            title: 'Failed to create peak season',
+            description: response.message,
+            duration: 3000
+          })
+        }
+        
         onUpdatePeakSeason();
       } catch (error) {
         console.error('Failed to create peak season:', error);
@@ -70,12 +90,11 @@ export function SetRoomPeakSeason({ roomId, onUpdatePeakSeason }: SetRoomPeakSea
           </DialogHeader>
           <form onSubmit={formik.handleSubmit}>
             <div className="grid gap-4 py-4">
-              {/* Input fields for peak season details */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="dateRange" className="text-right">
                   Date Range
                 </Label>
-                {/* <DatePickerWithRange date={date} setDate={setDate} /> */}
+                <CalendarPeakSeaon setDate={setDate} date={date}/>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="newPrice" className="text-right">

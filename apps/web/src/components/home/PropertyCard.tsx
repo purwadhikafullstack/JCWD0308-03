@@ -64,7 +64,7 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
           {property.category}
         </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>{' '}
+          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>
           <div className="font-light text-neutral-500">/night</div>
           {onAction && actionLabel && (
             <Button

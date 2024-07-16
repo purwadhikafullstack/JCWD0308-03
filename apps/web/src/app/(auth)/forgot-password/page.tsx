@@ -49,7 +49,7 @@ const ForgotPassword = () => {
           {name: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email'},
         ]}
         onSubmit={handleSubmit}
-        loading={loading || succes}
+        loading={loading}
         />
     </div>
   );

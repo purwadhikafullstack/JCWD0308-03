@@ -15,6 +15,8 @@ import { Facility, Room } from "@/type/property.type";
 import { Textarea } from '@/components/ui/textarea';
 import { editRoom } from '@/lib/room';
 import { DeleteRoomButton } from '@/app/(dashboard)/tenant/properties/room/_components/deleteRoombutton';
+import getCurrentRoomPrice from '@/lib/getCurrentPrice';
+import { useToast } from '../ui/use-toast';
 
 interface RoomDetailsEditProps {
   room: Room;
@@ -34,7 +36,10 @@ const RoomDetailsEdit: React.FC<RoomDetailsEditProps> = ({ room, onUpdateRoom, r
     bedDetails: room.bedDetails || '',
     roomFacilities: room.roomFacilities,
     bathroomFacilities: room.bathroomFacilities,
+    roomPeakSeason: room.roomPeakSeason
   });
+
+  const {toast} = useToast()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -49,11 +54,18 @@ const RoomDetailsEdit: React.FC<RoomDetailsEditProps> = ({ room, onUpdateRoom, r
     try {
       const response = await editRoom(updatedRoom, room.id);
       onUpdateRoom(room.id, updatedRoom);
-      window.location.reload(); // This could be improved for better UX
+      if (response.status === 'ok') {
+        toast({
+          title: 'Room updated successfully',
+          duration: 3000
+        })
+      }
     } catch (error) {
       console.error('Failed to update room:', error);
     }
   };
+
+  const currentRoomPrice = getCurrentRoomPrice(updatedRoom.price || 0, updatedRoom.roomPeakSeason || []);
 
   return (
     <div className="space-y-2">
@@ -79,7 +91,7 @@ const RoomDetailsEdit: React.FC<RoomDetailsEditProps> = ({ room, onUpdateRoom, r
                   id="price"
                   name="price"
                   type="number"
-                  value={updatedRoom.price}
+                  value={currentRoomPrice}
                   onChange={handleInputChange}
                   className="col-span-3"
                 />
