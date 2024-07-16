@@ -40,9 +40,6 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
 
   const currentUser = useAppSelector((state) => state.user.value);
 
-  // console.log("halo property :" , property );
-  // console.log("halo rooms :" , room );
-  
 
   const minPrice = useMemo(() => {
     if (property.rooms && property.rooms.length > 0) {
@@ -64,11 +61,10 @@ const PropertyCard: React.FC<PropertieCardProps> = ({
       className="col-span-1 cursor-pointer group" >
         <div className="font-semibold text-lg">{property.name}</div>
         <div className="font-light text-neutral-500">
-          {/* {city},{country} */}
           {property.category}
         </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>{' '}
+          <div className="font-semibold">Rp. {minPrice.toLocaleString('id')}</div>
           <div className="font-light text-neutral-500">/night</div>
           {onAction && actionLabel && (
             <Button

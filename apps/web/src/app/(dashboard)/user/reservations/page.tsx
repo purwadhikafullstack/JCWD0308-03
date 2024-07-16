@@ -6,7 +6,6 @@ import Wrapper from "@/components/wrapper"
 import { getUserReservationsById } from "@/lib/transaction"
 import { formatDateTime, formatToIDR } from "@/lib/user.service"
 import { Reservation } from "@/type/reservation.type"
-import { set } from "cypress/types/lodash"
 import Cookies from "js-cookie"
 import { useEffect, useState } from "react"
 
@@ -29,6 +28,7 @@ export default function UserReservation() {
       }
     }
     fetchReservations(token)
+    
   },[token])
 if (isLoading) return <div>Loading...</div>
 if (error) return <div>Error: {error}</div>
@@ -37,8 +37,8 @@ if (error) return <div>Error: {error}</div>
     <Wrapper>
     <Card>
       <CardHeader className="px-7">
-        <CardTitle>Orders</CardTitle>
-        <CardDescription>Recent orders from your store.</CardDescription>
+        <CardTitle>Your Trip</CardTitle>
+        <CardDescription>Recent trip from your reservations.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -56,12 +56,13 @@ if (error) return <div>Error: {error}</div>
             {reservation?.map((reservation : Reservation)=> {
               const checkIn = new Date(reservation.startDate)
               const checkOut = new Date(reservation.endDate)
-
               return (
               <TableRow className="bg-accent" key={reservation.id}>
               <TableCell>{reservation.room.property.name}</TableCell>
               <TableCell className="hidden sm:table-cell">{reservation.room.type}</TableCell>
-              <TableCell className="hidden sm:table-cell">{reservation.status}</TableCell>
+              <TableCell className="hidden sm:table-cell">
+                <Badge className="text-xs" variant={reservation.status == 'Confirmed' ? 'default' : 'destructive' }>{reservation.status}</Badge>
+              </TableCell>
               <TableCell className="hidden md:table-cell">{formatDateTime(checkIn).dateOnly}</TableCell>
               <TableCell className="hidden md:table-cell">{formatDateTime(checkOut).dateOnly}</TableCell>
               <TableCell className="text-right">{formatToIDR(reservation.price)}</TableCell>

@@ -3,21 +3,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 export class TenantManagement {
-    async getOrderList(req: Request, res: Response) {
-        try {
-            const { user } = req
-            const orders = await prisma.reservation.findMany({
-                where: { userId: user?.id},
-                include: {
-                    user: true,
-                    room: true,
-                },
-            });
-            res.status(200).json(orders);
-        } catch (error) {
-            res.status(500).json({ error });
-        }
-    }
     async cancelReservation(req: Request, res: Response) {
         const { reservationId } = req.body;
         try {
@@ -28,6 +13,33 @@ export class TenantManagement {
             res.status(200).json(canceledReservation);
         } catch (error) {
             res.status(500).json({ error });
+        }
+    }
+    async salesReport( req: Request, res: Response) {
+        try {
+            const { user } = req
+            const { from, to } = req.body
+            const fromDate = new Date(from);
+            fromDate.setHours(0, 0, 0, 0)
+            const toDate = new Date(to);
+            toDate.setDate(toDate.getDate());
+            toDate.setHours(23, 59, 0, 0);
+            const sales = await prisma.reservation.findMany({
+                where : {
+                    AND : [
+                        { Property : {tenantId : user?.id}},
+                        { createdAt: { gte: fromDate, lte: toDate } },
+                    ],
+                },
+                include: {
+                    user: true,
+                    room: true,
+                    Property: true
+                },
+            })
+            res.status(200).json(sales)
+        } catch (error) {
+            res.status(500).json({error})
         }
     }
     // async submitReview(req: Request, res: Response) {

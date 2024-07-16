@@ -29,7 +29,7 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
   const handleChange = () => {
     if (imageRef.current && imageRef.current.files) {
       const filesArray = Array.from(imageRef.current.files);
-      setImage(filesArray);
+      setImage((previewImg) => [...previewImg, ...filesArray]);
 
       filesArray.forEach((file) => {
         const reader = new FileReader();
@@ -82,7 +82,7 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
     <Wrapper>
       <Card>
         <CardHeader>
-          <CardTitle>Upload Image</CardTitle>
+          <CardTitle>Upload Property Image</CardTitle>
           <CardDescription>
             Show how your property looks like to guest
           </CardDescription>
@@ -137,7 +137,7 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
           <Button
             label="Upload"
             onClick={handleUpload}
-            disabled={loading || image.length <2}
+            disabled={loading || image.length == 0 }
           />
           {previewImg.length > 0 && (
             

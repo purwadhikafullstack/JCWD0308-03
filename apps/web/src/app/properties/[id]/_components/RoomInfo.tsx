@@ -3,8 +3,11 @@ import { Room } from '@/type/property.type';
 import Image from 'next/image';
 import { MdBathroom, MdNavigateBefore, MdNavigateNext, MdRoomService } from 'react-icons/md';
 import { IoBedOutline, IoPeople } from 'react-icons/io5';
-import Link from 'next/link';
 import  RoomDescription from './RoomDescription';
+import { useAppSelector } from '@/hooks/hooks';
+import { Button } from '@/components/Button';
+import { useRouter } from 'next/navigation';
+import getCurrentRoomPrice from '@/lib/getCurrentPrice';
 
 interface RoomInfoProps {
   room: Room;
@@ -12,6 +15,8 @@ interface RoomInfoProps {
 
 const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const user = useAppSelector((state) => state.user.value);
+  const router = useRouter()
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -25,6 +30,9 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     );
   };
 
+  const currentPrice = getCurrentRoomPrice(room.price, room.roomPeakSeason);
+  const isRoomAvailable = room.stock > 0
+    
   return (
     <div className="border border-gray-300 rounded-lg w-full mx-auto mb-4 overflow-hidden shadow-lg">
       <div className="flex flex-col md:flex-row">
@@ -77,12 +85,22 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             </div>
             <p className=" text-gray-600"> <RoomDescription room={room}/></p>
           </div>
-            <p className=" font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
-              {room.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
+          {isRoomAvailable ? (
+            <>
+              <p className="font-semibold text-[#00a7c4] pt-5 pb-2 md:-mb-3">
+                {currentPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+              </p>
+              <Button
+                label="Choose"
+                onClick={user?.id === undefined || null ? () => router.push('/login/user') : () => router.push(`/transactions/${room.id}`)}
+                disabled={user?.role === 'tenant'}
+              />
+            </>
+          ) : (
+            <p className="font-semibold text-red-500 pt-5 pb-2 md:-mb-3">
+              Room not available
             </p>
-          <Link passHref href={`/transactions/${room.id}`} className=" bg-[#00a7c4] w-fit text-white py-2 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
-          Choose
-          </Link>
+          )}
         </div>
       </div>
     </div>

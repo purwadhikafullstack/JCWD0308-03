@@ -1,37 +1,24 @@
 import prisma from '@/prisma';
 import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
+import { changePasswordService, getTenantProfile, getUserProfile, updateProfileService, updateTenantPassword, updateUserPassword, uploadProfileImgService, verifyTenantAccount, verifyUserAccount } from '@/services/account.service';
 
-// controller for user & tenant
 export class AccountController {
-  // after register before vefication input password
   async setupAccount(req: Request, res: Response, next: NextFunction) {
     try {
       const { password } = req.body;
 
-      const salt = await genSalt(10);
-      const hashPW = await hash(password, salt);
-
-      console.log('setting up account for : ' + req.user?.name);
-
       if (req.user?.role === 'user') {
-        const user = await prisma.user.update({
-          where: { id: req.user?.id },
-          data: { password: hashPW },
-        });
-        return next();
+        await updateUserPassword(req.user?.id, password);
+        return next()
       } else if (req.user?.role === 'tenant') {
-        const tenant = await prisma.tenant.update({
-          where: { id: req.user?.id },
-          data: { password: hashPW },
-        });
+        await updateTenantPassword(req.user?.id, password);
         return next();
       } else {
         res.status(400).json({ error: 'Invalid user role' });
       }
     } catch (error) {
-      console.log('failed to setup user :', error);
       responseError(res, error);
     }
   }
@@ -43,53 +30,31 @@ export class AccountController {
       if (checkActive?.isActive) return res.status(400).json({ status: 'error', message: 'Account already verified' })
 
       if (user.role === 'user') {
-        const updatedUser = await prisma.user.update({
-          where: { id: user.id },
-          data: { isActive: true },
-        });
-        return res.status(200).json({ status: 'ok', data: updatedUser });
+        await verifyUserAccount(user.id, res);
       } else if (user.role === 'tenant') {
-        const updatedTenant = await prisma.tenant.update({
-          where: { id: user.id },
-          data: { isActive: true },
-        });
-        return res.status(200).json({ status: 'ok', data: updatedTenant });
+        await verifyTenantAccount(user.id, res);
       } else {
         return res.status(403).json({ status: 'error', message: 'Forbidden' });
       }
     } catch (error) {
-      console.log('Failed to verify account:', error);
       return responseError(res, error);
     }
   }
   async getProfileById(req: Request, res: Response) {
     try {
       const { user } = req;
+      if (!user)  return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+
+      let profileData
       if (user?.role === 'user') {
-        const dataUser = await prisma.user.findUnique({
-          where: { id: user?.id },
-          include: { reviews: true, Reservation: true },
-        });
-        if (!user)
-          return res
-            .status(404)
-            .json({ status: 'error', message: 'Account not found' });
-        console.log('get user : ', dataUser);
-        res.status(200).json(dataUser);
+        profileData = await getUserProfile(user.id);
       } else if (user?.role === 'tenant') {
-        const dataTenant = await prisma.tenant.findUnique({
-          where: { id: req.user?.id },
-          include: { properties: true },
-        });
-        if (!user)
-          return res
-            .status(404)
-            .json({ status: 'error', message: 'Account not found' });
-        console.log('get tenant : ', dataTenant);
-        res.status(200).json(dataTenant);
+        profileData = await getTenantProfile(user.id);
       } else {
         return res.status(403).json({ status: 'error', message: 'Forbidden' });
       }
+
+      res.status(200).json(profileData);
     } catch (error) {
       console.log('failed to get user profile : ', error);
       responseError(res, error);
@@ -112,26 +77,28 @@ export class AccountController {
   }
   async uploadProfileImage(req: Request, res: Response) {
     try {
-      const { file, user} = req
-      if (!file) return res.status(404).send({ status: 'error', message: 'file not found' });
-      const imgUrl = `http://localhost:8000/public/images/${file?.filename}`
-      if (user?.role === 'user') {
-        await prisma.user.update({
-          where: { id: req.user?.id },
-          data: { profile: imgUrl },
-        })
-        res.status(200).send({ status: 'ok', message: 'success upload profile image' });
-      } else if (user?.role === 'tenant') {
-        await prisma.tenant.update({
-          where: { id: req.user?.id },
-          data: { profile: imgUrl },
-        })
-        res.status(200).send({ status: 'ok', message: 'success upload profile image' });
-      } else {
-        return res.status(403).send({ status: 'error', message: 'Forbidden' });
-      }
+      await uploadProfileImgService
     } catch (error) {
       console.log('failed to upload profile image : ', error);
+      responseError(res, error);
+    }
+  }
+  async changePassword(req: Request, res: Response) {
+    try {
+      await changePasswordService(req, res)
+   } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        error,
+      })
+    }
+  }
+
+  async updateProfile (req: Request, res: Response) {
+    try {
+      await updateProfileService(req, res)
+    } catch (error) {
+      console.error("Failed to update user: ", error);
       responseError(res, error);
     }
   }

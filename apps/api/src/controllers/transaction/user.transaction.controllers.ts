@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { calculateNumberOfDays, calculateTotalPrice,} from '@/services/reservation.service';
+import { calculateNumberOfDays, calculateTotalPrice, createPaymentLink,} from '@/services/reservation.service';
 import { v4 as uuidv4 } from 'uuid'
 
 const prisma = new PrismaClient();
@@ -8,7 +8,7 @@ export class UserTransaction {
   // Create a new reservation
   async createReservation(req: Request, res: Response) {
     try {
-      const { propertyId, userId, roomId, date } = req.body;
+      const { propertyId, userId, roomId, date, } = req.body;
       const room = await prisma.room.findUnique({ where: { id: +roomId } });
       if (!room) {
         return res.status(404).json({ message: 'Room not found' });
@@ -27,32 +27,8 @@ export class UserTransaction {
           status: 'Pending', // Assuming default status
         },
       });
-      let data = {
-        transaction_details: {
-          order_id: reservation.id,
-          gross_amount: totalPrice,
-        },
-        expiry: {
-          unit: 'minutes',
-          duration: 10,
-        },
-      };
-      const secret = process.env.MIDTRANS_PUBLIC_SECRET as string;
-      const encededSecret = Buffer.from(secret).toString('base64');
-      const basicAuth = `Basic ${encededSecret}`;
-      // console.log(data);
-      const response = await fetch(`${process.env.MIDTRANS_PUBLIC_API}`, {
-        method: 'POST',
-        headers: {
-          'Access-Control-Allow-Origin': 'true',
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: basicAuth,
-        },
-        body: JSON.stringify(data),
-      });
-      const paymentLink = await response.json();
-      res.status(201).json(paymentLink);
+      const paymentLink = await createPaymentLink(reservation.id, totalPrice)
+      res.status(201).json(paymentLink)
     } catch (error) {
       res.status(500).json({ error });
     }

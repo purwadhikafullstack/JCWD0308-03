@@ -3,7 +3,7 @@ export interface Property {
   name: string;
   description: string;
   category: string;
-  locationCordinate?: string | null; // Assuming it can be null based on your response
+  locationCordinate?: string | null; 
   city: string;
   province: string;
   address: string;
@@ -13,11 +13,11 @@ export interface Property {
   updatedAt: Date;
   PropertyPicture: PropertyPicture[];
   Tenant: {
-    id: number; // You may need to add an ID here if available in your data
+    id: number; 
     name: string;
     email: string;
-    profile: string | null; // Assuming it can be null based on your response
-    bio: string | null; // Assuming it can be null based on your response
+    profile: string | null;
+    bio: string | null
   };
 }
 
@@ -28,13 +28,14 @@ export interface Room {
   stock: number;
   description: string;
   capacity: number;
-  bedDetails?: string | null; // Assuming it can be null based on your response
+  bedDetails?: string | null; 
   propertyId: number;
   createdAt: Date;
   updatedAt: Date;
   RoomPicture: RoomPicture[];
-  roomFacilities: Facility[]; // Assuming you have a Facility type defined
-  bathroomFacilities: Facility[]; // Assuming you have a Facility type defined
+  roomFacilities: Facility[];
+  bathroomFacilities: Facility[]; 
+  roomPeakSeason : roomPeakSeason[]
 }
 
 export interface PropertyPicture {
@@ -59,4 +60,12 @@ export interface Facility {
   roomId: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface roomPeakSeason {
+  id : number;
+  newPrice : number
+  startDate : Date
+  endDate : Date
+  roomId : number
 }

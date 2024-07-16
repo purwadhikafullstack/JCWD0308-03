@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -6,69 +5,148 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ImageSection from './ImageSection';
+import { Property, Room, roomPeakSeason } from '@/type/property.type';
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import PropertyDetailsForm from './PropertyDetailsForm'; 
+import { updateProperty } from '@/lib/properties';
+import { useToast } from '../ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { IoIosAddCircle } from 'react-icons/io';
+import RoomDetailsEdit from './RoomEditDetail';
+import { SetRoomPeakSeason } from '@/app/(dashboard)/tenant/properties/room/_components/SetRoomPeakSeasons';
+import { Label } from '../ui/label';
 
-export function EditProperty() {
+export function EditProperty({ property }: { property: Property }) {
+  const {toast} = useToast()
+  const router = useRouter()
+
+  const [rooms, setRooms] = useState<Room[]>(property.rooms);
+  const [editedProperty, setEditedProperty] = useState<Property>({ ...property });
+
+  const updateRoom = (roomId: number, updatedRoomData: Partial<Room>) => {
+    const updatedRooms = rooms.map((room) => {
+      if (room.id === roomId) {
+        const updatedRoom = { ...room, ...updatedRoomData };
+        if (updatedRoomData.roomPeakSeason !== undefined) {
+          updatedRoom.roomPeakSeason = updatedRoomData.roomPeakSeason as roomPeakSeason[];
+        }
+        return updatedRoom;
+      }
+      return room;
+    });
+    setRooms(updatedRooms);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setEditedProperty((prevProperty) => ({
+      ...prevProperty,
+      [id]: value,
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const res = await updateProperty(property.id, editedProperty);
+      if (res.status = 'ok') {
+        toast({title: 'Property updated successfully', duration: 3000})
+        setTimeout(() => window.location.reload(), 4000)
+      } else {
+        toast({title: 'Failed to update property',description: res.message, duration: 3000})
+      }
+    } catch (error) {
+      console.error('Failed to update property:', error);
+    }
+  };
+
+
   return (
-    <Tabs defaultValue="account" className="w-[380px]">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account">
-        <Card>
-          <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>
-              Make changes to your account here. Click save when youre done.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" defaultValue="@peduarte" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="password">
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, youll be logged out.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-    </Tabs>
-  )
+    <div className="flex flex-col space-y-4 pb-5">
+      <div className="w-full ">
+        <Tabs defaultValue="details" className="sticky top-32">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="details">Information</TabsTrigger>
+            <TabsTrigger value="photos">Photos</TabsTrigger>
+          </TabsList>
+          <TabsContent value="details">
+            <Card>
+              <CardHeader>
+                <CardTitle>Property Details</CardTitle>
+                <CardDescription>Edit the property details below.</CardDescription>
+              </CardHeader>
+              <PropertyDetailsForm
+                editedProperty={editedProperty}
+                handleChange={handleChange}
+              />
+              <CardFooter>
+                <Button className='bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70' onClick={handleSaveChanges}>Save Changes</Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+          <TabsContent value="photos">
+            <Card>
+              <CardHeader>
+                <CardTitle>Photo Tour</CardTitle>
+                <CardDescription>Manage and add photos for your property.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ImageSection
+                  images={property.PropertyPicture}
+                  id={property.id}
+                  isRoom={false}
+                  title="Property Photos"
+                />
+                {property.rooms.map((room: Room, idx: number) => (
+                  <ImageSection
+                    key={idx}
+                    images={room.RoomPicture}
+                    isRoom={true}
+                    id={room.id}
+                    title={`Room ${room.type} Photos`}
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+      <div className='text-xl font-bold text-center py-5 border-[#4a4a4a]'>Property Room List</div>
+      <div className="w-full space-y-4">
+        {property.rooms.map((room) => (
+          <Card key={room.id} className="shadow-lg ">
+            <CardHeader>
+              <CardTitle className='text-lg'>{room.type} Room</CardTitle>
+            </CardHeader>
+            <CardContent className="relative">
+                <div className="absolute flex -top-14 right-3">
+                  <SetRoomPeakSeason roomId={room.id} room={room}
+                  onUpdatePeakSeason={() => {updateRoom}}
+                  />
+                </div>
+              <RoomDetailsEdit 
+               room={room}
+               onUpdateRoom={updateRoom}
+               roomFacilities={room.roomFacilities}
+               bathroomFacilities={room.bathroomFacilities}/>
+            </CardContent>
+          </Card>
+        ))}
+
+        <Button
+          onClick={() => router.push(`/tenant/properties/create/room/${property.id}`) }
+          variant="default"
+          className='bg-[#00a7c4] hover:bg-[#00a7c4] hover:opacity-70 w-full flex gap-1 items-center justify-center'
+        >
+         <IoIosAddCircle size={20} />
+         <span>Add New Room</span>
+        </Button>
+      </div>
+    </div>
+  );
 }
+
+export default EditProperty;

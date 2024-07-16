@@ -17,7 +17,6 @@ const UserLoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { signInGoogle , data} = useAuth();
   const dispatch = useAppDispatch()
-  const user = useAppSelector((state) => state.user);
 
   const handleSubmit = async (values: any, actions: any) => {
     setLoading(true);
@@ -27,8 +26,6 @@ const UserLoginPage: React.FC = () => {
 
       if (res.status === 'ok') {
         dispatch(setUser(res.user))
-        console.log("user login :", user );
-        
         toast({
           title: 'Login successful',
           description: 'You have successfully logged in.',
@@ -39,7 +36,7 @@ const UserLoginPage: React.FC = () => {
         console.log('login error : ', res);
         toast({
           title: 'Login failed',
-          description: res.message || res,
+          description: res.message ,
           duration: 5000,
         });
       }
@@ -112,7 +109,7 @@ const UserLoginPage: React.FC = () => {
         subtitle="Enter your email below to login to your account"
         onSubmit={handleSubmit}
         buttonLabel="Login"
-        forgotPasswordHref="#"
+        forgotPasswordHref="/forgot-password"
         linkHref="/signup/user"
         onClickGoogle={signInGoogle}
         loading={loading}

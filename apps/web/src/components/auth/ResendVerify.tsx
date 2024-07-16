@@ -24,7 +24,7 @@ const ResendVerifyForm: React.FC<ResendVerifyFormProps> = ({
   loading
 }) => {
   const validationSchema = yup.object().shape({
-    email: yup.string().email('Invalid email'),
+    email: yup.string().email('Invalid email').required('Email is required'),
   });
   const initialValues = { email: '' };
 

@@ -17,6 +17,7 @@ import Cookies from 'js-cookie';
 import { useToast } from '../ui/use-toast';
 import { useAppSelector } from '@/hooks/hooks';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { format } from 'date-fns';
 
 const MAX_FILE_SIZE = 1048576;
 const ALLOWED_FILE_TYPES = [
@@ -96,7 +97,7 @@ export function UserProfile() {
               <AvatarImage
                 src={userProfile?.profile || '/images/placeholder.png'}
               />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>{userProfile?.name?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="w-20 h-8 rounded-full bg-white shadow-2xl z-10 border-2 -mt-5">
               <label
@@ -135,15 +136,16 @@ export function UserProfile() {
       </div>
       <div className="grid md:grid-cols-1 gap-8 pt-12">
         <Card className="shadow-2xl rounded-xl">
-          <CardHeader className="flex flex-col items-center">
-            <div className="text-3xl font-bold">Personal Information</div>
+          <CardHeader className="flex flex-row justify-between ">
+            <div className="text-2xl md:text-3xl font-bold ">Personal Information</div>
+            <EditButton />
           </CardHeader>
-          <CardContent className="flex flex-col items-start justify-between">
+          <CardContent className="flex flex-col justify-between">
             {[
               { label: 'Name', value: userProfile?.name },
               { label: 'Email address', value: userProfile?.email },
-              { label: 'Phone Numbers', value: userProfile?.phoneNumber },
-              { label: 'Date of Birth', value: userProfile?.dob ? userProfile.dob.toString() : 'Not set' },
+              { label: 'Phone Numbers', value: userProfile?.phoneNumber ? userProfile.phoneNumber : 'Not set' },
+              { label: 'Date of Birth', value: userProfile?.dob ? format(new Date(userProfile.dob), 'dd/MM/yyyy') : 'Not set' },
               { label: 'Gender', value: userProfile?.gender ? userProfile.gender : 'Not set' },
             ].map((item, index) => (
               <div
@@ -157,7 +159,6 @@ export function UserProfile() {
                   </div>
                 </div>
                 {index < 3 && <hr className="my-2 border-muted-foreground" />}
-                <EditButton />
               </div>
             ))}
           </CardContent>

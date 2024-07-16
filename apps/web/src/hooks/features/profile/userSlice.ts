@@ -12,6 +12,7 @@ export interface User {
   gender? : string;
   createdAt: Date;
   updatedAt: Date;
+  isSocialLogin: boolean;
 }
 export interface UserSlice {
   user: User | null;

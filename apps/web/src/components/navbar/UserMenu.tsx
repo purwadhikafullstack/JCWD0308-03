@@ -54,7 +54,6 @@ export const UserMenu = () => {
   useEffect(() => {
     profile(token)
   },[])
-  // console.log(userProfile);
 
   return (
     <div className="relative">
@@ -64,7 +63,7 @@ export const UserMenu = () => {
           className="px-2 py-1 border-[1px] border-neutral-200 flex items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu className="text-gray-500" />
-          <div className="block">
+          <div className="md:block hidden">
             <Avatar src={userProfile?.profile} />
           </div>
         </div>
@@ -77,7 +76,7 @@ export const UserMenu = () => {
               <>
                 {userProfile?.role === 'user' ? (
                   <>
-                    <MenuItem label="My reservation" onClick={() => {router.push('/user/reservation')}} />
+                    <MenuItem label="My reservation" onClick={() => {router.push('/user/reservations')}} />
                     <MenuItem label="My favorite" onClick={() => {}} />
                     <MenuItem label="Profile" onClick={() => {router.push('/profile')}} />
                     <hr className="bg-gray-300" />

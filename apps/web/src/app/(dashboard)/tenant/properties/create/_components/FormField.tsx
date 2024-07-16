@@ -7,7 +7,7 @@ interface FormFieldProps {
   name: string;
   label: string;
   type: 'text' | 'number' | 'textarea' | 'checkbox';
-  value?: string; // Optional value for checkboxes
+  value?: string; 
   placeholder?: string;
 }
 
