@@ -23,7 +23,7 @@ export async function findUserByEmail(email: string, res: Response) {
 export async function sendVerificationEmail(createUser :any){
   const payload = { id: createUser.id, role: createUser.role };
   const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1h' });
-  const link = `http://localhost:3000/verify/${createUser.role}/${token}`;
+  const link = `${process.env.PUBLIC_URL}/verify/${createUser.role}/${token}`;
   const templatePath = path.join(__dirname, '../templates', 'registerUser.html');
   const templateSource = fs.readFileSync(templatePath, 'utf-8');
   const compiledTemplate = Handlebars.compile(templateSource);
@@ -81,7 +81,7 @@ export async function sendUpdateEmailService(user:any, res: Response) {
 
   const payload = {id: user.id, role: user.role, name: user.name};
   const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
-  const link = `http://localhost:3000/update-email/${token}`;
+  const link = `${process.env.PUBLIC_URL}/update-email/${token}`;
   const templatePath = path.join(__dirname,'../templates','updateEmail.html');
   const templateSource = fs.readFileSync(templatePath, 'utf-8');
   const compiledTemplate = Handlebars.compile(templateSource);
@@ -122,7 +122,7 @@ export async function sendForgotPasswordService(email: string, res: Response) {
 
       const payload = {id: user.id, role: user.role, name: user.name};
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: '1d' });
-      const link = `http://localhost:3000/reset-password/${token}`;
+      const link = `${process.env.PUBLIC_URL}/reset-password/${token}`;
       const templatePath = path.join(__dirname,'../templates','forgotPassword.html');
       const templateSource = fs.readFileSync(templatePath, 'utf-8');
       const compiledTemplate = Handlebars.compile(templateSource);

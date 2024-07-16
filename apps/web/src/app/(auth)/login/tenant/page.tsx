@@ -21,11 +21,9 @@ const TenantLoginPage: React.FC = () => {
     setLoading(true);
     try {
       const res = await loginAccount(values, 'tenants');
-      console.log("res login tenant :"  , res);
       
       if (res.status === 'ok') {
         dispatch(setUser(res.tenant))
-        console.log("tenant login :", user );
         toast({
           title: 'You succesfully login as tenant',
           description: 'You will redirect to management page',
@@ -78,7 +76,6 @@ const TenantLoginPage: React.FC = () => {
           })
           setTimeout(() => {router.push('/login/user')}, 3500)
         } else {
-          console.log('something went wrong: ', res);
           toast({
             title: 'Something went wrong please try again!',
           })

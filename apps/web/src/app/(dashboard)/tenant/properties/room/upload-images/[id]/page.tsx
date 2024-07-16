@@ -52,7 +52,6 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
       });
 
       const res = await uploadImages(params.id, formData, 'rooms');
-      console.log('res upload: ', res);
       if (res.status === 'ok') {
         toast.toast({
           title: 'Image successfully uploaded, now you can manage your property!',
@@ -68,7 +67,6 @@ const UploadImage = ({ params }: { params: { id: number } }) => {
         });
       }
     } catch (error: any) {
-      console.log('Failed to upload image:', error);
       toast.toast({
         title: 'Failed to upload image',
         description: error.message || 'Unknown error occurred',

@@ -72,7 +72,6 @@ const UserSignup = () => {
           })
           setTimeout(() => {router.push('/')}, 3500)
         }else {
-          console.log("register user from google : ", res);
           toast({
             title: 'Something went wrong, please try again!',
           })

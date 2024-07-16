@@ -11,7 +11,6 @@ export class RoomController {
       if (!rooms) res.status(404).json({ error: 'Room not found' });
       res.status(200).json(rooms);
     } catch (error) {
-      console.log('failed to get rooms', error);
       responseError(res, error);
     }
   }
@@ -33,7 +32,6 @@ export class RoomController {
   
       res.status(201).json({ status: 'ok', createdRoom});
     } catch (error) {
-      console.log('failed to create room', error);
       responseError(res, error);
     }
   }
@@ -56,7 +54,6 @@ export class RoomController {
 
     res.status(200).json({ status: 'ok', updatedRoom });
     } catch (error) {
-      console.log('failed to update room', error);
       responseError(res, error);
     }
   }
@@ -67,7 +64,6 @@ export class RoomController {
       const deletedRoom = await deleteRoomService(+id);
       res.status(200).json({ status: 'ok', deletedRoom });
     } catch (error) {
-      console.log('failed to delete room', error);
       responseError(res, error);
     }
   }
@@ -84,7 +80,6 @@ export class RoomController {
       })
       res.status(200).json({ status: 'ok', updatePeakSeason })
     } catch (error) {
-      console.log('failed to delete room', error);
       responseError(res, error);  
     }
   }
@@ -103,7 +98,6 @@ export class RoomController {
       })
       res.status(200).json({ status: 'ok', availability });
     } catch (error) {
-      console.log('failed to set room availability', error);
       responseError(res, error);
     }
   }

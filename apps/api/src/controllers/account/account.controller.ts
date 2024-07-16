@@ -56,7 +56,6 @@ export class AccountController {
 
       res.status(200).json(profileData);
     } catch (error) {
-      console.log('failed to get user profile : ', error);
       responseError(res, error);
     }
   }
@@ -79,7 +78,6 @@ export class AccountController {
     try {
       await uploadProfileImgService
     } catch (error) {
-      console.log('failed to upload profile image : ', error);
       responseError(res, error);
     }
   }

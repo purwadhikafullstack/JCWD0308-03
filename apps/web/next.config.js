@@ -21,6 +21,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'jcwd030803.purwadhikabootcamp.com',
+      },
     ],
   },
 
@@ -37,6 +41,24 @@ const nextConfig = {
       },
       {
         source: "/login/tenant",
+        headers: [
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "unsafe-none",
+          },
+        ],
+      },
+      {
+        source: "/signup/user",
+        headers: [
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "unsafe-none",
+          },
+        ],
+      },
+      {
+        source: "/signup/tenant",
         headers: [
           {
             key: "Cross-Origin-Embedder-Policy",

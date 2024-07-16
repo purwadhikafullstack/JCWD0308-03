@@ -29,7 +29,6 @@ export default function Management() {
       const sales = await getSales(token, date!)
       setOrderList(sales)
     } catch (error) {
-      console.log(error);
       setError('Failed to fetch order list')
     } finally {
       setIsLoading(false)

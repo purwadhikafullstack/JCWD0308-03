@@ -21,7 +21,6 @@ export default function UserReservation() {
         const res = await getUserReservationsById(token)
         setReservation(res)
       } catch (error) {
-        console.log(error);
         setError('Failed to fetch reservations')
       } finally {
         setIsLoading(false)
