@@ -1,5 +1,4 @@
 'use server';
-
 import { createToken } from '@/app/action';
 import Cookies from 'js-cookie';
 
@@ -17,7 +16,6 @@ export const registerAccount = async (data: any, role: string) => {
 
     return responseData;
   } catch (error: any) {
-    console.error('Failed to register account account.ts:', error.message);
     return error.message
   }
 };
@@ -33,7 +31,6 @@ export const resendVerifyEmail = async (email: string, role:string) => {
     const res = await response.json();
     return res;
   } catch (error :any) {
-    console.log('failed to resend verify email : ', error);
     return error
   }
 }
@@ -51,7 +48,6 @@ export const VerifyEmail = async (data: any, token: string) => {
     const res = await response.json();
     return res;
   } catch (error) {
-    console.log('failed to verify email : ', error);
     return error;
   }
 };
@@ -89,7 +85,6 @@ export const registerUserGoogle = async(user:any, role:string) => {
     const data = await response.json()
     return data
   } catch (error) {
-    console.log("failed to register user signInGoogle : ", error);
     throw error
   }
   }
@@ -123,7 +118,6 @@ export const uploadImage = async (data: any, token: any) => {
     });
 
     const res = await response.json();
-    console.log('upload image : ', res);
     return res
   
   } catch (error) {

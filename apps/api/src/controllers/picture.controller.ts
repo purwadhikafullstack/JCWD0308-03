@@ -17,7 +17,6 @@ export class PictureController {
             })
             res.status(201).json({status : 'ok', uploadPictures})
         } catch (error:any) {
-            console.log('failed to upload pictures property', error);
             responseError(res, error.message);
         }
     }
@@ -38,7 +37,6 @@ export class PictureController {
             })
             res.status(201).json({status: 'ok',uploadPictures})
         } catch (error) {
-            console.log('failed to upload pictures room', error);
             responseError(res, error);
         }
     }

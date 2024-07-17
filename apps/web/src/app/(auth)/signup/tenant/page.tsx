@@ -79,7 +79,6 @@ const TenantSignup = () => {
           })
           setTimeout(() => {router.push('/login/user')}, 3500)
         } else {
-          console.log('something went wrong: ', res);
           toast({
             title: 'Something went wrong please try again!',
           })

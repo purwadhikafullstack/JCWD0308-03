@@ -56,7 +56,6 @@ export class AccountController {
 
       res.status(200).json(profileData);
     } catch (error) {
-      console.log('failed to get user profile : ', error);
       responseError(res, error);
     }
   }
@@ -79,7 +78,25 @@ export class AccountController {
     try {
       await uploadProfileImgService
     } catch (error) {
-      console.log('failed to upload profile image : ', error);
+      responseError(res, error);
+    }
+  }
+  async changePassword(req: Request, res: Response) {
+    try {
+      await changePasswordService(req, res)
+   } catch (error) {
+      res.status(400).send({
+        status: 'error',
+        error,
+      })
+    }
+  }
+
+  async updateProfile (req: Request, res: Response) {
+    try {
+      await updateProfileService(req, res)
+    } catch (error) {
+      console.error("Failed to update user: ", error);
       responseError(res, error);
     }
   }

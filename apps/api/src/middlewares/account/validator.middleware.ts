@@ -9,7 +9,6 @@ export class ValidatorMiddleware {
 
         (req:Request, res:Response, next:NextFunction) => {
             const errors = validationResult(req)
-            console.log("erorr validation register tenant : " ,errors.array()[0]);
             
             if(!errors.isEmpty()){
                 return res.status(400).send({error: errors.array()[0].msg})
@@ -23,7 +22,6 @@ export class ValidatorMiddleware {
         body('name').notEmpty().withMessage('Name is required'),
         (req:Request, res:Response, next:NextFunction) => {
             const errors = validationResult(req)
-            console.log("erorr validation register user : " ,errors.array()[0]);
             
             if(!errors.isEmpty()){
                 return res.status(400).send({error: errors.array()[0].msg})
@@ -37,7 +35,6 @@ export class ValidatorMiddleware {
         body('password').notEmpty().withMessage('Password is required'),
         (req:Request, res:Response, next:NextFunction) => {
             const errors = validationResult(req)
-            console.log("erorr validation login : " ,errors.array()[0]);
             
             if(!errors.isEmpty()){
                 return res.status(400).send({error: errors.array()[0].msg})
@@ -50,7 +47,6 @@ export class ValidatorMiddleware {
         body('email').isEmail().withMessage('Invalid Email, please enter a valid email'),
         (req:Request, res:Response, next:NextFunction) => {
             const errors = validationResult(req)
-            console.log("erorr validation email : " ,errors.array()[0]);
             
             if(!errors.isEmpty()){
                 return res.status(400).send({error: errors.array()[0].msg})

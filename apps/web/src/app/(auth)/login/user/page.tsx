@@ -33,7 +33,6 @@ const UserLoginPage: React.FC = () => {
         });
         setTimeout(() => {router.push('/')}, 3500)
       } else {
-        console.log('login error : ', res);
         toast({
           title: 'Login failed',
           description: res.message ,
@@ -61,7 +60,6 @@ const UserLoginPage: React.FC = () => {
       // setLoading(true)
       try {
         const res = await registerUserGoogle(userData , 'users')
-        console.log("register user from google : ", res);
         if (res.status === 'ok') {
           dispatch(setUser(res.user))
           createToken(res.token)
@@ -84,7 +82,6 @@ const UserLoginPage: React.FC = () => {
             router.push('/');
           }, 3500);
         } else {
-          console.log('something went wrong : ', res);
           toast({
             title: 'Something went wrong please try again!',
           });

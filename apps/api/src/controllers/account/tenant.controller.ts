@@ -12,7 +12,6 @@ export class TenantController {
             const allTenants = await prisma.tenant.findMany();
             res.json(allTenants)
         } catch (error) {
-            console.log("failed to get tenants : ", error);
             responseError(res, error);
         }
     }
@@ -24,7 +23,6 @@ export class TenantController {
         await sendVerificationEmail(createTenant)
         return res.status(201).json({status: "ok", createTenant})
         } catch (error) {
-            console.log("failed to register tenant :", error);
             responseError(res, error)
         }
     }
@@ -35,7 +33,6 @@ export class TenantController {
             const token = await sendVerificationEmail(tenant)
             return res.status(200).json({status: "ok", message: "suscess resend email verification", tenant, token})
         } catch (error) {
-            console.log("failed to resend email verification :", error);
             responseError(res, error)
         }
     }     
@@ -44,7 +41,6 @@ export class TenantController {
             const {email, password} = req.body
            await loginTenantService(email, password, res)
         } catch (error) {
-            console.log("failed to login tenant : ", error);
             responseError(res, error)
         }
     }
@@ -53,7 +49,6 @@ export class TenantController {
             const {email, name, profile, phoneNumber } = req.body
             await signInGoogleService(email, name, profile, phoneNumber, res)            
         } catch (error) {
-            console.log("failed to sign in google tenant back : ", error);
             responseError(res, error)
         }
     }

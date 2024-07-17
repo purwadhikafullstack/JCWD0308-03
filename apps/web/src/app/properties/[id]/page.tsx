@@ -31,7 +31,6 @@ export default function PropertyDetail({params} : {params:Iparams}) {
         setProperty(property);
         setLoading(false)
       } catch (error) {
-        console.log('failed to get properties on properties[id] : ', error);
         setError('Failed to fetch property details.');
         setLoading(false);
       }

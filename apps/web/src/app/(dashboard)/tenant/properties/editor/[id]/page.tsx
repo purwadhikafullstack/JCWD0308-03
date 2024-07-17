@@ -11,7 +11,6 @@ const EditorProperties = ({ params }: { params: { id: number } }) => {
     async function fetchProperty() {
       try {
         const property = await getPropertyById(params.id);
-        console.log('property : ', property);
         setProperty(property);
       } catch (error) {
         console.log("failed to get properties : ", error);
