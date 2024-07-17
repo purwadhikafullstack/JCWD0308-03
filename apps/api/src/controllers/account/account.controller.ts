@@ -25,9 +25,6 @@ export class AccountController {
     try {
       const { user } = req;
       if (!user) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
-      const checkActive = await prisma.user.findUnique({where: { id: user.id }}) || await prisma.tenant.findUnique({where: { id: user.id }})
-      if (checkActive?.isActive) return res.status(400).json({ status: 'error', message: 'Account already verified' })
-
       if (user.role === 'user') {
         await verifyUserAccount(user.id, res);
       } else if (user.role === 'tenant') {
