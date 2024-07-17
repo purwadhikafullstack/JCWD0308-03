@@ -1,7 +1,6 @@
 import prisma from '@/prisma';
 import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
-import { compare, genSalt, hash } from 'bcrypt';
 import { changePasswordService, getTenantProfile, getUserProfile, updateProfileService, updateTenantPassword, updateUserPassword, uploadProfileImgService, verifyTenantAccount, verifyUserAccount } from '@/services/account.service';
 
 export class AccountController {
@@ -76,7 +75,7 @@ export class AccountController {
   }
   async uploadProfileImage(req: Request, res: Response) {
     try {
-      await uploadProfileImgService
+      await uploadProfileImgService(req, res)
     } catch (error) {
       responseError(res, error);
     }
