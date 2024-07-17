@@ -1,7 +1,6 @@
 import prisma from '@/prisma';
 import { NextFunction, Request, Response } from 'express';
 import { responseError } from '@/helpers/responseError';
-import { compare, genSalt, hash } from 'bcrypt';
 import { changePasswordService, getTenantProfile, getUserProfile, updateProfileService, updateTenantPassword, updateUserPassword, uploadProfileImgService, verifyTenantAccount, verifyUserAccount } from '@/services/account.service';
 
 export class AccountController {
@@ -26,9 +25,6 @@ export class AccountController {
     try {
       const { user } = req;
       if (!user) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
-      const checkActive = await prisma.user.findUnique({where: { id: user.id }}) || await prisma.tenant.findUnique({where: { id: user.id }})
-      if (checkActive?.isActive) return res.status(400).json({ status: 'error', message: 'Account already verified' })
-
       if (user.role === 'user') {
         await verifyUserAccount(user.id, res);
       } else if (user.role === 'tenant') {
@@ -76,7 +72,7 @@ export class AccountController {
   }
   async uploadProfileImage(req: Request, res: Response) {
     try {
-      await uploadProfileImgService
+      await uploadProfileImgService(req, res)
     } catch (error) {
       responseError(res, error);
     }
