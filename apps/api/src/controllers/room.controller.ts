@@ -16,7 +16,7 @@ export class RoomController {
   }
   async createRoom(req: Request, res: Response) {
     try {
-      const { type, price, description, capacity, bedDetails, facilities, bathroomFacilities } = req.body;
+      const { type, price, description, capacity, bedDetails, roomFacilities, bathroomFacilities, stock } = req.body;
       const { id } = req.params;
   
       const createdRoom = await createRoom({
@@ -26,8 +26,9 @@ export class RoomController {
         capacity: parseInt(capacity),
         bedDetails,
         propertyId: +id,
-        facilities,
+        roomFacilities,
         bathroomFacilities,
+        stock
       });
   
       res.status(201).json({ status: 'ok', createdRoom});

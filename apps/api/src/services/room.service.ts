@@ -20,8 +20,9 @@ export async function createRoom(data: {
     capacity: number;
     bedDetails: string;
     propertyId: number;
-    facilities?: string[];
+    roomFacilities?: string[];
     bathroomFacilities?: string[];
+    stock?: number;
 }) {
     const createdRoom = await prisma.room.create({
         data: {
@@ -31,6 +32,7 @@ export async function createRoom(data: {
             capacity: data.capacity,
             bedDetails: data.bedDetails,
             propertyId: data.propertyId,
+            stock: data.stock,
         },
         include: {
             roomFacilities: true,
@@ -38,9 +40,9 @@ export async function createRoom(data: {
         }
     });
 
-    if (data.facilities && data.facilities.length > 0) {
+    if (data.roomFacilities && data.roomFacilities.length > 0) {
         await prisma.roomFacilities.createMany({
-            data: data.facilities.map((facility: string) => ({
+            data: data.roomFacilities.map((facility: string) => ({
                 name: facility,
                 roomId: createdRoom.id,
             }))
